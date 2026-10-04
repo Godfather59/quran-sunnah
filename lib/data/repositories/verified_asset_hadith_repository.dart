@@ -187,12 +187,13 @@ class VerifiedAssetHadithRepository implements HadithRepository {
       ContentPackageStore.instance.isInstalled('hadith:$id');
 
   Future<List<BundledSection>> _loadIndex(String collectionId) async {
+    if (!await isCollectionInstalled(collectionId)) {
+      _indices.remove(collectionId);
+      return const [];
+    }
     final hit = _indices[collectionId];
     if (hit != null) {
       return hit;
-    }
-    if (!await isCollectionInstalled(collectionId)) {
-      return const [];
     }
     final raw = await ContentPackageStore.instance.loadString(
       'assets/hadith/$collectionId/index.json',
@@ -253,6 +254,10 @@ class VerifiedAssetHadithRepository implements HadithRepository {
 
   Future<List<Hadith>> _loadSection(
       String collectionId, int section) async {
+    if (!await isCollectionInstalled(collectionId)) {
+      _indices.remove(collectionId);
+      return const [];
+    }
     final index = await _loadIndex(collectionId);
     if (index.isEmpty) return const [];
     final meta = index.firstWhere((e) => e.section == section);
