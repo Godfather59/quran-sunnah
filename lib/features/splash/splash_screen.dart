@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/l10n/app_strings.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -6,6 +7,7 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final s = AppStrings.of(context);
     return Scaffold(
       body: Center(
         child: Column(
@@ -29,7 +31,7 @@ class SplashScreen extends StatelessWidget {
               textDirection: TextDirection.rtl,
             ),
             const SizedBox(height: 8),
-            Text('Quran & Sunnah',
+            Text(s.t('appTitle'),
                 style: Theme.of(context)
                     .textTheme
                     .titleMedium
