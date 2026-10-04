@@ -12,19 +12,43 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
           flutter-version: '3.44.0'
           cache: true
+
       - run: flutter pub get
-      - name: Build release APK
+
+      - name: Create temporary test signing key
+        shell: bash
+        run: |
+          keytool -genkeypair             -keystore android/app/test-release.jks             -storepass android             -keypass android             -alias test             -keyalg RSA             -keysize 2048             -validity 3650             -dname "CN=Quran Sunnah Test,O=Godfather59,C=MA"
+
+          cat > android/key.properties <<'EOF'
+          storePassword=android
+          keyPassword=android
+          keyAlias=test
+          storeFile=test-release.jks
+          EOF
+
+      - name: Build signed release APK
         run: flutter build apk --release
+
+      - name: Verify Android signature
+        shell: bash
+        run: |
+          APKSIGNER="$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -1)"
+          test -n "$APKSIGNER"
+          "$APKSIGNER" verify --verbose --print-certs             build/app/outputs/flutter-apk/app-release.apk
+
       - name: Report APK size and checksum
         shell: bash
         run: |
           ls -lh build/app/outputs/flutter-apk/app-release.apk
           sha256sum build/app/outputs/flutter-apk/app-release.apk
+
       - uses: actions/upload-artifact@v4
         with:
           name: quran-sunnah-test-apk
