@@ -20,6 +20,7 @@ Future<AppDatabase> _pumpAdaptive(
   addTearDown(tester.view.resetDevicePixelRatio);
 
   final db = AppDatabase.memory();
+  addTearDown(db.close);
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
@@ -40,7 +41,8 @@ Future<AppDatabase> _pumpAdaptive(
       ),
     ),
   );
-  await tester.pumpAndSettle();
+  await tester.pump();
+  await tester.pump(const Duration(milliseconds: 100));
   return db;
 }
 
@@ -55,8 +57,6 @@ void main() {
       locale: const Locale('ar'),
       themeMode: ThemeMode.dark,
     );
-    addTearDown(db.close);
-
     expect(find.byType(NavigationBar), findsOneWidget);
     expect(find.byType(NavigationRail), findsNothing);
 
@@ -74,8 +74,6 @@ void main() {
       locale: const Locale('en'),
       themeMode: ThemeMode.light,
     );
-    addTearDown(db.close);
-
     expect(find.byType(NavigationRail), findsOneWidget);
     expect(find.byType(NavigationBar), findsNothing);
 
