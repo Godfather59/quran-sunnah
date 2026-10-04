@@ -6,8 +6,8 @@
 
 import 'dart:convert';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../content/content_packages.dart';
 
 class TafsirInfo {
   const TafsirInfo({
@@ -87,9 +87,13 @@ final tafsirSurahProvider =
   if (info == null || !info.bundled) {
     return const {};
   }
-  final raw = await rootBundle.loadString(
-      'assets/quran/tafsir/$tafsirId/$surah.json',
-      cache: false);
+  final packageId = 'quran:tafsir-$tafsirId';
+  if (!await ContentPackageStore.instance.isInstalled(packageId)) {
+    return const {};
+  }
+  final raw = await ContentPackageStore.instance.loadString(
+    'assets/quran/tafsir/$tafsirId/$surah.json',
+  );
   final json = jsonDecode(raw) as Map<String, dynamic>;
   final out = <int, String>{};
   for (final e in (json['entries'] as List)) {
