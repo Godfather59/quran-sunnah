@@ -1,18 +1,32 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:crypto/crypto.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 String _gitBlobSha(Uint8List bytes) {
   final header = utf8.encode('blob ${bytes.length}\u0000');
-  final digest = sha1.convert([...header, ...bytes]);
-  return digest.toString();
+  return sha1.convert([...header, ...bytes]).toString();
+}
+
+Future<Uint8List> _sourceBytes(String path) async {
+  final file = File(path);
+  if (await file.exists()) {
+    return file.readAsBytes();
+  }
+  final data = await rootBundle.load(path);
+  return data.buffer.asUint8List(
+    data.offsetInBytes,
+    data.lengthInBytes,
+  );
 }
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('bundled religious datasets match pinned exact bytes', () async {
+  test('all religious source files match pinned exact bytes', () async {
     final raw = await rootBundle.loadString('assets/integrity_manifest.json');
     final manifest = jsonDecode(raw) as Map<String, dynamic>;
     expect(manifest['algorithm'], 'git-blob-sha1');
@@ -22,15 +36,11 @@ void main() {
     expect(files.length, greaterThan(800));
 
     for (final entry in files.entries) {
-      final data = await rootBundle.load(entry.key);
-      final bytes = data.buffer.asUint8List(
-        data.offsetInBytes,
-        data.lengthInBytes,
-      );
+      final bytes = await _sourceBytes(entry.key);
       expect(
         _gitBlobSha(bytes),
         entry.value,
-        reason: 'asset bytes changed: ${entry.key}',
+        reason: 'source bytes changed: ${entry.key}',
       );
     }
   });
