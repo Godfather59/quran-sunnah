@@ -80,38 +80,27 @@ class SearchIndexService {
     await database.transaction(() async {
       await database.clearSearchDocuments(kind: 'hadith');
       for (final collection in collections.where((c) => c.isDownloaded)) {
-        var offset = 0;
-        const pageSize = 500;
-        while (true) {
-          final page = await hadith.query(
-            HadithFilter(collectionIds: {collection.id}),
-            limit: pageSize,
-            offset: offset,
-          );
-          if (page.isEmpty) break;
-          await database.insertSearchDocuments(
-            page
-                .where((h) => !h.isPlaceholder && h.matnAr.isNotEmpty)
-                .map((h) => SearchIndexDocument(
-                      id: 'hadith:${h.id}',
-                      kind: 'hadith',
-                      refKey: h.id,
-                      title:
-                          '${collection.nameEn} · Hadith ${h.hadithNumber}',
-                      subtitle: h.book,
-                      body: h.matnAr,
-                      normalizedBody: normalizeForIndex(h.matnAr),
-                      normalizedTitle: normalizeForIndex(
-                        '${collection.nameEn} ${h.book} ${h.hadithNumber}',
-                      ),
-                      collectionId: h.collectionId,
-                      hadithNumber: h.hadithNumber,
-                      book: h.book,
-                    )),
-          );
-          offset += page.length;
-          if (page.length < pageSize) break;
-        }
+        final rows = await hadith.allForIndex(collection.id);
+        await database.insertSearchDocuments(
+          rows
+              .where((h) => !h.isPlaceholder && h.matnAr.isNotEmpty)
+              .map((h) => SearchIndexDocument(
+                    id: 'hadith:${h.id}',
+                    kind: 'hadith',
+                    refKey: h.id,
+                    title:
+                        '${collection.nameEn} · Hadith ${h.hadithNumber}',
+                    subtitle: h.book,
+                    body: h.matnAr,
+                    normalizedBody: normalizeForIndex(h.matnAr),
+                    normalizedTitle: normalizeForIndex(
+                      '${collection.nameEn} ${h.book} ${h.hadithNumber}',
+                    ),
+                    collectionId: h.collectionId,
+                    hadithNumber: h.hadithNumber,
+                    book: h.book,
+                  )),
+        );
       }
       await database.setMeta(metaKey, fingerprint);
     });
