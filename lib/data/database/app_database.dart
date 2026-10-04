@@ -177,7 +177,7 @@ class AppDatabase extends _$AppDatabase {
     await customStatement(
       'CREATE TRIGGER IF NOT EXISTS search_documents_au '
       'AFTER UPDATE ON search_documents BEGIN '
-      "INSERT INTO search_fts(search_fts, rowid, normalized_body, normalized_title) "
+      'INSERT INTO search_fts(search_fts, rowid, normalized_body, normalized_title) '
       "VALUES ('delete', old.rowid, old.normalized_body, old.normalized_title); "
       'INSERT INTO search_fts(rowid, normalized_body, normalized_title) '
       'VALUES (new.rowid, new.normalized_body, new.normalized_title); '
