@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../../core/utils/text_utils.dart';
 import '../database/app_database.dart';
+import '../content/content_packages.dart';
 import '../repositories/hadith_repository.dart';
 import '../repositories/quran_repository.dart';
 import '../repositories/tafsir_repository.dart';
@@ -72,7 +73,13 @@ class SearchIndexService {
   }
 
   Future<void> _ensureHadith() async {
-    final fingerprint = await _fingerprintPrefix('assets/hadith/');
+    final installed = await ContentPackageStore.instance.installedIds();
+    final installedHadith = installed
+        .where((id) => id.startsWith('hadith:'))
+        .toList()
+      ..sort();
+    final fingerprint =
+        '${await _fingerprintPrefix('assets/hadith/')}|${installedHadith.join(',')}';
     const metaKey = 'search.hadith.all';
     if (await database.getMeta(metaKey) == fingerprint) return;
 
@@ -111,16 +118,31 @@ class SearchIndexService {
         kTafsirCatalog.where((t) => t.id == tafsirId).firstOrNull;
     if (info == null || !info.bundled) return;
     final prefix = 'assets/quran/tafsir/$tafsirId/';
-    final fingerprint = await _fingerprintPrefix(prefix);
+    final packageId = 'quran:tafsir-$tafsirId';
+    final installed =
+        await ContentPackageStore.instance.isInstalled(packageId);
+    final fingerprint =
+        '${await _fingerprintPrefix(prefix)}|${installed ? 'installed' : 'absent'}';
     final metaKey = 'search.tafsir.$tafsirId';
     if (await database.getMeta(metaKey) == fingerprint) return;
+
+    if (!installed) {
+      await database.transaction(() async {
+        await database.clearSearchDocuments(
+          kind: 'tafsir',
+          tafsirId: tafsirId,
+        );
+        await database.setMeta(metaKey, fingerprint);
+      });
+      return;
+    }
 
     final docs = <SearchIndexDocument>[];
     for (var surah = 1; surah <= 114; surah++) {
       try {
-        final raw = await _bundle.loadString(
+        final raw = await ContentPackageStore.instance.loadString(
           '$prefix$surah.json',
-          cache: false,
+          bundle: _bundle,
         );
         final json = jsonDecode(raw) as Map<String, dynamic>;
         for (final item in json['entries'] as List) {
