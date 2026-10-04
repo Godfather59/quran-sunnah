@@ -4,7 +4,6 @@
 // Displayed Quran, Hadith and Tafsir strings always come from the exact
 // source text stored in the verified assets.
 
-import '../../core/utils/text_utils.dart';
 import '../database/app_database.dart';
 import '../models/hadith.dart';
 import '../repositories/hadith_repository.dart';
