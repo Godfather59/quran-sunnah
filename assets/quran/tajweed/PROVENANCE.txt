@@ -1,0 +1,14 @@
+Tajweed annotations (Hafs/Uthmani) — per-surah JSON
+=====================================================
+Generator : cpfair/quran-tajweed decision trees (references: Dar
+            al-Maarifah tajweed masaahif, ReciteQuran.com).
+Generated : 2026-10-04 by running tajweed_classifier.py against OUR
+            EXACT bundled Tanzil text (assets/quran/hafs-an-asim/
+            uthmani.txt) — index alignment by construction.
+Verified  : 6236 entries; 59,126 annotations; every [start,end) bounds-
+            checked against our verse strings (0 violations).
+Rules     : 18 (ghunnah, hamzat_wasl, idghaam_*, ikhfa*, iqlab,
+            lam_shamsiyyah, madd_*, qalqalah, silent).
+Rendering : colors spans only; verse text never altered.
+License   : generator repo has no license file — treat output as
+            derived study aid; rulings must be learned from a teacher.

@@ -1,0 +1,17 @@
+Word morphology (Hafs) — per-surah JSON
+==========================================
+Source    : Quranic Arabic Corpus v0.4 (Kais Dukes, Leeds) via the
+            mustafa0x/quran-morphology fork (Buckwalter→Arabic,
+            reproducible from the original by script).
+License   : GNU GPL with Terms of Use — app use explicitly permitted
+            provided the source is credited and linked:
+            http://corpus.quran.com (credited in-app in Word Meanings).
+Generated : 2026-10-04 by aligning corpus segments to OUR EXACT
+            bundled Tanzil text (token-level, normalized comparison).
+Coverage  : 82,260 tokens; 98.6% carry lemma/root/POS; 286 tokens
+            (0.35%) show the word with no gloss rather than a guess.
+            Pause marks tagged MARK; basmala prefixes glossed from 1:1.
+Layout    : words/hafs/<surah>.json {entries: [{ayah, words:
+            [{w, lemma, root, pos}]}]}.
+Note      : lemmas/roots are dictionary forms for study, not full
+            translations — pair with the ayah translation + tafsir.

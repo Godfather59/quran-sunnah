@@ -1,0 +1,65 @@
+name: quran_sunnah_app
+description: Premium Quran and authentic Sunnah app (iOS + Android). Verified datasets only — no invented religious text.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_riverpod: ^2.5.1
+  shared_preferences: ^2.2.3
+  intl: ^0.20.3
+  google_fonts: ^6.2.1
+  just_audio: ^0.9.40
+  just_audio_background: ^0.0.1-beta.11
+  dynamic_color: ^1.7.0
+  path_provider: ^2.1.4
+  share_plus: ^10.0.3
+  collection: ^1.18.0
+  xml: ^6.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/quran/hafs-an-asim/uthmani.txt
+    - assets/quran/hafs-an-asim/imlai.txt
+    - assets/quran/hafs-an-asim/indopak.txt
+    - assets/quran/warsh-an-nafi/uthmani.txt
+    - assets/quran/qalun-an-nafi/uthmani.txt
+    - assets/quran/metadata/quran-data.xml
+    - assets/quran/translations/en-sahih.txt
+    - assets/quran/translations/fr-hamidullah.txt
+    - assets/quran/tafsir/jalalayn/
+    - assets/quran/tafsir/siraj/
+    - assets/quran/tajweed/hafs/
+    - assets/quran/words/hafs/
+    - assets/hadith/bukhari/index.json
+    - assets/hadith/bukhari/sections/
+    - assets/hadith/muslim/index.json
+    - assets/hadith/muslim/sections/
+    - assets/hadith/abudawud/index.json
+    - assets/hadith/abudawud/sections/
+    - assets/hadith/tirmidhi/index.json
+    - assets/hadith/tirmidhi/sections/
+    - assets/hadith/nasai/index.json
+    - assets/hadith/nasai/sections/
+    - assets/hadith/ibnmajah/index.json
+    - assets/hadith/ibnmajah/sections/
+    - assets/hadith/malik/index.json
+    - assets/hadith/malik/sections/
+    - assets/hadith/nawawi/index.json
+    - assets/hadith/nawawi/sections/
+    - assets/hadith/qudsi/index.json
+    - assets/hadith/qudsi/sections/
+    - assets/hadith/dehlawi/index.json
+    - assets/hadith/dehlawi/sections/

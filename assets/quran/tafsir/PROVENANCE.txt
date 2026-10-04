@@ -1,0 +1,14 @@
+Bundled Tafsir — per-surah JSON
+==================================
+jalalayn/ : Tafsir al-Jalalayn (Jalal al-Din al-Mahalli & Jalal al-Din
+            al-Suyuti), Arabic. Upstream: fawazahmed0/quran-api@1
+            edition "ara-jalaladdinalmah" (source: tanzil.net).
+siraj/    : Al-Siraj fi Tafsir al-Quran (concise Arabic tafsir).
+            Upstream: fawazahmed0/quran-api@1 edition
+            "ara-sirajtafseer" (source: quranenc.com).
+Fetched   : 2026-10-04. 6236 entries each, zero gaps, verbatim.
+Layout    : <id>/<surah>.json with [{ayah, text}].
+License   : verify upstream terms before redistribution.
+More      : Ibn Kathir / Tabari / Sa'di plug in via the same layout +
+            one catalog row (see TafsirRepository); classic Arabic
+            editions preferred from Shamela-verified digitizations.

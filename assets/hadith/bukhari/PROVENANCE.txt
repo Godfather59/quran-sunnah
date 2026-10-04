@@ -1,0 +1,18 @@
+Sahih al-Bukhari (Arabic) — bundled sections
+================================================
+Upstream : fawazahmed0/hadith-api@1, edition "ara-bukhari"
+           (Arabic text with diacritics, .min.json full edition)
+Fetched  : 2026-10-04 via jsDelivr CDN
+Entries  : 7589 (incl. repeated hadith numbers, preserved as-is)
+Sections : 98 (book/chapter titles from upstream "sections" metadata,
+           English titles as provided upstream)
+ Grays/grades: UPSTREAM GRADES ARE EMPTY ("grades": []) for this edition.
+           The app therefore shows grade as unavailable — never invented.
+           Enrich later only from a sourced grading dataset (e.g. Dorar).
+Sanad    : matn "text" ships as one verbatim string (sanad inline where
+           present upstream). No sanad parsing is performed; narrator
+           fields stay null until a structured sanad source is wired.
+License  : verify upstream terms before redistribution
+           (https://github.com/fawazahmed0/hadith-api).
+Local layout: index.json + sections/<n>.json, split losslessly from the
+           full edition by hadithnumber ranges (duplicates kept).

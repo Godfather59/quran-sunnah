@@ -1,0 +1,5 @@
+﻿Forty Hadith Qudsi (Arabic) - bundled sections
+Upstream : fawazahmed0/hadith-api@1, edition "ara-qudsi"
+Fetched  : 2026-10-04 via jsDelivr CDN
+Grades   : UPSTREAM GRADES ARE EMPTY - shown as unavailable, never invented.
+License  : verify upstream terms before redistribution.

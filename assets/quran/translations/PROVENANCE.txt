@@ -1,0 +1,9 @@
+Quran translations — bundled
+==============================
+en-sahih.txt      : Saheeh International, via https://tanzil.net/trans/en.sahih
+fr-hamidullah.txt : Muhammad Hamidullah (French), via https://tanzil.net/trans/fr.hamidullah
+Fetched           : 2026-10-04, `surah|ayah|text` format, 6236 lines each
+Terms             : per Tanzil translation page terms; translators credited
+                    in-app next to every rendered translation.
+Note              : translations are human interpretation, rendered in a
+                    muted style that can never be mistaken for Quran text.

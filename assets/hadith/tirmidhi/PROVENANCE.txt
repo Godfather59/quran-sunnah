@@ -1,0 +1,8 @@
+﻿Jami At Tirmidhi (Arabic) - bundled sections
+==========================================
+Upstream : fawazahmed0/hadith-api@1, edition "ara-tirmidhi"
+Fetched  : 2026-10-04 via jsDelivr CDN
+Sections : per upstream "sections" metadata (English titles as provided)
+Grades   : UPSTREAM GRADES ARE EMPTY - shown as unavailable, never invented.
+Empty matn: upstream numbers without matn kept as placeholders, refs intact.
+License  : verify upstream terms before redistribution.

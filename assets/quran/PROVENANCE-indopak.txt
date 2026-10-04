@@ -1,0 +1,13 @@
+IndoPak script (Hafs) — bundled text
+=====================================
+hafs-an-asim/indopak.txt : Hafs ‘an ‘Asim in Indo-Pak orthography.
+Upstream : fawazahmed0/quran-api@1 edition "ara-quranindopak"
+           (source: fonts.qurancomplex.gov.sa, Unicode conversion).
+Fetched  : 2026-10-04 via jsDelivr CDN, converted losslessly from
+           JSON [{chapter, verse, text}] to `surah|ayah|text`.
+Entries  : 6236, zero gaps, verbatim (incl. Quranic Extended-B marks
+           U+08D4–U+08E2 and RLM U+200F).
+Font     : requires a font covering Arabic Extended-B — the app uses
+           "Amiri Quran" (Google Fonts, fetched once then cached
+           offline) whenever the IndoPak script is active.
+License  : verify upstream terms before redistribution.

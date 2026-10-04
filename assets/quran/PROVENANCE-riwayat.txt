@@ -1,0 +1,12 @@
+Warsh & Qalun — bundled Hafs-independent editions
+=====================================================
+warsh-an-nafi/uthmani.txt : Warsh ‘an Nafi‘, Arabic.
+qalun-an-nafi/uthmani.txt : Qalun ‘an Nafi‘, Arabic.
+Upstream : fawazahmed0/quran-api@1 editions "ara-quranwarsh" and
+           "ara-quranqaloon" (source: qurancomplex.gov.sa, v8).
+Fetched  : 2026-10-04 via jsDelivr CDN, converted losslessly from
+           JSON [{chapter, verse, text}] to `surah|ayah|text`.
+Entries  : 6236 each, zero gaps, verbatim (incl. Quranic marks
+           U+06DF–U+06EC, standard Unicode — no PUA).
+Compare  : Riwayat comparison now shows REAL Warsh/Qalun differences.
+License  : verify upstream terms before redistribution.
