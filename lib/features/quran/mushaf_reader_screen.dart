@@ -196,8 +196,8 @@ class _PageAyah extends StatelessWidget {
   Widget build(BuildContext context) {
     final num = switch (prefs.ayahNumberStyle) {
       AyahNumberStyle.arabicIndic =>
-        toArabicIndic(ayah.ayah),
-      _ => '${ayah.ayah}',
+        toArabicIndic(ayah.displayAyahNumber),
+      _ => '${ayah.displayAyahNumber}',
     };
     return InkWell(
       onTap: () => showAyahActionSheet(context, ayah),
