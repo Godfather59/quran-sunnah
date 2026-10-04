@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quran_sunnah_app/core/l10n/app_strings.dart';
+import 'package:quran_sunnah_app/core/theme/app_theme.dart';
 import 'package:quran_sunnah_app/data/database/app_database.dart';
 import 'package:quran_sunnah_app/data/models/hadith.dart';
 import 'package:quran_sunnah_app/features/quran/quran_reader_screen.dart';
@@ -162,6 +163,87 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 500));
     expect(find.byType(QuranReaderScreen), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('reader + hadith hold in Arabic RTL dark on small phone',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'app.onboarded': true,
+      'app.locale': 'ar',
+    });
+    final db = AppDatabase.memory();
+    addTearDown(db.close);
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(360, 640);
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(Future.value(db)),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(null),
+          darkTheme: AppTheme.dark(null),
+          themeMode: ThemeMode.dark,
+          locale: const Locale('ar'),
+          supportedLocales: AppStrings.supported,
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          home: const QuranReaderScreen(surah: 112),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+
+    final context = tester.element(find.byType(QuranReaderScreen));
+    expect(Directionality.of(context), TextDirection.rtl);
+    expect(Theme.of(context).brightness, Brightness.dark);
+    expect(find.textContaining('الرواية'), findsOneWidget);
+    expect(find.textContaining('رسم المصحف'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('hadith copy shows confirmation in Arabic RTL dark',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final db = AppDatabase.memory();
+    addTearDown(db.close);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(Future.value(db)),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.light(null),
+          darkTheme: AppTheme.dark(null),
+          themeMode: ThemeMode.dark,
+          locale: const Locale('ar'),
+          supportedLocales: AppStrings.supported,
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          home: const Scaffold(
+            body: HadithCard(hadith: _hadith, missingMessage: null),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    await tester.tap(find.text('نسخ'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(find.text('نسخ'), findsWidgets);
     expect(tester.takeException(), isNull);
   });
 }
