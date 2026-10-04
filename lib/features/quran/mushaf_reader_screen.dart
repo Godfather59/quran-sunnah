@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../core/l10n/app_strings.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/text_utils.dart';
 import '../../core/widgets/common.dart';
 import '../../data/models/quran.dart';
+import '../../data/repositories/quran_metadata.dart';
 import '../../data/repositories/quran_repository.dart';
 import '../../state/providers.dart';
 import 'widgets/ayah_action_sheet.dart';
 
-/// Mushaf Mode: one Medina page per swipe, boundaries from verified
-/// metadata. Hafs editions only — other Riwaya show honest fallback.
+/// Medina-page Mushaf mode backed by verified Hafs/Uthmani page metadata.
+///
+/// Page layout is intentionally unavailable for editions that do not ship
+/// their own verified page mapping. We never reuse Hafs page boundaries for
+/// another Riwaya and label them as if they were authoritative.
 class MushafReaderScreen extends ConsumerStatefulWidget {
   const MushafReaderScreen({super.key, this.surah = 1, this.page = 1});
 
@@ -22,115 +27,178 @@ class MushafReaderScreen extends ConsumerStatefulWidget {
       _MushafReaderScreenState();
 }
 
-class _MushafReaderScreenState
-    extends ConsumerState<MushafReaderScreen> {
+class _MushafReaderScreenState extends ConsumerState<MushafReaderScreen> {
   late final PageController _ctrl;
   late int _page;
 
   @override
   void initState() {
     super.initState();
-    _page = widget.page;
+    _page = widget.page.clamp(1, 604);
     _ctrl = PageController(initialPage: _page - 1);
   }
 
   @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final s = AppStrings.of(context);
     final q = ref.watch(quranPrefsProvider);
     final metaAsync = ref.watch(quranMetadataProvider);
+    final hasVerifiedPageMap = q.editionId == 'hafs-an-asim__uthmani';
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mushaf · ص ${_page.toString()}'),
+        title: Text('${s.t('mushaf')} · ${s.t('page')} $_page'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.find_in_page),
-            tooltip: 'Go to page',
-            onPressed: () => _jumpToPage(context),
+            icon: const Icon(Icons.find_in_page_outlined),
+            tooltip: s.t('goToPage'),
+            onPressed:
+                hasVerifiedPageMap ? () => _jumpToPage(context) : null,
           ),
         ],
       ),
-      body: metaAsync.when(
-        loading: () =>
-            const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('$e')),
-        data: (meta) => Column(
-          children: [
-            Expanded(
-              child: PageView.builder(
-                controller: _ctrl,
-                onPageChanged: (i) =>
-                    setState(() => _page = i + 1),
-                itemCount: meta.pageStarts.length,
-                itemBuilder: (context, i) =>
-                    _MushafPage(
-                        page: i + 1, editionId: q.editionId),
-              ),
-            ),
-            SafeArea(
+      body: !hasVerifiedPageMap
+          ? Center(
               child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                        onPressed: () => _ctrl.previousPage(
-                            duration: const Duration(
-                                milliseconds: 250),
-                            curve: Curves.easeOut),
-                        icon:
-                            const Icon(Icons.chevron_left)),
-                    Text(
-                        'Page $_page / ${meta.pageStarts.length}'),
-                    IconButton(
-                        onPressed: () => _ctrl.nextPage(
-                            duration: const Duration(
-                                milliseconds: 250),
-                            curve: Curves.easeOut),
-                        icon: const Icon(
-                            Icons.chevron_right)),
-                  ],
+                padding: const EdgeInsets.all(24),
+                child: UnavailableBanner(
+                  message: s.t('mushafPageMapUnavailable'),
                 ),
               ),
+            )
+          : metaAsync.when(
+              loading: () =>
+                  const Center(child: CircularProgressIndicator()),
+              error: (e, _) => Center(child: Text('$e')),
+              data: (meta) => Column(
+                children: [
+                  Expanded(
+                    child: PageView.builder(
+                      controller: _ctrl,
+                      reverse: true,
+                      onPageChanged: (i) {
+                        final page = i + 1;
+                        setState(() => _page = page);
+                        _rememberPage(meta, page);
+                      },
+                      itemCount: meta.pageStarts.length,
+                      itemBuilder: (context, i) => _MushafPage(
+                        page: i + 1,
+                        editionId: q.editionId,
+                      ),
+                    ),
+                  ),
+                  SafeArea(
+                    top: false,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 4, 12, 8),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            tooltip: s.t('previousPage'),
+                            onPressed: _page <= 1
+                                ? null
+                                : () => _ctrl.previousPage(
+                                      duration:
+                                          const Duration(milliseconds: 220),
+                                      curve: Curves.easeOut,
+                                    ),
+                            icon: const Icon(Icons.chevron_right),
+                          ),
+                          Expanded(
+                            child: Semantics(
+                              label:
+                                  '${s.t('page')} $_page ${s.t('of')} ${meta.pageStarts.length}',
+                              child: Text(
+                                '${s.t('page')} $_page / ${meta.pageStarts.length}',
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.labelLarge,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            tooltip: s.t('nextPage'),
+                            onPressed: _page >= meta.pageStarts.length
+                                ? null
+                                : () => _ctrl.nextPage(
+                                      duration:
+                                          const Duration(milliseconds: 220),
+                                      curve: Curves.easeOut,
+                                    ),
+                            icon: const Icon(Icons.chevron_left),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
     );
   }
 
+  Future<void> _rememberPage(QuranMetadata meta, int page) async {
+    if (page < 1 || page > meta.pageStarts.length) return;
+    final start = meta.pageStarts[page - 1];
+    final prefs = ref.read(quranPrefsProvider);
+    await ref.read(quranPrefsProvider.notifier).update(
+          prefs.copyWith(
+            lastSurah: start.surah,
+            lastAyah: start.ayah,
+            readingMode: ReadingMode.mushaf,
+          ),
+        );
+  }
+
   Future<void> _jumpToPage(BuildContext context) async {
-    final ctrl =
-        TextEditingController(text: '$_page');
+    final s = AppStrings.of(context);
+    final ctrl = TextEditingController(text: '$_page');
     final v = await showDialog<int>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Go to page (1–604)'),
+        title: Text(s.t('goToPage')),
         content: TextField(
           controller: ctrl,
           keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            hintText: '1–604',
+            labelText: s.t('page'),
+          ),
         ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(s.t('cancel')),
+          ),
           FilledButton(
-              onPressed: () => Navigator.pop(
-                  ctx, int.tryParse(ctrl.text)),
-              child: const Text('Go')),
+            onPressed: () => Navigator.pop(ctx, int.tryParse(ctrl.text)),
+            child: Text(s.t('go')),
+          ),
         ],
       ),
     );
+    ctrl.dispose();
     if (v != null && v >= 1 && v <= 604) {
-      _ctrl.jumpToPage(v - 1);
+      await _ctrl.animateToPage(
+        v - 1,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+      );
     }
   }
 }
 
 class _MushafPage extends ConsumerWidget {
-  const _MushafPage(
-      {required this.page, required this.editionId});
+  const _MushafPage({
+    required this.page,
+    required this.editionId,
+  });
 
   final int page;
   final String editionId;
@@ -139,40 +207,66 @@ class _MushafPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = AppStrings.of(context);
     final q = ref.watch(quranPrefsProvider);
-    final ayahsAsync =
-        ref.watch(_pageAyahsProvider((page, editionId)));
+    final ayahsAsync = ref.watch(_pageAyahsProvider((page, editionId)));
 
     return Padding(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(10),
       child: Card(
+        clipBehavior: Clip.antiAlias,
         child: Padding(
-          padding: EdgeInsets.all(q.margins + 8),
+          padding: EdgeInsets.all(q.margins + 6),
           child: ayahsAsync.when(
-            loading: () => const Center(
-                child: CircularProgressIndicator()),
+            loading: () =>
+                const Center(child: CircularProgressIndicator()),
             error: (e, _) => Center(child: Text('$e')),
             data: (ayahs) {
               if (ayahs.isEmpty) {
                 return Center(
-                    child: UnavailableBanner(
-                        message:
-                            s.t('contentUnavailable')));
+                  child: UnavailableBanner(
+                    message: s.t('contentUnavailable'),
+                  ),
+                );
               }
-              final juz = ayahs.first.juz;
+              final first = ayahs.first;
+              final hasSajda = ayahs.any((a) => a.isSajda);
               return Column(
                 children: [
-                  Text('Juz $juz · Page $page',
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelSmall),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 8,
+                    runSpacing: 4,
+                    children: [
+                      _MetaChip(
+                        label: s.t('juz'),
+                        value: first.juz?.toString() ?? '—',
+                      ),
+                      _MetaChip(
+                        label: s.t('hizb'),
+                        value: first.hizb?.toString() ?? '—',
+                      ),
+                      _MetaChip(
+                        label: s.t('rub'),
+                        value: first.rub?.toString() ?? '—',
+                      ),
+                      if (hasSajda)
+                        Chip(
+                          avatar: const Text('۩'),
+                          label: Text(s.t('sajda')),
+                          visualDensity: VisualDensity.compact,
+                        ),
+                    ],
+                  ),
                   const Divider(),
                   Expanded(
                     child: SingleChildScrollView(
                       child: Wrap(
+                        textDirection: TextDirection.rtl,
                         children: ayahs
                             .map((a) => _PageAyah(
-                                ayah: a, prefs: q))
-                            .toList(),
+                                  ayah: a,
+                                  prefs: q,
+                                ))
+                            .toList(growable: false),
                       ),
                     ),
                   ),
@@ -186,8 +280,23 @@ class _MushafPage extends ConsumerWidget {
   }
 }
 
+class _MetaChip extends StatelessWidget {
+  const _MetaChip({required this.label, required this.value});
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) => Chip(
+        label: Text('$label $value'),
+        visualDensity: VisualDensity.compact,
+      );
+}
+
 class _PageAyah extends StatelessWidget {
-  const _PageAyah({required this.ayah, required this.prefs});
+  const _PageAyah({
+    required this.ayah,
+    required this.prefs,
+  });
 
   final Ayah ayah;
   final QuranPrefs prefs;
@@ -195,30 +304,44 @@ class _PageAyah extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final num = switch (prefs.ayahNumberStyle) {
-      AyahNumberStyle.arabicIndic =>
-        toArabicIndic(ayah.displayAyahNumber),
+      AyahNumberStyle.arabicIndic => toArabicIndic(ayah.displayAyahNumber),
       _ => '${ayah.displayAyahNumber}',
     };
     return InkWell(
       onTap: () => showAyahActionSheet(context, ayah),
-      child: RichText(
-        textDirection: TextDirection.rtl,
-        textAlign: TextAlign.right,
-        text: TextSpan(
-          style: AppTheme.quranArabic(context,
-              size: prefs.fontSize, height: prefs.lineHeight),
-          children: [
-            TextSpan(text: '${ayah.text} '),
-            TextSpan(
-              text: '﴿$num﴾ ',
-              style: TextStyle(
-                color: Theme.of(context)
-                    .colorScheme
-                    .primary,
-                fontSize: prefs.fontSize * 0.8,
-              ),
+      child: Semantics(
+        button: true,
+        label: 'Ayah ${ayah.surah}:${ayah.displayAyahNumber}',
+        child: RichText(
+          textDirection: TextDirection.rtl,
+          textAlign: TextAlign.right,
+          text: TextSpan(
+            style: AppTheme.quranArabic(
+              context,
+              size: prefs.fontSize,
+              height: prefs.lineHeight,
             ),
-          ],
+            children: [
+              TextSpan(text: '${ayah.text} '),
+              TextSpan(
+                text: '﴿$num﴾',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontSize: prefs.fontSize * 0.8,
+                ),
+              ),
+              if (ayah.isSajda)
+                TextSpan(
+                  text: ' ۩ ',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.tertiary,
+                    fontSize: prefs.fontSize * 0.85,
+                  ),
+                )
+              else
+                const TextSpan(text: ' '),
+            ],
+          ),
         ),
       ),
     );
@@ -226,6 +349,7 @@ class _PageAyah extends StatelessWidget {
 }
 
 final _pageAyahsProvider = FutureProvider.family(
-    (ref, (int, String) args) => ref
-        .watch(quranRepositoryProvider)
-        .ayahsOfPage(args.$1, args.$2));
+  (ref, (int, String) args) => ref
+      .watch(quranRepositoryProvider)
+      .ayahsOfPage(args.$1, args.$2),
+);
