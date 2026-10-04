@@ -10,7 +10,7 @@ import 'package:quran_sunnah_app/data/repositories/verified_asset_quran_reposito
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  for (final t in kTranslationCatalog) {
+  for (final t in kTranslationCatalog.where((t) => t.bundled)) {
     test('translation ${t.id} covers all 6236 verses', () async {
       final container = ProviderContainer();
       addTearDown(container.dispose);
@@ -33,6 +33,17 @@ void main() {
       expect(map.keys.toSet(), arabicKeys);
     });
   }
+
+  test('unbundled verified candidates stay empty until imported', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    for (final t in kTranslationCatalog.where((t) => !t.bundled)) {
+      final map =
+          await container.read(translationTextsProvider(t.id).future);
+      expect(map, isEmpty, reason: t.id);
+      expect(t.version, isNotNull);
+    }
+  });
 
   test('unknown translation id yields empty (honest)', () async {
     final container = ProviderContainer();
