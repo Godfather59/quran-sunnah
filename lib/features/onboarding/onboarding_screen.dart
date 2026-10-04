@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../data/models/quran.dart';
 import '../../data/seed/hadith_collections.dart';
+import '../../data/repositories/verified_asset_quran_repository.dart';
 import '../../state/providers.dart';
 import '../../core/navigation/adaptive_scaffold.dart';
 
@@ -89,10 +90,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           () => setState(() => _riwaya = RiwayaId.hafsAsim)),
       _option(ar ? 'ورش عن نافع' : 'ورش عن نافع — Warsh ʿan Nāfiʿ',
           _riwaya == RiwayaId.warshNafi,
-          () => setState(() => _riwaya = RiwayaId.warshNafi)),
+          () => setState(() {
+            _riwaya = RiwayaId.warshNafi;
+            _script = QuranScript.uthmani;
+          })),
       _option(ar ? 'قالون عن نافع' : 'قالون عن نافع — Qālūn ʿan Nāfiʿ',
           _riwaya == RiwayaId.qalunNafi,
-          () => setState(() => _riwaya = RiwayaId.qalunNafi)),
+          () => setState(() {
+            _riwaya = RiwayaId.qalunNafi;
+            _script = QuranScript.uthmani;
+          })),
     ]);
   }
 
@@ -103,12 +110,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       _option(ar ? 'عثماني' : 'Uthmani — عثماني',
           _script == QuranScript.uthmani,
           () => setState(() => _script = QuranScript.uthmani)),
-      _option(ar ? 'إملائي' : 'Simple / Imla’i — إملائي',
-          _script == QuranScript.imlai,
-          () => setState(() => _script = QuranScript.imlai)),
-      _option(ar ? 'هندي باكستاني' : 'IndoPak',
-          _script == QuranScript.indopak,
-          () => setState(() => _script = QuranScript.indopak)),
+      if (kVerifiedQuranAssets.containsKey(
+          '${_riwaya.storageKey}__imlai'))
+        _option(ar ? 'إملائي' : 'Simple / Imla’i — إملائي',
+            _script == QuranScript.imlai,
+            () => setState(() => _script = QuranScript.imlai)),
+      if (kVerifiedQuranAssets.containsKey(
+          '${_riwaya.storageKey}__indopak'))
+        _option(ar ? 'هندي باكستاني' : 'IndoPak',
+            _script == QuranScript.indopak,
+            () => setState(() => _script = QuranScript.indopak)),
     ]);
   }
 

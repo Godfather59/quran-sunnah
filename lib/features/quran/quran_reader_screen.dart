@@ -72,7 +72,7 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
                 ],
               ),
               actions: [
-                if (q.script == QuranScript.tajweed)
+                if (q.showTajweed && q.tajweedAvailable)
                   IconButton(
                     tooltip: 'Tajweed legend',
                     icon: const Icon(Icons.palette_outlined),

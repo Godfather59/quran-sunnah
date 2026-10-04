@@ -8,3 +8,10 @@ ios/.symlinks/
 android/.gradle/
 *.iml
 .DS_Store
+
+.idea/
+android/key.properties
+android/*.jks
+android/*.keystore
+*.jks
+*.keystore

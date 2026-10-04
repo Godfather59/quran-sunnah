@@ -5,8 +5,8 @@ import '../../../data/models/quran.dart';
 import '../../../data/repositories/tajweed_repository.dart';
 import '../../../state/providers.dart';
 
-/// Verse text with Tajweed coloring when the user selected the
-/// Tajweed script AND verified metadata covers this edition.
+/// Verse text with optional Tajweed coloring over verified Hafs/Uthmani.
+/// Tajweed is an annotation overlay, never a separate Quran edition.
 /// Otherwise falls back to plain verse text (never blank).
 class TajweedText extends ConsumerWidget {
   const TajweedText({
@@ -30,7 +30,7 @@ class TajweedText extends ConsumerWidget {
         font: q.font,
         indopak: indopak);
     final tajweedActive =
-        q.script == QuranScript.tajweed && ayah.editionId == 'hafs-an-asim__uthmani';
+        q.showTajweed && q.tajweedAvailable && ayah.editionId == 'hafs-an-asim__uthmani';
     if (!tajweedActive) {
       return Text(
         ayah.text,

@@ -87,7 +87,17 @@ class RiwayaInfo {
 }
 
 /// Writing style (rasm) — INDEPENDENT from [RiwayaId].
+///
+/// [tajweed] is retained only as a legacy persisted value from pre-1.0
+/// builds. Tajweed is a presentation overlay on Hafs/Uthmani, not a
+/// separate Quran edition. New UI must never select this enum value.
 enum QuranScript { uthmani, imlai, indopak, tajweed }
+
+extension QuranScriptX on QuranScript {
+  /// Dataset-backed script. Legacy Tajweed resolves to Uthmani.
+  QuranScript get datasetScript =>
+      this == QuranScript.tajweed ? QuranScript.uthmani : this;
+}
 
 /// Reading layout.
 enum ReadingMode { reading, mushaf }

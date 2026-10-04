@@ -164,7 +164,6 @@ class VerifiedAssetHadithRepository implements HadithRepository {
 
   final AssetBundle _bundle;
   final Map<String, List<BundledSection>> _indices = {};
-  final Map<String, List<Hadith>> _sections = {};
 
   bool get isBundled => true;
 
@@ -223,11 +222,6 @@ class VerifiedAssetHadithRepository implements HadithRepository {
 
   Future<List<Hadith>> _loadSection(
       String collectionId, int section) async {
-    final key = '$collectionId:$section';
-    final hit = _sections[key];
-    if (hit != null) {
-      return hit;
-    }
     final meta = (await _loadIndex(collectionId))
         .firstWhere((e) => e.section == section);
     final raw = await _bundle.loadString(
@@ -242,7 +236,6 @@ class VerifiedAssetHadithRepository implements HadithRepository {
           out.where((h) => h.hadithNumber == '$number').length;
       out.add(_mapEntry(collectionId, meta, m, sameCount: same));
     }
-    _sections[key] = out;
     return out;
   }
 
@@ -299,6 +292,11 @@ class VerifiedAssetHadithRepository implements HadithRepository {
           h.book != filter.book) {
         return false;
       }
+      if (filter.number != null &&
+          filter.number!.trim().isNotEmpty &&
+          h.hadithNumber != filter.number!.trim()) {
+        return false;
+      }
       if (q.isNotEmpty &&
           !normalizeArabic(h.matnAr).contains(normQ) &&
           !h.hadithNumber.contains(q)) {
@@ -307,23 +305,22 @@ class VerifiedAssetHadithRepository implements HadithRepository {
       return true;
     }
 
+    var matched = 0;
     for (final id in ids) {
-      for (final h in await allIn(id)) {
-        if (matches(h)) {
+      final index = await _loadIndex(id);
+      for (final section in index) {
+        final items = await _loadSection(id, section.section);
+        for (final h in items) {
+          if (!matches(h)) continue;
+          if (matched++ < offset) continue;
           out.add(h);
-          if (out.length >= offset + limit) {
-            break;
+          if (out.length >= limit) {
+            return out;
           }
         }
       }
-      if (out.length >= offset + limit) {
-        break;
-      }
     }
-    if (offset >= out.length) {
-      return [];
-    }
-    return out.sublist(offset);
+    return out;
   }
 
   @override

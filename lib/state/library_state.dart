@@ -1,13 +1,78 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../data/models/library.dart';
 
-/// In-memory library; swap with Drift box without changing UI.
-/// Notes are always rendered in a visually distinct container.
-class LibraryNotifier extends StateNotifier<List<Bookmark>> {
-  LibraryNotifier() : super(const []);
+const _bookmarksKey = 'library.bookmarks.v1';
+const _notesKey = 'library.notes.v1';
+const _collectionsKey = 'library.collections.v1';
+const _highlightsKey = 'library.highlights.v1';
+const _recentKey = 'library.recent.v1';
 
-  void toggleAyah(int surah, int ayah) {
+List<dynamic> _decodeList(String? raw) {
+  if (raw == null || raw.isEmpty) return const [];
+  try {
+    final value = jsonDecode(raw);
+    return value is List ? value : const [];
+  } catch (_) {
+    return const [];
+  }
+}
+
+class LibraryNotifier extends StateNotifier<List<Bookmark>> {
+  LibraryNotifier() : super(const []) {
+    final initial = state;
+    ready = _load(initial);
+  }
+
+  /// Completes when persisted bookmarks have been hydrated.
+  late final Future<void> ready;
+
+  Future<void> _load(List<Bookmark> initial) async {
+    final p = await SharedPreferences.getInstance();
+    if (!identical(state, initial)) return;
+    final out = <Bookmark>[];
+    for (final item in _decodeList(p.getString(_bookmarksKey))) {
+      if (item is! Map) continue;
+      final m = Map<String, dynamic>.from(item);
+      final kindIndex = m['kind'] as int? ?? -1;
+      if (kindIndex < 0 || kindIndex >= BookmarkKind.values.length) continue;
+      out.add(Bookmark(
+        id: m['id'] as String? ?? '',
+        kind: BookmarkKind.values[kindIndex],
+        refKey: m['refKey'] as String? ?? '',
+        title: m['title'] as String? ?? '',
+        subtitle: m['subtitle'] as String? ?? '',
+        collectionId: m['collectionId'] as String?,
+        createdAt: DateTime.tryParse(m['createdAt'] as String? ?? ''),
+      ));
+    }
+    state = out.where((b) => b.id.isNotEmpty && b.refKey.isNotEmpty).toList();
+  }
+
+  Future<void> _save() async {
+    final p = await SharedPreferences.getInstance();
+    await p.setString(
+      _bookmarksKey,
+      jsonEncode([
+        for (final b in state)
+          {
+            'id': b.id,
+            'kind': b.kind.index,
+            'refKey': b.refKey,
+            'title': b.title,
+            'subtitle': b.subtitle,
+            'collectionId': b.collectionId,
+            'createdAt': b.createdAt?.toIso8601String(),
+          },
+      ]),
+    );
+  }
+
+  Future<void> toggleAyah(int surah, int ayah) async {
     final key = '$surah:$ayah';
     if (state.any((b) => b.refKey == key)) {
       state = state.where((b) => b.refKey != key).toList();
@@ -24,14 +89,12 @@ class LibraryNotifier extends StateNotifier<List<Bookmark>> {
         ),
       ];
     }
+    await _save();
   }
 
-  /// Assign an ayah bookmark to a custom collection (creates it).
-  void setAyahCollection(
-      int surah, int ayah, String? collectionId) {
+  Future<void> setAyahCollection(int surah, int ayah, String? collectionId) async {
     final key = '$surah:$ayah';
-    final existing =
-        state.where((b) => b.refKey == key).firstOrNull;
+    final existing = state.where((b) => b.refKey == key).firstOrNull;
     if (existing == null) {
       state = [
         ...state,
@@ -60,9 +123,10 @@ class LibraryNotifier extends StateNotifier<List<Bookmark>> {
               : b)
           .toList();
     }
+    await _save();
   }
 
-  void toggleHadith(String id, String title) {
+  Future<void> toggleHadith(String id, String title) async {
     if (state.any((b) => b.refKey == id)) {
       state = state.where((b) => b.refKey != id).toList();
     } else {
@@ -78,12 +142,15 @@ class LibraryNotifier extends StateNotifier<List<Bookmark>> {
         ),
       ];
     }
+    await _save();
   }
 
   bool isBookmarked(String key) => state.any((b) => b.refKey == key);
 
-  void remove(String id) =>
-      state = state.where((b) => b.id != id).toList();
+  Future<void> remove(String id) async {
+    state = state.where((b) => b.id != id).toList();
+    await _save();
+  }
 }
 
 final libraryProvider =
@@ -91,7 +158,47 @@ final libraryProvider =
         (ref) => LibraryNotifier());
 
 class NotesNotifier extends StateNotifier<List<UserNote>> {
-  NotesNotifier() : super(const []);
+  NotesNotifier() : super(const []) {
+    final initial = state;
+    unawaited(_load(initial));
+  }
+
+  Future<void> _load(List<UserNote> initial) async {
+    final p = await SharedPreferences.getInstance();
+    if (!identical(state, initial)) return;
+    final out = <UserNote>[];
+    for (final item in _decodeList(p.getString(_notesKey))) {
+      if (item is! Map) continue;
+      final m = Map<String, dynamic>.from(item);
+      final id = m['id'] as String? ?? '';
+      final refKey = m['refKey'] as String? ?? '';
+      final text = m['text'] as String? ?? '';
+      if (id.isEmpty || refKey.isEmpty || text.isEmpty) continue;
+      out.add(UserNote(
+        id: id,
+        refKey: refKey,
+        text: text,
+        createdAt: DateTime.tryParse(m['createdAt'] as String? ?? ''),
+      ));
+    }
+    state = out;
+  }
+
+  Future<void> _save() async {
+    final p = await SharedPreferences.getInstance();
+    await p.setString(
+      _notesKey,
+      jsonEncode([
+        for (final n in state)
+          {
+            'id': n.id,
+            'refKey': n.refKey,
+            'text': n.text,
+            'createdAt': n.createdAt?.toIso8601String(),
+          },
+      ]),
+    );
+  }
 
   UserNote? forRef(String refKey) =>
       state.where((n) => n.refKey == refKey).firstOrNull;
@@ -100,6 +207,7 @@ class NotesNotifier extends StateNotifier<List<UserNote>> {
     final trimmed = text.trim();
     if (trimmed.isEmpty) {
       state = state.where((n) => n.refKey != refKey).toList();
+      unawaited(_save());
       return;
     }
     final existing = forRef(refKey);
@@ -120,65 +228,135 @@ class NotesNotifier extends StateNotifier<List<UserNote>> {
                   id: n.id,
                   refKey: n.refKey,
                   text: trimmed,
-                  createdAt: n.createdAt)
+                  createdAt: n.createdAt,
+                )
               : n)
           .toList();
     }
+    unawaited(_save());
   }
 
-  void remove(String id) =>
-      state = state.where((n) => n.id != id).toList();
+  void remove(String id) {
+    state = state.where((n) => n.id != id).toList();
+    unawaited(_save());
+  }
 }
 
 final notesProvider =
     StateNotifierProvider<NotesNotifier, List<UserNote>>(
         (ref) => NotesNotifier());
 
-class CollectionsNotifier
-    extends StateNotifier<List<CustomCollection>> {
-  CollectionsNotifier()
-      : super(const [
-          CustomCollection(id: 'fav-ayat', name: 'Favorite Ayat'),
-          CustomCollection(id: 'prayer', name: 'Prayer Hadith'),
-          CustomCollection(id: 'ramadan', name: 'Ramadan'),
-        ]);
+const _defaultCollections = [
+  CustomCollection(id: 'fav-ayat', name: 'Favorite Ayat'),
+  CustomCollection(id: 'prayer', name: 'Prayer Hadith'),
+  CustomCollection(id: 'ramadan', name: 'Ramadan'),
+];
+
+class CollectionsNotifier extends StateNotifier<List<CustomCollection>> {
+  CollectionsNotifier() : super(_defaultCollections) {
+    final initial = state;
+    unawaited(_load(initial));
+  }
+
+  Future<void> _load(List<CustomCollection> initial) async {
+    final p = await SharedPreferences.getInstance();
+    if (!identical(state, initial)) return;
+    final raw = p.getString(_collectionsKey);
+    if (raw == null) return;
+    final out = <CustomCollection>[];
+    for (final item in _decodeList(raw)) {
+      if (item is! Map) continue;
+      final m = Map<String, dynamic>.from(item);
+      final id = m['id'] as String? ?? '';
+      final name = m['name'] as String? ?? '';
+      if (id.isNotEmpty && name.isNotEmpty) {
+        out.add(CustomCollection(id: id, name: name));
+      }
+    }
+    state = out;
+  }
+
+  Future<void> _save() async {
+    final p = await SharedPreferences.getInstance();
+    await p.setString(
+      _collectionsKey,
+      jsonEncode([
+        for (final c in state) {'id': c.id, 'name': c.name},
+      ]),
+    );
+  }
 
   void add(String name) {
     final trimmed = name.trim();
-    if (trimmed.isEmpty) {
-      return;
-    }
+    if (trimmed.isEmpty) return;
     state = [
       ...state,
       CustomCollection(
-          id:
-              'c-${DateTime.now().microsecondsSinceEpoch}',
-          name: trimmed),
+        id: 'c-${DateTime.now().microsecondsSinceEpoch}',
+        name: trimmed,
+      ),
     ];
+    unawaited(_save());
   }
 
   void rename(String id, String name) {
     final trimmed = name.trim();
-    if (trimmed.isEmpty) {
-      return;
-    }
+    if (trimmed.isEmpty) return;
     state = state
         .map((c) => c.id == id
             ? CustomCollection(id: c.id, name: trimmed)
             : c)
         .toList();
+    unawaited(_save());
   }
 
-  void remove(String id) =>
-      state = state.where((c) => c.id != id).toList();
+  void remove(String id) {
+    state = state.where((c) => c.id != id).toList();
+    unawaited(_save());
+  }
 }
 
-final collectionsProvider = StateNotifierProvider<
-    CollectionsNotifier, List<CustomCollection>>(
-    (ref) => CollectionsNotifier());
+final collectionsProvider =
+    StateNotifierProvider<CollectionsNotifier, List<CustomCollection>>(
+        (ref) => CollectionsNotifier());
 
 class HighlightsNotifier extends StateNotifier<List<Highlight>> {
-  HighlightsNotifier() : super(const []);
+  HighlightsNotifier() : super(const []) {
+    final initial = state;
+    unawaited(_load(initial));
+  }
+
+  Future<void> _load(List<Highlight> initial) async {
+    final p = await SharedPreferences.getInstance();
+    if (!identical(state, initial)) return;
+    final out = <Highlight>[];
+    for (final item in _decodeList(p.getString(_highlightsKey))) {
+      if (item is! Map) continue;
+      final m = Map<String, dynamic>.from(item);
+      final id = m['id'] as String? ?? '';
+      final refKey = m['refKey'] as String? ?? '';
+      final color = m['colorValue'] as int?;
+      if (id.isNotEmpty && refKey.isNotEmpty && color != null) {
+        out.add(Highlight(id: id, refKey: refKey, colorValue: color));
+      }
+    }
+    state = out;
+  }
+
+  Future<void> _save() async {
+    final p = await SharedPreferences.getInstance();
+    await p.setString(
+      _highlightsKey,
+      jsonEncode([
+        for (final h in state)
+          {
+            'id': h.id,
+            'refKey': h.refKey,
+            'colorValue': h.colorValue,
+          },
+      ]),
+    );
+  }
 
   Highlight? forRef(String refKey) =>
       state.where((h) => h.refKey == refKey).firstOrNull;
@@ -190,41 +368,82 @@ class HighlightsNotifier extends StateNotifier<List<Highlight>> {
     } else {
       state = [
         ...state.where((h) => h.refKey != refKey),
-        Highlight(
-          id: 'hl-$refKey',
-          refKey: refKey,
-          colorValue: colorValue,
-        ),
+        Highlight(id: 'hl-$refKey', refKey: refKey, colorValue: colorValue),
       ];
     }
+    unawaited(_save());
   }
 
-  void remove(String id) =>
-      state = state.where((h) => h.id != id).toList();
+  void remove(String id) {
+    state = state.where((h) => h.id != id).toList();
+    unawaited(_save());
+  }
 }
 
 final highlightsProvider =
     StateNotifierProvider<HighlightsNotifier, List<Highlight>>(
         (ref) => HighlightsNotifier());
 
+class RecentNotifier extends StateNotifier<List<RecentItem>> {
+  RecentNotifier() : super(const []) {
+    final initial = state;
+    unawaited(_load(initial));
+  }
+
+  Future<void> _load(List<RecentItem> initial) async {
+    final p = await SharedPreferences.getInstance();
+    if (!identical(state, initial)) return;
+    final out = <RecentItem>[];
+    for (final item in _decodeList(p.getString(_recentKey))) {
+      if (item is! Map) continue;
+      final m = Map<String, dynamic>.from(item);
+      final kindIndex = m['kind'] as int? ?? -1;
+      if (kindIndex < 0 || kindIndex >= BookmarkKind.values.length) continue;
+      final refKey = m['refKey'] as String? ?? '';
+      if (refKey.isEmpty) continue;
+      out.add(RecentItem(
+        refKey: refKey,
+        title: m['title'] as String? ?? '',
+        subtitle: m['subtitle'] as String? ?? '',
+        kind: BookmarkKind.values[kindIndex],
+      ));
+    }
+    state = out;
+  }
+
+  Future<void> _save() async {
+    final p = await SharedPreferences.getInstance();
+    await p.setString(
+      _recentKey,
+      jsonEncode([
+        for (final r in state)
+          {
+            'refKey': r.refKey,
+            'title': r.title,
+            'subtitle': r.subtitle,
+            'kind': r.kind.index,
+          },
+      ]),
+    );
+  }
+
+  void touch(RecentItem item) {
+    state = [
+      item,
+      ...state.where((r) => r.refKey != item.refKey),
+    ].take(50).toList();
+    unawaited(_save());
+  }
+}
+
 final recentProvider =
-    StateProvider<List<RecentItem>>((ref) => const [
-          RecentItem(
-              refKey: '2:255',
-              title: 'Al-Baqarah · 255',
-              subtitle: 'Quran',
-              kind: BookmarkKind.ayah),
-          RecentItem(
-              refKey: 'bukhari:1',
-              title: 'Bukhari · Hadith 1',
-              subtitle: 'Sunnah',
-              kind: BookmarkKind.hadith),
-        ]);
+    StateNotifierProvider<RecentNotifier, List<RecentItem>>(
+        (ref) => RecentNotifier());
 
 /// Highlight palette (opaque dots, translucent wash on text).
 const List<Color> kHighlightColors = [
-  Color(0xFFFFD54F), // amber
-  Color(0xFFA5D6A7), // green
-  Color(0xFF90CAF9), // blue
-  Color(0xFFF48FB1), // pink
+  Color(0xFFFFD54F),
+  Color(0xFFA5D6A7),
+  Color(0xFF90CAF9),
+  Color(0xFFF48FB1),
 ];

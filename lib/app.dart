@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../core/l10n/app_strings.dart';
-import '../core/theme/app_theme.dart';
-import '../state/providers.dart';
+import 'core/l10n/app_strings.dart';
+import 'core/theme/app_theme.dart';
+import 'state/providers.dart';
 import 'core/navigation/adaptive_scaffold.dart';
 import 'features/splash/splash_screen.dart';
 import 'features/onboarding/onboarding_screen.dart';

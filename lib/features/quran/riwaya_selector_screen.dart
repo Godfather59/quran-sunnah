@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/quran.dart';
 import '../../data/seed/riwayat_catalog.dart';
+import '../../data/repositories/verified_asset_quran_repository.dart';
 import '../../state/download_state.dart';
 import '../../state/providers.dart';
 
@@ -28,9 +29,17 @@ class RiwayaSelectorScreen extends ConsumerWidget {
             ),
           ),
           ...kRiwayaCatalog.map((r) {
-            final editionId = '${r.id.storageKey}__${q.script.name}';
+            final preferredEdition =
+                '${r.id.storageKey}__${q.datasetScript.name}';
+            final fallbackEdition = '${r.id.storageKey}__uthmani';
+            final available = kVerifiedQuranAssets.containsKey(preferredEdition) ||
+                kVerifiedQuranAssets.containsKey(fallbackEdition);
+            final editionId = kVerifiedQuranAssets.containsKey(preferredEdition)
+                ? preferredEdition
+                : fallbackEdition;
             final selected = q.riwaya == r.id;
-            final installed = dl.installed.contains('quran:$editionId');
+            final installed =
+                available && dl.installed.contains('quran:$editionId');
             return Card(
               child: ListTile(
                 selected: selected,
@@ -42,15 +51,30 @@ class RiwayaSelectorScreen extends ConsumerWidget {
                 subtitle: Text(
                     '${r.riwayaEn}\nQirā’at ${r.qiraaEn} · v${r.datasetVersion} · ${installed ? 'Downloaded' : 'Not downloaded'}'),
                 isThreeLine: true,
-                trailing: installed
-                    ? const Icon(Icons.download_done)
-                    : const Icon(Icons.download),
-                onTap: () async {
-                  await ref
-                      .read(quranPrefsProvider.notifier)
-                      .update(q.copyWith(riwaya: r.id));
-                  if (context.mounted) Navigator.pop(context);
-                },
+                enabled: available,
+                trailing: available
+                    ? (installed
+                        ? const Icon(Icons.download_done)
+                        : const Icon(Icons.download))
+                    : const Icon(Icons.lock_outline),
+                onTap: !available
+                    ? null
+                    : () async {
+                        final nextScript =
+                            kVerifiedQuranAssets.containsKey(preferredEdition)
+                                ? q.datasetScript
+                                : QuranScript.uthmani;
+                        await ref
+                            .read(quranPrefsProvider.notifier)
+                            .update(q.copyWith(
+                              riwaya: r.id,
+                              script: nextScript,
+                              showTajweed: r.id == RiwayaId.hafsAsim &&
+                                  nextScript == QuranScript.uthmani &&
+                                  q.showTajweed,
+                            ));
+                        if (context.mounted) Navigator.pop(context);
+                      },
               ),
             );
           }),
@@ -73,9 +97,7 @@ class ScriptSelectorScreen extends ConsumerWidget {
       (QuranScript.imlai, 'Simple / Imla’i — إملائي',
           'Simplified modern reading & search-friendly.'),
       (QuranScript.indopak, 'IndoPak',
-          'Bundled for Hafs. Uses the Amiri Quran font (fetched once).'),
-      (QuranScript.tajweed, 'Tajweed (color-coded)',
-          'Hafs/Uthmani in Reading mode. Verified annotations.'),
+          'Bundled for Hafs with Extended Arabic marks.'),
     ];
     return Scaffold(
       appBar: AppBar(
@@ -88,22 +110,48 @@ class ScriptSelectorScreen extends ConsumerWidget {
             child: Text(
                 'Style changes presentation only — never the wording or meaning.'),
           ),
-          ...items.map((e) => Card(
-                child: RadioGroup<QuranScript>(
-                  groupValue: q.script,
-                  onChanged: (v) async {
-                    if (v == null) return;
-                    await ref
-                        .read(quranPrefsProvider.notifier)
-                        .update(q.copyWith(script: v));
-                  },
-                  child: RadioListTile<QuranScript>(
-                    value: e.$1,
-                    title: Text(e.$2),
-                    subtitle: Text(e.$3),
-                  ),
+          ...items.map((e) {
+            final editionId = '${q.riwaya.storageKey}__${e.$1.name}';
+            final available = kVerifiedQuranAssets.containsKey(editionId);
+            return Card(
+              child: RadioGroup<QuranScript>(
+                groupValue: q.datasetScript,
+                onChanged: (v) {
+                  if (!available || v == null) return;
+                  ref
+                      .read(quranPrefsProvider.notifier)
+                      .update(q.copyWith(
+                        script: v,
+                        showTajweed:
+                            v == QuranScript.uthmani && q.showTajweed,
+                      ));
+                },
+                child: RadioListTile<QuranScript>(
+                  value: e.$1,
+                  enabled: available,
+                  title: Text(e.$2),
+                  subtitle: Text(available
+                      ? e.$3
+                      : '${e.$3} · Dataset unavailable for this Riwaya'),
                 ),
-              )),
+              ),
+            );
+          }),
+          Card(
+            child: SwitchListTile(
+              secondary: const Icon(Icons.palette_outlined),
+              title: const Text('Tajweed colors · ألوان التجويد'),
+              subtitle: Text(q.tajweedAvailable
+                  ? 'Verified Hafs/Uthmani annotations; Quran text stays unchanged.'
+                  : 'Available only with Hafs + Uthmani.'),
+              value: q.showTajweed && q.tajweedAvailable,
+              onChanged: q.tajweedAvailable
+                  ? (v) => ref
+                      .read(quranPrefsProvider.notifier)
+                      .update(q.copyWith(showTajweed: v))
+                  : null,
+            ),
+          ),
         ],
       ),
     );
