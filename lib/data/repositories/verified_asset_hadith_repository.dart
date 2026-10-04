@@ -23,7 +23,7 @@ class _BundledCollection {
     required this.version,
     required this.totalHadith,
     required this.sizeMb,
-    this.capabilities = const HadithCapabilities(),
+    required this.capabilities,
   });
 
   final String id;
@@ -42,6 +42,7 @@ const _bundled = [
     version: 'hadith-api@1',
     totalHadith: 7589,
     sizeMb: 9.0,
+    capabilities: HadithCapabilities(),
   ),
   _BundledCollection(
     id: 'muslim',
@@ -50,6 +51,7 @@ const _bundled = [
     version: 'hadith-api@1',
     totalHadith: 7563,
     sizeMb: 8.0,
+    capabilities: HadithCapabilities(),
   ),
   _BundledCollection(
     id: 'abudawud',
@@ -58,6 +60,7 @@ const _bundled = [
     version: 'hadith-api@1',
     totalHadith: 5274,
     sizeMb: 6.5,
+    capabilities: HadithCapabilities(),
   ),
   _BundledCollection(
     id: 'tirmidhi',
@@ -66,6 +69,7 @@ const _bundled = [
     version: 'hadith-api@1',
     totalHadith: 3998,
     sizeMb: 5.0,
+    capabilities: HadithCapabilities(),
   ),
   _BundledCollection(
     id: 'nasai',
@@ -74,6 +78,7 @@ const _bundled = [
     version: 'hadith-api@1',
     totalHadith: 5765,
     sizeMb: 7.0,
+    capabilities: HadithCapabilities(),
   ),
   _BundledCollection(
     id: 'ibnmajah',
@@ -82,6 +87,7 @@ const _bundled = [
     version: 'hadith-api@1',
     totalHadith: 4343,
     sizeMb: 5.5,
+    capabilities: HadithCapabilities(),
   ),
   _BundledCollection(
     id: 'malik',
@@ -90,6 +96,7 @@ const _bundled = [
     version: 'hadith-api@1',
     totalHadith: 1858,
     sizeMb: 2.5,
+    capabilities: HadithCapabilities(),
   ),
   _BundledCollection(
     id: 'nawawi',
@@ -98,6 +105,7 @@ const _bundled = [
     version: 'hadith-api@1',
     totalHadith: 42,
     sizeMb: 0.3,
+    capabilities: HadithCapabilities(),
   ),
   _BundledCollection(
     id: 'qudsi',
@@ -106,6 +114,7 @@ const _bundled = [
     version: 'hadith-api@1',
     totalHadith: 40,
     sizeMb: 0.3,
+    capabilities: HadithCapabilities(),
   ),
   _BundledCollection(
     id: 'dehlawi',
@@ -114,6 +123,7 @@ const _bundled = [
     version: 'hadith-api@1',
     totalHadith: 40,
     sizeMb: 0.3,
+    capabilities: HadithCapabilities(),
   ),
 ];
 
