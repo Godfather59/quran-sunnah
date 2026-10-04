@@ -196,7 +196,9 @@ class Ayah {
   int get displayAyahNumber => displayAyah ?? ayah;
 
   String get canonicalVerseId =>
-      ' UI must show
+      '$canonicalSurahNumber:$canonicalAyahNumber';
+
+  /// True when no verified dataset row exists yet. UI must show
   /// "Content unavailable for this source." and never invent text.
   final bool isPlaceholder;
 
