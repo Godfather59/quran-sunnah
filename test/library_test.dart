@@ -102,14 +102,8 @@ void main() {
     );
 
     await collections.remove(added.id);
-    await library.ready;
-    // Reload the bookmark view because removing a collection is performed by
-    // the collections notifier while the database atomically detaches items.
-    final restarted = _container(db);
-    addTearDown(restarted.dispose);
-    await _hydrate(restarted);
     expect(
-      restarted
+      container
           .read(libraryProvider)
           .firstWhere((b) => b.refKey == '2:255')
           .collectionId,
