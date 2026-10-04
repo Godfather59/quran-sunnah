@@ -116,18 +116,16 @@ class ScriptSelectorScreen extends ConsumerWidget {
             return Card(
               child: RadioGroup<QuranScript>(
                 groupValue: q.datasetScript,
-                onChanged: !available
-                    ? null
-                    : (v) {
-                        if (v == null) return;
-                        ref
-                            .read(quranPrefsProvider.notifier)
-                            .update(q.copyWith(
-                              script: v,
-                              showTajweed:
-                                  v == QuranScript.uthmani && q.showTajweed,
-                            ));
-                      },
+                onChanged: (v) {
+                  if (!available || v == null) return;
+                  ref
+                      .read(quranPrefsProvider.notifier)
+                      .update(q.copyWith(
+                        script: v,
+                        showTajweed:
+                            v == QuranScript.uthmani && q.showTajweed,
+                      ));
+                },
                 child: RadioListTile<QuranScript>(
                   value: e.$1,
                   enabled: available,
