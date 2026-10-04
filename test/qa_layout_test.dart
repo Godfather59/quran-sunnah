@@ -68,7 +68,7 @@ void main() {
 
   testWidgets('large layout switches to navigation rail in LTR',
       (tester) async {
-    final db = await _pumpAdaptive(
+    await _pumpAdaptive(
       tester,
       size: const Size(1200, 900),
       locale: const Locale('en'),
