@@ -51,10 +51,40 @@ class _MushafReaderScreenState extends ConsumerState<MushafReaderScreen> {
     final q = ref.watch(quranPrefsProvider);
     final metaAsync = ref.watch(quranMetadataProvider);
     final hasVerifiedPageMap = q.editionId == 'hafs-an-asim__uthmani';
+    final headerAyahsAsync = hasVerifiedPageMap
+        ? ref.watch(_pageAyahsProvider((_page, q.editionId)))
+        : null;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${s.t('mushaf')} · ${s.t('page')} $_page'),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('${s.t('mushaf')} · ${s.t('page')} $_page'),
+            if (headerAyahsAsync != null)
+              headerAyahsAsync.when(
+                loading: () => const SizedBox.shrink(),
+                error: (_, __) => const SizedBox.shrink(),
+                data: (ayahs) {
+                  if (ayahs.isEmpty) return const SizedBox.shrink();
+                  final first = ayahs.first;
+                  final hasSajda = ayahs.any((a) => a.isSajda);
+                  final parts = [
+                    if (first.juz != null) '${s.t('juz')} ${first.juz}',
+                    if (first.hizb != null) '${s.t('hizb')} ${first.hizb}',
+                    if (hasSajda) '۩ ${s.t('sajda')}',
+                  ];
+                  if (parts.isEmpty) return const SizedBox.shrink();
+                  return Text(
+                    parts.join(' · '),
+                    style: Theme.of(context).textTheme.labelSmall,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  );
+                },
+              ),
+          ],
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.find_in_page_outlined),

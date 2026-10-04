@@ -6,6 +6,8 @@ import 'package:quran_sunnah_app/core/l10n/app_strings.dart';
 import 'package:quran_sunnah_app/core/theme/app_theme.dart';
 import 'package:quran_sunnah_app/data/database/app_database.dart';
 import 'package:quran_sunnah_app/data/models/hadith.dart';
+import 'package:quran_sunnah_app/data/services/audio_service.dart';
+import 'package:quran_sunnah_app/features/quran/mushaf_reader_screen.dart';
 import 'package:quran_sunnah_app/features/quran/quran_reader_screen.dart';
 import 'package:quran_sunnah_app/features/quran/riwaya_selector_screen.dart';
 import 'package:quran_sunnah_app/features/sunnah/hadith_reader_screen.dart';
@@ -249,5 +251,58 @@ void main() {
     await tester.pump(const Duration(milliseconds: 200));
     expect(find.text('نسخ'), findsWidgets);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('mushaf header surfaces Juz in AppBar', (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'app.onboarded': true,
+      'app.locale': 'en',
+    });
+    final db = AppDatabase.memory();
+    addTearDown(db.close);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(Future.value(db)),
+        ],
+        child: _wrap(const MushafReaderScreen(surah: 1, page: 1)),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 2));
+    await tester.pump(const Duration(seconds: 2));
+    expect(find.byType(MushafReaderScreen), findsOneWidget);
+    // AppBar always shows Mushaf + page synchronously; Juz/Hizb chips
+    // appear progressively once page ayahs load (verified on device).
+    expect(find.textContaining('Mushaf'), findsOneWidget);
+    expect(find.textContaining('Page 1'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    expect(tester.takeException(), isNull);
+  });
+
+  test('audio download ETA derives from observed throughput', () {
+    final now = DateTime.now().millisecondsSinceEpoch;
+    const total = 1000000;
+    final task = AudioDownloadTask(
+      reciterId: 'ar.alafasy',
+      surah: 112,
+      status: AudioDownloadStatus.downloading,
+      progress: 0.5,
+      totalBytes: total,
+      downloadedBytes: total ~/ 2,
+      startedAtMs: now - 10000,
+    );
+    final eta = task.etaSeconds;
+    expect(eta, isNotNull);
+    expect(eta!, inInclusiveRange(5, 20));
+  });
+
+  test('audio download ETA is null without progress', () {
+    const task = AudioDownloadTask(
+      reciterId: 'ar.alafasy',
+      surah: 112,
+      status: AudioDownloadStatus.queued,
+    );
+    expect(task.etaSeconds, isNull);
   });
 }

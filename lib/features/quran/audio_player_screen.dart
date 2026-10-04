@@ -410,6 +410,16 @@ class _OfflineRow extends StatelessWidget {
         case AudioDownloadStatus.measuring:
         case AudioDownloadStatus.downloading:
         case AudioDownloadStatus.paused:
+          final eta = current.etaSeconds;
+          final sizeLabel = current.totalBytes > 0
+              ? ' · ${_AudioPlayerScreenState._formatBytes(current.downloadedBytes)}'
+                  ' / ${_AudioPlayerScreenState._formatBytes(current.totalBytes)}'
+              : '';
+          final etaLabel = eta == null
+              ? ''
+              : eta < 60
+                  ? ' · ~${eta}s'
+                  : ' · ~${eta ~/ 60}m ${eta % 60}s';
           return ListTile(
             leading: SizedBox(
               width: 24,
@@ -424,7 +434,20 @@ class _OfflineRow extends StatelessWidget {
               '${s.t('surah')} $surah · '
               '${current.status == AudioDownloadStatus.paused ? s.t('pause') : s.t('downloading')}',
             ),
-            subtitle: LinearProgressIndicator(value: current.progress),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                LinearProgressIndicator(value: current.progress),
+                const SizedBox(height: 4),
+                Text(
+                  '${(current.progress * 100).toStringAsFixed(0)}%$sizeLabel$etaLabel'
+                  '${current.status == AudioDownloadStatus.paused ? ' · ${s.t('resume')}' : ''}',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+            isThreeLine: true,
             trailing: Wrap(
               spacing: 2,
               children: [
@@ -499,7 +522,19 @@ class _DownloadTaskTile extends ConsumerWidget {
       child: ListTile(
         title: Text('$name · ${s.t('surah')} ${task.surah}'),
         subtitle: Text(
-          '$status · ${(task.progress * 100).toStringAsFixed(0)}%',
+          () {
+            final eta = task.etaSeconds;
+            final size = task.totalBytes > 0
+                ? ' · ${_AudioPlayerScreenState._formatBytes(task.downloadedBytes)}'
+                    ' / ${_AudioPlayerScreenState._formatBytes(task.totalBytes)}'
+                : '';
+            final etaLabel = eta == null
+                ? ''
+                : eta < 60
+                    ? ' · ~${eta}s'
+                    : ' · ~${eta ~/ 60}m ${eta % 60}s';
+            return '$status · ${(task.progress * 100).toStringAsFixed(0)}%$size$etaLabel';
+          }(),
         ),
         trailing: switch (task.status) {
           AudioDownloadStatus.queued ||

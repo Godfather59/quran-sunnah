@@ -101,6 +101,8 @@ class AudioDownloadTask {
     required this.status,
     this.progress = 0,
     this.totalBytes = 0,
+    this.downloadedBytes = 0,
+    this.startedAtMs,
     this.error,
   });
 
@@ -109,14 +111,35 @@ class AudioDownloadTask {
   final AudioDownloadStatus status;
   final double progress;
   final int totalBytes;
+  final int downloadedBytes;
+  final int? startedAtMs;
   final String? error;
 
   String get key => '$reciterId:$surah';
+
+  /// Estimated remaining seconds from observed throughput, null if unknown.
+  int? get etaSeconds {
+    if (startedAtMs == null ||
+        downloadedBytes <= 0 ||
+        totalBytes <= 0) {
+      return null;
+    }
+    final elapsed =
+        (DateTime.now().millisecondsSinceEpoch - startedAtMs!) / 1000;
+    if (elapsed < 1) return null;
+    final speed = downloadedBytes / elapsed;
+    if (speed <= 0) return null;
+    final remaining = totalBytes - downloadedBytes;
+    if (remaining <= 0) return 0;
+    return remaining ~/ speed;
+  }
 
   AudioDownloadTask copyWith({
     AudioDownloadStatus? status,
     double? progress,
     int? totalBytes,
+    int? downloadedBytes,
+    int? startedAtMs,
     String? error,
   }) =>
       AudioDownloadTask(
@@ -125,6 +148,8 @@ class AudioDownloadTask {
         status: status ?? this.status,
         progress: progress ?? this.progress,
         totalBytes: totalBytes ?? this.totalBytes,
+        downloadedBytes: downloadedBytes ?? this.downloadedBytes,
+        startedAtMs: startedAtMs ?? this.startedAtMs,
         error: error,
       );
 }
@@ -485,6 +510,8 @@ class AudioService extends StateNotifier<AudioState> {
         surah: surah,
         status: AudioDownloadStatus.downloading,
         totalBytes: totalBytes,
+        downloadedBytes: 0,
+        startedAtMs: DateTime.now().millisecondsSinceEpoch,
       ));
       for (var ayah = 1; ayah <= meta.ayahCount; ayah++) {
         while (_pausedDownloads.contains(key) &&
@@ -500,7 +527,20 @@ class AudioService extends StateNotifier<AudioState> {
 
         final expected =
             await _cache.remoteSize(client, reciter, surah, ayah);
-        await _cache.fetch(client, reciter, surah, ayah);
+        // Flaky CDN: retry a few times before failing the whole surah.
+        Object? lastError;
+        for (var attempt = 0; attempt < 3; attempt++) {
+          try {
+            await _cache.fetch(client, reciter, surah, ayah);
+            lastError = null;
+            break;
+          } catch (e) {
+            lastError = e;
+            await Future<void>.delayed(
+                Duration(milliseconds: 400 * (attempt + 1)));
+          }
+        }
+        if (lastError != null) throw lastError;
         completedBytes += expected;
         final progress = totalBytes <= 0
             ? ayah / meta.ayahCount
@@ -510,6 +550,7 @@ class AudioService extends StateNotifier<AudioState> {
           _setDownloadTask(current.copyWith(
             status: AudioDownloadStatus.downloading,
             progress: progress,
+            downloadedBytes: completedBytes,
           ));
         }
       }
