@@ -150,11 +150,12 @@ class DownloadNotifier extends StateNotifier<DownloadState> {
 
   Future<void> cancel(String id) async {
     _downloader.cancel(id);
-    await _downloader.clearStaging(id);
     final p = {...state.progress}..remove(id);
-    final s = {...state.status}..remove(id);
+    final s = {...state.status, id: PackageTransferStatus.idle};
     final e = {...state.errors}..remove(id);
     state = state.copyWith(progress: p, status: s, errors: e);
+    // The active download loop observes the cancel flag, closes its stream,
+    // then clears staging in install()'s cancellation handler.
   }
 
   Future<void> remove(String id) async {
