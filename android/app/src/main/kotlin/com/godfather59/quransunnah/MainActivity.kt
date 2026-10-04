@@ -1,4 +1,4 @@
-package com.quran_sunnah.quran_sunnah_app
+package com.godfather59.quransunnah
 
 import io.flutter.embedding.android.FlutterActivity
 
