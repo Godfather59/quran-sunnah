@@ -69,6 +69,17 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
                           Theme.of(context).textTheme.labelSmall,
                     ),
                   ),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (_) =>
+                                const ScriptSelectorScreen())),
+                    child: Text(
+                      '${s.t('quranScript')} · ${_scriptLabel(s, q.datasetScript)} ▾',
+                      style:
+                          Theme.of(context).textTheme.labelSmall,
+                    ),
+                  ),
                 ],
               ),
               actions: [
@@ -318,3 +329,10 @@ class _AyahTranslations extends ConsumerWidget {
     );
   }
 }
+
+String _scriptLabel(AppStrings s, QuranScript script) => switch (script) {
+      QuranScript.uthmani => s.t('uthmani'),
+      QuranScript.imlai => s.t('imlai'),
+      QuranScript.indopak => s.t('indopak'),
+      QuranScript.tajweed => s.t('uthmani'),
+    };

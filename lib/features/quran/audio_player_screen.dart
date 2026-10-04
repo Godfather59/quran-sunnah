@@ -501,20 +501,62 @@ class _DownloadTaskTile extends ConsumerWidget {
         subtitle: Text(
           '$status · ${(task.progress * 100).toStringAsFixed(0)}%',
         ),
-        trailing: task.status == AudioDownloadStatus.failed
-            ? IconButton(
-                icon: const Icon(Icons.refresh),
-                tooltip: s.t('retry'),
-                onPressed: () => svc.retryDownload(task.key),
-              )
-            : task.status == AudioDownloadStatus.completed ||
-                    task.status == AudioDownloadStatus.canceled
-                ? IconButton(
-                    icon: const Icon(Icons.close),
-                    tooltip: s.t('remove'),
-                    onPressed: () => svc.dismissDownload(task.key),
-                  )
-                : null,
+        trailing: switch (task.status) {
+          AudioDownloadStatus.queued ||
+          AudioDownloadStatus.measuring ||
+          AudioDownloadStatus.downloading =>
+            Wrap(
+              spacing: 2,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.pause),
+                  tooltip: s.t('pause'),
+                  onPressed: () => svc.pauseDownload(task.key),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  tooltip: s.t('cancelDownload'),
+                  onPressed: () => svc.cancelDownload(task.key),
+                ),
+              ],
+            ),
+          AudioDownloadStatus.paused => Wrap(
+              spacing: 2,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.play_arrow),
+                  tooltip: s.t('resume'),
+                  onPressed: () => svc.resumeDownload(task.key),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  tooltip: s.t('cancelDownload'),
+                  onPressed: () => svc.cancelDownload(task.key),
+                ),
+              ],
+            ),
+          AudioDownloadStatus.failed => Wrap(
+              spacing: 2,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.refresh),
+                  tooltip: s.t('retry'),
+                  onPressed: () => svc.retryDownload(task.key),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  tooltip: s.t('remove'),
+                  onPressed: () => svc.dismissDownload(task.key),
+                ),
+              ],
+            ),
+          AudioDownloadStatus.completed || AudioDownloadStatus.canceled =>
+            IconButton(
+              icon: const Icon(Icons.close),
+              tooltip: s.t('remove'),
+              onPressed: () => svc.dismissDownload(task.key),
+            ),
+        },
       ),
     );
   }
