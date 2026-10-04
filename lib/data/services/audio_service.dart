@@ -209,12 +209,14 @@ class AudioService extends StateNotifier<AudioState> {
           speed: _ref.read(appPrefsProvider).playbackSpeed,
         )) {
     _player.playbackEventStream.listen((_) {
+      if (!mounted) return;
       final playing = _player.playing;
       if (playing != state.playing) {
         state = state.copyWith(playing: playing);
       }
     });
     _player.currentIndexStream.listen((i) {
+      if (!mounted) return;
       final seq = _player.sequence;
       if (i != null && seq != null && i < seq.length) {
         final tag = seq[i].tag;
@@ -268,8 +270,10 @@ class AudioService extends StateNotifier<AudioState> {
   }
 
   Future<void> refreshOffline() async {
-    final surahs = await _cache.downloadedSurahs(state.reciterId);
-    final perSurah = await _cache.surahStorageBytes(state.reciterId);
+    if (!mounted) return;
+    final reciterId = state.reciterId;
+    final surahs = await _cache.downloadedSurahs(reciterId);
+    final perSurah = await _cache.surahStorageBytes(reciterId);
     final reciterStorage =
         perSurah.values.fold<int>(0, (sum, bytes) => sum + bytes);
     final storage = await _cache.storageBytes();
