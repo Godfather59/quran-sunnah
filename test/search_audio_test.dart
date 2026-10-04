@@ -57,7 +57,7 @@ void main() {
 
   test('hadith search hits bundled collections', () async {
     final r = await search.search(
-      query: 'النية',
+      query: 'الأعمال',
       editionId: 'hafs-an-asim__uthmani',
       tafsirId: 'jalalayn',
       hadithFilter:
