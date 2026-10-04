@@ -1,19 +1,16 @@
-// Global search across bundled datasets (§21).
+// Global search across verified bundled datasets.
 //
-// Arabic matching is diacritic-insensitive via [normalizeArabic] —
-// applied to the IN-MEMORY comparison only; displayed text is always
-// the verbatim source string. Narrator/topic search honestly returns
-// empty: no structured biographical/topical dataset is bundled yet.
+// Search text is indexed in SQLite FTS5 using a normalized copy only.
+// Displayed Quran, Hadith and Tafsir strings always come from the exact
+// source text stored in the verified assets.
 
-import 'dart:convert';
-
-import 'package:flutter/services.dart';
 import '../../core/utils/text_utils.dart';
+import '../database/app_database.dart';
 import '../models/hadith.dart';
 import '../repositories/hadith_repository.dart';
 import '../repositories/quran_repository.dart';
-import '../repositories/tafsir_repository.dart';
 import '../seed/surah_metadata.dart';
+import 'search_index_service.dart';
 
 enum SearchKind { quran, hadith, tafsir, surah }
 
@@ -62,49 +59,21 @@ class SearchService {
   SearchService({
     required this.quran,
     required this.hadith,
-    AssetBundle? bundle,
-  }) : _bundle = bundle ?? rootBundle;
+    required this.database,
+  }) : _index = SearchIndexService(
+          database: database,
+          quran: quran,
+          hadith: hadith,
+        );
 
   final QuranRepository quran;
   final HadithRepository hadith;
-  final AssetBundle _bundle;
-  final Map<String, Map<int, String>> _tafsirCache = {};
-
-  Future<Map<int, String>> _tafsirSurah(
-      String tafsirId, int surah) async {
-    final key = '$tafsirId:$surah';
-    final hit = _tafsirCache[key];
-    if (hit != null) {
-      return hit;
-    }
-    final info =
-        kTafsirCatalog.where((t) => t.id == tafsirId).firstOrNull;
-    if (info == null || !info.bundled) {
-      return const {};
-    }
-    try {
-      final raw = await _bundle.loadString(
-          'assets/quran/tafsir/$tafsirId/$surah.json',
-          cache: false);
-      final json = jsonDecode(raw) as Map<String, dynamic>;
-      final out = <int, String>{};
-      for (final e in (json['entries'] as List)) {
-        final m = e as Map<String, dynamic>;
-        out[(m['ayah'] as num).toInt()] =
-            (m['text'] as String?) ?? '';
-      }
-      _tafsirCache[key] = out;
-      return out;
-    } catch (_) {
-      return const {};
-    }
-  }
+  final AppDatabase database;
+  final SearchIndexService _index;
 
   List<SearchHit> searchSurahs(String query) {
     final q = query.trim().toLowerCase();
-    if (q.isEmpty) {
-      return const [];
-    }
+    if (q.isEmpty) return const [];
     return kSurahMetadata
         .where((m) =>
             m.nameAr.contains(query.trim()) ||
@@ -132,124 +101,135 @@ class SearchService {
     int limitPerCategory = 50,
   }) async {
     final raw = query.trim();
-    if (raw.isEmpty) {
-      return const SearchResults();
-    }
-    final normQ = normalizeArabic(raw);
+    if (raw.isEmpty) return const SearchResults();
+
+    await _index.ensureIndexed(
+      editionId: editionId,
+      tafsirId: tafsirId,
+    );
+
+    final fts = SearchIndexService.ftsQuery(raw);
     var truncated = false;
 
-    // Verse-reference shortcut: "2:255".
-    SearchHit? refHit;
-    final refMatch = RegExp(r'^(\d{1,3})\s*:\s*(\d{1,3})$').firstMatch(raw);
+    SearchHit? directVerse;
+    final refMatch =
+        RegExp(r'^(\d{1,3})\s*:\s*(\d{1,3})$').firstMatch(raw);
     if (refMatch != null) {
-      final s = int.parse(refMatch.group(1)!);
-      final a = int.parse(refMatch.group(2)!);
-      final ayahs = await quran.ayahsOfSurah(s, editionId);
-      final match = ayahs
-          .where((x) => x.ayah == a && !x.isPlaceholder)
-          .firstOrNull;
-      if (match != null) {
-        refHit = SearchHit(
-          kind: SearchKind.quran,
-          title: 'Surah $s · Ayah $a',
-          subtitle: 'Direct verse reference',
-          snippet: match.text,
-          refKey: match.key,
-          surah: s,
-          ayah: a,
-        );
+      final surah = int.parse(refMatch.group(1)!);
+      final displayAyah = int.parse(refMatch.group(2)!);
+      if (surah >= 1 && surah <= 114) {
+        final ayahs = await quran.ayahsOfSurah(surah, editionId);
+        final match = ayahs
+            .where((a) =>
+                a.displayAyahNumber == displayAyah && !a.isPlaceholder)
+            .firstOrNull;
+        if (match != null) {
+          directVerse = SearchHit(
+            kind: SearchKind.quran,
+            title:
+                'Surah $surah · Ayah ${match.displayAyahNumber}',
+            subtitle: 'Direct verse reference',
+            snippet: match.text,
+            refKey: match.canonicalVerseId,
+            surah: match.surah,
+            ayah: match.displayAyahNumber,
+          );
+        }
       }
     }
 
-    // Quran full-text.
     final quranHits = <SearchHit>[];
-    if (refHit != null) {
-      quranHits.add(refHit);
-    }
-    final all = await quran.allAyahs(editionId);
-    for (final a in all) {
-      if (a.isPlaceholder) {
-        continue;
-      }
-      if (surahScope != null && a.surah != surahScope) {
-        continue;
-      }
-      if (!normalizeArabic(a.text).contains(normQ)) {
-        continue;
-      }
-      if (refHit != null && a.key == refHit.refKey) {
-        continue;
-      }
-      quranHits.add(SearchHit(
-        kind: SearchKind.quran,
-        title: 'Surah ${a.surah} · Ayah ${a.ayah}',
-        subtitle: 'Quran · $editionId',
-        snippet: a.text,
-        refKey: a.key,
-        surah: a.surah,
-        ayah: a.ayah,
-      ));
-      if (quranHits.length >= limitPerCategory) {
-        truncated = true;
-        break;
-      }
-    }
+    if (directVerse != null) quranHits.add(directVerse);
 
-    // Hadith (bundled collections, diacritic-insensitive + number).
-    final hadithHits = <SearchHit>[];
-    final hadiths = await hadith.query(
-        hadithFilter.copyWith(query: raw),
-        limit: limitPerCategory);
-    for (final h in hadiths) {
-      hadithHits.add(SearchHit(
-        kind: SearchKind.hadith,
-        title:
-            '${_collectionShort(h.collectionId)} · Hadith ${h.hadithNumber}',
-        subtitle: h.book,
-        snippet: h.matnAr.length > 220
-            ? '${h.matnAr.substring(0, 220)}…'
-            : h.matnAr,
-        refKey: h.id,
-        hadith: h,
-      ));
-    }
-
-    // Tafsir (preferred tafsir only).
-    final tafsirHits = <SearchHit>[];
-    final tafsirInfo =
-        kTafsirCatalog.where((t) => t.id == tafsirId).firstOrNull;
-    if (tafsirInfo != null && tafsirInfo.bundled) {
-      outer:
-      for (var s = 1; s <= 114; s++) {
-        if (surahScope != null && s != surahScope) {
+    if (fts.isNotEmpty) {
+      final rows = await database.searchIndex(
+        query: fts,
+        kind: 'quran',
+        editionId: editionId,
+        surah: surahScope,
+        limit: limitPerCategory + 1,
+      );
+      if (rows.length > limitPerCategory) truncated = true;
+      for (final row in rows.take(limitPerCategory)) {
+        if (directVerse != null && row.refKey == directVerse.refKey) {
           continue;
         }
-        final map = await _tafsirSurah(tafsirId, s);
-        for (final e in map.entries) {
-          if (!normalizeArabic(e.value).contains(normQ)) {
-            continue;
-          }
-          tafsirHits.add(SearchHit(
-            kind: SearchKind.tafsir,
-            title: '${tafsirInfo.titleEn} · $s:${e.key}',
-            subtitle: tafsirInfo.source,
-            snippet: e.value.length > 220
-                ? '${e.value.substring(0, 220)}…'
-                : e.value,
-            refKey: '$tafsirId:$s:${e.key}',
-            surah: s,
-            ayah: e.key,
-          ));
-          if (tafsirHits.length >= limitPerCategory) {
-            truncated = true;
-            break outer;
-          }
-        }
+        quranHits.add(SearchHit(
+          kind: SearchKind.quran,
+          title: row.title,
+          subtitle: row.subtitle,
+          snippet: row.body,
+          refKey: row.refKey,
+          surah: row.surah,
+          ayah: row.ayah,
+        ));
+      }
+    }
+
+    final hadithHits = <SearchHit>[];
+    if (fts.isNotEmpty) {
+      final rows = await database.searchIndex(
+        query: fts,
+        kind: 'hadith',
+        collectionIds: hadithFilter.collectionIds,
+        book: hadithFilter.book,
+        hadithNumber: hadithFilter.number,
+        limit: limitPerCategory + 1,
+      );
+      if (rows.length > limitPerCategory) truncated = true;
+      for (final row in rows.take(limitPerCategory)) {
+        final collection = row.collectionId ?? '';
+        final number = row.hadithNumber ?? '';
+        final h = Hadith(
+          id: row.refKey,
+          collectionId: collection,
+          book: row.book ?? row.subtitle,
+          bookAr: '',
+          chapter: row.book ?? row.subtitle,
+          chapterAr: '',
+          hadithNumber: number,
+          matnAr: row.body,
+          narrator: null,
+          sanadAr: null,
+          grade: null,
+          gradingAuthority: null,
+        );
+        hadithHits.add(SearchHit(
+          kind: SearchKind.hadith,
+          title: row.title,
+          subtitle: row.subtitle,
+          snippet: _snippet(row.body),
+          refKey: row.refKey,
+          hadith: h,
+        ));
+      }
+    }
+
+    final tafsirHits = <SearchHit>[];
+    if (fts.isNotEmpty) {
+      final rows = await database.searchIndex(
+        query: fts,
+        kind: 'tafsir',
+        tafsirId: tafsirId,
+        surah: surahScope,
+        limit: limitPerCategory + 1,
+      );
+      if (rows.length > limitPerCategory) truncated = true;
+      for (final row in rows.take(limitPerCategory)) {
+        tafsirHits.add(SearchHit(
+          kind: SearchKind.tafsir,
+          title: row.title,
+          subtitle: row.subtitle,
+          snippet: _snippet(row.body),
+          refKey: row.refKey,
+          surah: row.surah,
+          ayah: row.ayah,
+        ));
       }
     }
 
     return SearchResults(
-      quran: quranHits,
+      quran: quranHits.take(limitPerCategory).toList(growable: false),
       hadith: hadithHits,
       tafsir: tafsirHits,
       surahs: searchSurahs(raw),
@@ -257,14 +237,6 @@ class SearchService {
     );
   }
 
-  String _collectionShort(String id) => switch (id) {
-        'bukhari' => 'Bukhari',
-        'muslim' => 'Muslim',
-        'abudawud' => 'Abu Dawud',
-        'tirmidhi' => 'Tirmidhi',
-        'nasai' => 'Nasa’i',
-        'ibnmajah' => 'Ibn Majah',
-        'malik' => 'Malik',
-        _ => id,
-      };
+  static String _snippet(String value) =>
+      value.length > 220 ? '${value.substring(0, 220)}…' : value;
 }
