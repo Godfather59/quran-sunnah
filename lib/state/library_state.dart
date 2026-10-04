@@ -89,7 +89,7 @@ class LibraryNotifier extends StateNotifier<List<Bookmark>> {
     await _save();
   }
 
-  Future<void> setAyahCollection(int surah, int ayah, String? collectionId) {
+  Future<void> setAyahCollection(int surah, int ayah, String? collectionId) async {
     final key = '$surah:$ayah';
     final existing = state.where((b) => b.refKey == key).firstOrNull;
     if (existing == null) {
@@ -123,7 +123,7 @@ class LibraryNotifier extends StateNotifier<List<Bookmark>> {
     await _save();
   }
 
-  Future<void> toggleHadith(String id, String title) {
+  Future<void> toggleHadith(String id, String title) async {
     if (state.any((b) => b.refKey == id)) {
       state = state.where((b) => b.refKey != id).toList();
     } else {
