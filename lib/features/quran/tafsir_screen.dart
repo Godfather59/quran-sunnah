@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../data/repositories/tafsir_repository.dart';
+import '../../data/content/content_packages.dart';
+import '../../state/download_state.dart';
 import '../../state/providers.dart';
 
 /// Tafsir per ayah (§14). Source always shown; bundled works offline,
@@ -33,6 +35,9 @@ class _TafsirScreenState extends ConsumerState<TafsirScreen> {
     final s = AppStrings.of(context);
     final info =
         kTafsirCatalog.firstWhere((t) => t.id == _tafsir);
+    final downloads = ref.watch(downloadProvider);
+    final packageId = 'quran:tafsir-$_tafsir';
+    final installed = downloads.installed.contains(packageId);
     final entriesAsync = ref
         .watch(tafsirSurahProvider((_tafsir, widget.surah)));
 
@@ -51,6 +56,23 @@ class _TafsirScreenState extends ConsumerState<TafsirScreen> {
                       onSelected: !t.bundled
                           ? null
                           : (_) async {
+                              final id = 'quran:tafsir-${t.id}';
+                              if (!ref
+                                  .read(downloadProvider)
+                                  .installed
+                                  .contains(id)) {
+                                try {
+                                  await ref
+                                      .read(downloadProvider.notifier)
+                                      .install(id);
+                                  ref
+                                      .read(contentRevisionProvider.notifier)
+                                      .state++;
+                                } catch (_) {
+                                  return;
+                                }
+                              }
+                              if (!mounted) return;
                               setState(() => _tafsir = t.id);
                               final q = ref.read(quranPrefsProvider);
                               await ref
@@ -77,6 +99,23 @@ class _TafsirScreenState extends ConsumerState<TafsirScreen> {
                     Text(s.t('contentUnavailable')),
                     const SizedBox(height: 8),
                     Text(s.t('tafsirDatasetRequired')),
+                  ] else if (!installed) ...[
+                    Text(s.t('downloadBeforeUse')),
+                    const SizedBox(height: 8),
+                    FilledButton.icon(
+                      onPressed: () async {
+                        try {
+                          await ref
+                              .read(downloadProvider.notifier)
+                              .install(packageId);
+                          ref
+                              .read(contentRevisionProvider.notifier)
+                              .state++;
+                        } catch (_) {}
+                      },
+                      icon: const Icon(Icons.download),
+                      label: Text(s.t('download')),
+                    ),
                   ] else
                     entriesAsync.when(
                       loading: () => const Center(
