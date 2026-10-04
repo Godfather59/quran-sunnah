@@ -6,6 +6,7 @@ import '../../data/repositories/hadith_repository.dart';
 import 'collection_selector_screen.dart';
 import 'hadith_filter_screen.dart';
 import 'hadith_reader_screen.dart';
+import 'topic_collections_screen.dart';
 
 /// Sunnah home (§15–16): collection selector + paginated hadith feed.
 class SunnahHomeScreen extends ConsumerStatefulWidget {
@@ -82,6 +83,14 @@ class _SunnahHomeScreenState
                     builder: (_) =>
                         const BookChapterBrowserScreen(
                             collectionId: 'bukhari'))),
+          ),
+          IconButton(
+            icon: const Icon(Icons.topic_outlined),
+            tooltip: s.t('tabTopic'),
+            onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (_) =>
+                        const TopicCollectionsScreen())),
           ),
         ],
       ),

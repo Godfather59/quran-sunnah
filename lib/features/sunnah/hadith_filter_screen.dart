@@ -67,11 +67,11 @@ class _HadithFilterScreenState extends ConsumerState<HadithFilterScreen> {
               const SizedBox(height: 12),
               TextField(
                 controller: _narrator,
-                enabled: caps.narrator,
                 decoration: InputDecoration(
                   labelText: s.t('tabNarrator'),
-                  suffixIcon:
-                      caps.narrator ? null : const Icon(Icons.lock_outline),
+                  helperText: s.isArabic
+                      ? 'بحث نصي في متن الحديث (لا توجد بيانات رواة منظمة بعد).'
+                      : 'Text search inside hadith matn (no structured narrator dataset yet).',
                 ),
               ),
               TextField(
@@ -113,7 +113,7 @@ class _HadithFilterScreenState extends ConsumerState<HadithFilterScreen> {
                     collectionIds: filter.collectionIds,
                     book: value(_book, true),
                     number: value(_number, true),
-                    narrator: value(_narrator, caps.narrator),
+                    narrator: value(_narrator, true),
                     grade: value(_grade, caps.grade),
                     topic: value(_topic, caps.topics),
                     query: filter.query,

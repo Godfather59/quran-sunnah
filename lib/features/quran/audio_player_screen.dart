@@ -77,6 +77,27 @@ class _AudioPlayerScreenState extends ConsumerState<AudioPlayerScreen> {
                         if (value != null) svc.selectReciter(value);
                       },
                     ),
+                  ] else ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      s.isArabic
+                          ? 'التسجيلات الموثقة متوفرة لحفص عن عاصم فقط.'
+                          : 'Verified recordings exist only for Hafs. Switch Riwaya to play.',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    const SizedBox(height: 8),
+                    FilledButton.tonal(
+                      onPressed: () => ref
+                          .read(quranPrefsProvider.notifier)
+                          .update(q.copyWith(
+                            riwaya: RiwayaId.hafsAsim,
+                            script: QuranScript.uthmani,
+                          )),
+                      child: Text(s.isArabic
+                          ? 'حفص عن عاصم'
+                          : 'Hafs'),
+                    ),
                   ],
                   if (audio.refKey != null)
                     Text(

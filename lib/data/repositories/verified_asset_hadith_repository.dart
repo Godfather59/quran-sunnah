@@ -378,11 +378,17 @@ class VerifiedAssetHadithRepository implements HadithRepository {
         return false;
       }
       if (filter.narrator != null &&
-          filter.narrator!.trim().isNotEmpty &&
-          !(h.narrator ?? '')
-              .toLowerCase()
-              .contains(filter.narrator!.trim().toLowerCase())) {
-        return false;
+          filter.narrator!.trim().isNotEmpty) {
+        // No verified structured narrator dataset ships yet: match the
+        // query as honest matn text search (normalized, diacritic-
+        // insensitive) instead of an authority-backed narrator field.
+        final normNarrator = normalizeArabic(filter.narrator!.trim());
+        final structured = (h.narrator ?? '').toLowerCase();
+        if (!normalizeArabic(h.matnAr).contains(normNarrator) &&
+            !structured
+                .contains(filter.narrator!.trim().toLowerCase())) {
+          return false;
+        }
       }
       if (filter.grade != null &&
           filter.grade!.trim().isNotEmpty &&
