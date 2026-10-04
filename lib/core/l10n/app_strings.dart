@@ -200,6 +200,21 @@ class AppStrings {
       'en': 'Not downloaded',
       'fr': 'Non téléchargé',
     },
+    'download': {'ar': 'تنزيل', 'en': 'Download', 'fr': 'Télécharger'},
+    'resume': {'ar': 'متابعة', 'en': 'Resume', 'fr': 'Reprendre'},
+    'cancelDownload': {'ar': 'إلغاء التنزيل', 'en': 'Cancel download', 'fr': 'Annuler le téléchargement'},
+    'coreContent': {'ar': 'المحتوى الأساسي', 'en': 'Core content', 'fr': 'Contenu principal'},
+    'optionalContent': {'ar': 'محتوى اختياري', 'en': 'Optional content', 'fr': 'Contenu facultatif'},
+    'selectedDownloadSize': {'ar': 'حجم التنزيل المحدد', 'en': 'Selected download size', 'fr': 'Taille sélectionnée'},
+    'downloadBeforeUse': {'ar': 'يلزم تنزيل هذه الحزمة قبل استخدامها.', 'en': 'Download this package before using it.', 'fr': 'Téléchargez ce paquet avant de l’utiliser.'},
+    'packageSource': {'ar': 'المصدر', 'en': 'Source', 'fr': 'Source'},
+    'licenseStatus': {'ar': 'حالة الترخيص', 'en': 'License status', 'fr': 'Statut de licence'},
+    'downloadingContent': {'ar': 'جارٍ تنزيل المحتوى المحدد…', 'en': 'Downloading selected content…', 'fr': 'Téléchargement du contenu sélectionné…'},
+    'downloadFailed': {'ar': 'فشل تنزيل المحتوى. تحقق من الاتصال وحاول مجددًا.', 'en': 'Content download failed. Check your connection and try again.', 'fr': 'Échec du téléchargement. Vérifiez la connexion et réessayez.'},
+    'wordMorphology': {'ar': 'تحليل الكلمات', 'en': 'Word morphology', 'fr': 'Morphologie des mots'},
+    'wordMorphologyHint': {'ar': 'بيانات الكلمات والجذور والصيغ من المصدر الموثق.', 'en': 'Word, root and morphology data from the verified source.', 'fr': 'Mots, racines et morphologie depuis la source vérifiée.'},
+    'includeTafsir': {'ar': 'تنزيل التفسير المحدد', 'en': 'Download selected Tafsir', 'fr': 'Télécharger le tafsir sélectionné'},
+    'packageCount': {'ar': 'حزمة', 'en': 'packages', 'fr': 'paquets'},
     // ── Settings groups ──
     'quranGroup': {'ar': 'القرآن', 'en': 'Quran', 'fr': 'Coran'},
     'sunnahGroup': {'ar': 'السنة', 'en': 'Sunnah', 'fr': 'Sunna'},
@@ -539,11 +554,11 @@ class AppStrings {
     },
     'obDownloadsHint': {
       'ar':
-          'الترجمات والتفاسير التالية مضمنة أصلًا وتعمل دون اتصال. اختر ما تريد تفعيله افتراضيًا.',
+          'اختر المحتوى الإضافي الذي تريد تنزيله الآن. بعد التنزيل يعمل دون اتصال ويمكن حذفه أو إعادة تنزيله لاحقًا.',
       'en':
-          'The translations and Tafsir below are already bundled and work offline. Choose what you want enabled by default.',
+          'Choose additional content to download now. Once installed it works offline and can be removed or downloaded again later.',
       'fr':
-          'Les traductions et tafsirs ci-dessous sont déjà inclus et fonctionnent hors ligne. Choisissez ceux à activer par défaut.',
+          'Choisissez le contenu supplémentaire à télécharger maintenant. Une fois installé, il fonctionne hors ligne et peut être supprimé ou retéléchargé plus tard.',
     },
     'obNext': {'ar': 'التالي', 'en': 'Next', 'fr': 'Suivant'},
     'obDone': {'ar': 'ابدأ', 'en': 'Start', 'fr': 'Commencer'},
