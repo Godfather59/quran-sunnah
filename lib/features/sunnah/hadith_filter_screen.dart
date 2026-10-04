@@ -18,6 +18,13 @@ class _HadithFilterScreenState
   final _number = TextEditingController();
 
   @override
+  void dispose() {
+    _book.dispose();
+    _number.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final filter = ref.watch(hadithFilterProvider);
     return Scaffold(
@@ -48,12 +55,12 @@ class _HadithFilterScreenState
           const SizedBox(height: 20),
           FilledButton(
             onPressed: () {
-              ref.read(hadithFilterProvider.notifier).state =
-                  filter.copyWith(
-                book:
-                    _book.text.isEmpty ? null : _book.text,
+              ref.read(hadithFilterProvider.notifier).state = HadithFilter(
+                collectionIds: filter.collectionIds,
+                book: _book.text.trim().isEmpty ? null : _book.text.trim(),
                 number:
-                    _number.text.isEmpty ? null : _number.text,
+                    _number.text.trim().isEmpty ? null : _number.text.trim(),
+                query: filter.query,
               );
               Navigator.pop(context);
             },
