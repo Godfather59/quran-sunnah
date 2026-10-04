@@ -30,7 +30,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Set<String> _collections = {'bukhari', 'muslim'};
   Set<String> _translations = {};
   String _tafsirId = 'jalalayn';
-  bool _includeTafsir = true;
+  bool _includeTafsir = false;
   bool _showTajweed = false;
   bool _downloadWords = false;
   bool _finishing = false;
@@ -127,11 +127,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   void _setLocale(String locale) {
     setState(() {
       _locale = locale;
-      _translations = switch (locale) {
-        'en' => {'en-sahih'},
-        'fr' => {'fr-hamidullah'},
-        _ => <String>{},
-      };
+      // Optional packages are never forced by language. A clean install
+      // can always finish setup fully offline with the core datasets.
+      _translations = <String>{};
     });
   }
 
