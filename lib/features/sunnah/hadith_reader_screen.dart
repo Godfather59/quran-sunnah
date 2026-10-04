@@ -19,7 +19,7 @@ class HadithCardRef extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) =>
-      Text('Hadith $id');
+      Text('${AppStrings.of(context).t('hadith')} $id');
 }
 
 class HadithPlaceholderCard extends StatelessWidget {
@@ -77,8 +77,10 @@ class HadithCard extends ConsumerWidget {
                       ? null
                       : () => ref
                           .read(libraryProvider.notifier)
-                          .toggleHadith(h.id,
-                              'Hadith ${h.hadithNumber}'),
+                          .toggleHadith(
+                            h.id,
+                            '${s.t('hadith')} ${h.hadithNumber}',
+                          ),
                 ),
               ],
             ),
@@ -88,44 +90,52 @@ class HadithCard extends ConsumerWidget {
                     textDirection: TextDirection.rtl,
                     style:
                         Theme.of(context).textTheme.bodySmall),
-              Text(h.book,
-                  style:
-                      Theme.of(context).textTheme.bodySmall),
+              if (!s.isArabic || h.bookAr.isEmpty)
+                Text(
+                  h.book,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
               if (h.chapterAr.isNotEmpty &&
                   h.chapterAr != h.chapter)
                 Text(h.chapterAr,
                     textDirection: TextDirection.rtl,
                     style:
                         Theme.of(context).textTheme.bodySmall),
-              if (h.chapter.isNotEmpty &&
+              if ((!s.isArabic || h.chapterAr.isEmpty) &&
+                  h.chapter.isNotEmpty &&
                   h.chapter != h.book)
-                Text(h.chapter,
-                    style:
-                        Theme.of(context).textTheme.bodySmall),
+                Text(
+                  h.chapter,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
             ] else ...[
-              Text('Book of Revelation · كتاب بدء الوحي',
-                  style:
-                      Theme.of(context).textTheme.bodySmall),
+              Text(
+                s.isArabic
+                    ? 'كتاب بدء الوحي'
+                    : 'Book of Revelation · كتاب بدء الوحي',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
             ],
             const Divider(height: 24),
             if (h == null || h.isPlaceholder) ...[
               Text(s.t('contentUnavailable')),
               const SizedBox(height: 8),
-              const Text(
-                'Arabic matn, sanad, narrator, grade + authority, translation and parallel narrations render here from verified collection datasets.',
-                style: TextStyle(height: 1.6),
+              Text(
+                s.t('arabicMatnPlaceholderHint'),
+                style: const TextStyle(height: 1.6),
               ),
               const SizedBox(height: 12),
               Wrap(
                 spacing: 8,
                 children: [
                   OutlinedButton(
-                      onPressed: () {},
-                      child: const Text('Chain of Narration')),
+                    onPressed: () {},
+                    child: Text(s.t('chainOfNarration')),
+                  ),
                   OutlinedButton(
-                      onPressed: () {},
-                      child:
-                          const Text('Related Narrations')),
+                    onPressed: () {},
+                    child: Text(s.t('relatedNarrations')),
+                  ),
                 ],
               ),
             ] else ...[
@@ -152,7 +162,9 @@ class HadithCard extends ConsumerWidget {
                               NarratorViewScreen(
                                   name: h.narrator!))),
                   child: Text(
-                      'Narrator: ${h.narrator} → profile'),
+                    '${s.t('narratorLabel')}: ${h.narrator} → '
+                    '${s.t('profileLabel')}',
+                  ),
                 ),
             ],
           ],
@@ -184,6 +196,7 @@ class _GradeRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = AppStrings.of(context);
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -194,8 +207,8 @@ class _GradeRow extends StatelessWidget {
       ),
       child: Text(
         hadith.grade == null
-            ? 'Grade: unavailable for this source (not provided upstream — never assumed).'
-            : 'Grade: ${hadith.grade}'
+            ? s.t('gradeUnavailable')
+            : '${s.t('gradeLabel')}: ${hadith.grade}'
                 '${hadith.gradingAuthority != null ? ' (${hadith.gradingAuthority})' : ''}',
         style: Theme.of(context).textTheme.bodySmall,
       ),
@@ -233,7 +246,9 @@ class _BookChapterBrowserScreenState
         repo is VerifiedAssetHadithRepository ? repo : null;
 
     return Scaffold(
-      appBar: AppBar(title: Text('Books · $_collectionId')),
+      appBar: AppBar(
+        title: Text('${s.t('booksChapters')} · ${_collectionLabel(s, _collectionId)}'),
+      ),
       body: verified == null
           ? Center(child: Text(s.t('contentUnavailable')))
           : Column(
@@ -247,8 +262,9 @@ class _BookChapterBrowserScreenState
                         for (final c in kBundledHadithCollections
                             .where((c) => c.isDownloaded))
                           ButtonSegment(
-                              value: c.id,
-                              label: Text(c.nameEn)),
+                            value: c.id,
+                            label: Text(s.isArabic ? c.nameAr : c.nameEn),
+                          ),
                       ],
                       selected: {_collectionId},
                       onSelectionChanged: (v) => setState(
@@ -275,9 +291,14 @@ class _BookChapterBrowserScreenState
                           return Card(
                             child: ExpansionTile(
                               title: Text(
-                                  '${sec.section}. ${sec.title}'),
+                                s.isArabic
+                                    ? '${s.t('book')} ${sec.section}'
+                                    : '${sec.section}. ${sec.title}',
+                              ),
                               subtitle: Text(
-                                  '${sec.count} hadith · nos. ${sec.first}–${sec.last}'),
+                                '${sec.count} ${s.t('hadithCountUnit')} · '
+                                '${s.t('numbersLabel')} ${sec.first}–${sec.last}',
+                              ),
                               children: [
                                 _SectionHadiths(
                                     repo: verified,
@@ -295,6 +316,12 @@ class _BookChapterBrowserScreenState
               ],
             ),
     );
+  }
+
+  String _collectionLabel(AppStrings s, String id) {
+    final info = kBundledHadithCollections.where((c) => c.id == id).firstOrNull;
+    if (info == null) return id;
+    return s.isArabic ? info.nameAr : info.nameEn;
   }
 }
 
