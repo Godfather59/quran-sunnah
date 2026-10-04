@@ -185,9 +185,11 @@ class _CollectionTopicsState extends State<_CollectionTopics> {
               Card(
                 child: ListTile(
                   leading: const Icon(Icons.topic_outlined),
-                  title: Text(sec.title.isEmpty
-                      ? '${s.t('book')} ${sec.section}'
-                      : sec.title),
+                  title: Text(s.isArabic
+                      ? 'الباب ${sec.section}: ${sec.title.isEmpty ? '' : sec.title}'
+                      : (sec.title.isEmpty
+                          ? '${s.t('book')} ${sec.section}'
+                          : sec.title)),
                   subtitle: Text(
                     '${sec.count} ${s.t('hadithCountUnit')} · '
                     '${s.t('numbersLabel')} ${sec.first}–${sec.last}',
@@ -198,9 +200,11 @@ class _CollectionTopicsState extends State<_CollectionTopics> {
                       builder: (_) => _TopicHadithsScreen(
                         collectionId: c.id,
                         section: sec.section,
-                        title: sec.title.isEmpty
-                            ? '${s.t('book')} ${sec.section}'
-                            : sec.title,
+                        title: s.isArabic
+                            ? 'الباب ${sec.section}: ${sec.title}'
+                            : (sec.title.isEmpty
+                                ? '${s.t('book')} ${sec.section}'
+                                : sec.title),
                       ),
                     ),
                   ),

@@ -33,12 +33,43 @@ class HadithPlaceholderCard extends StatelessWidget {
   }
 }
 
+/// Splits matn into chain / quoted utterance / tail using the source's
+/// own quotation marks. Purely presentational: text is never altered,
+/// and texts without balanced quotes render uniformly.
+class QuotedMatn {
+  const QuotedMatn(this.before, this.quote, this.after);
+
+  final String before;
+  final String? quote;
+  final String? after;
+}
+
+QuotedMatn splitQuotedMatn(String text) {
+  final first = text.indexOf('"');
+  final last = text.lastIndexOf('"');
+  if (first < 0 || last <= first) {
+    return QuotedMatn(text, null, null);
+  }
+  return QuotedMatn(
+    text.substring(0, first),
+    text.substring(first, last + 1),
+    text.substring(last + 1),
+  );
+}
+
 class HadithCard extends ConsumerWidget {
   const HadithCard(
-      {super.key, required this.hadith, required this.missingMessage});
+      {super.key,
+      required this.hadith,
+      required this.missingMessage,
+      this.highlight});
 
   final Hadith? hadith;
   final String? missingMessage;
+
+  /// Raw query to spotlight inside the matn (exact substring only —
+  /// never normalized, so indices always match the displayed text).
+  final String? highlight;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -153,10 +184,7 @@ class HadithCard extends ConsumerWidget {
                 Text(h.sanadAr!,
                     textDirection: TextDirection.rtl),
               const SizedBox(height: 8),
-              Text(h.matnAr,
-                  textDirection: TextDirection.rtl,
-                  style: const TextStyle(
-                      fontSize: 20, height: 2.0)),
+              _MatnText(matnAr: h.matnAr, highlight: highlight),
               const SizedBox(height: 8),
               // Meaning / translation: verified source only, never invented.
               if (h.matnTranslation != null &&
@@ -238,8 +266,77 @@ class HadithCard extends ConsumerWidget {
   }
 }
 
-class _GradeRow extends StatelessWidget {
-  const _GradeRow({required this.hadith});
+class _MatnText extends StatelessWidget {
+  const _MatnText({required this.matnAr, this.highlight});
+
+  final String matnAr;
+  final String? highlight;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    // Chain ('عن…') in muted tone, the quoted utterance prominent.
+    final chainStyle = TextStyle(
+      fontSize: 17,
+      height: 1.9,
+      color: scheme.onSurfaceVariant,
+    );
+    final quoteStyle = TextStyle(
+      fontSize: 20,
+      height: 2.0,
+      color: scheme.onSurface,
+      fontWeight: FontWeight.w600,
+    );
+    final matchStyle = TextStyle(
+      backgroundColor: scheme.primaryContainer,
+      color: scheme.onPrimaryContainer,
+    );
+    final parts = splitQuotedMatn(matnAr);
+    List<TextSpan> spans(String part, TextStyle base) {
+      final q = highlight?.trim() ?? '';
+      if (q.isEmpty || !part.contains(q)) {
+        return [TextSpan(text: part, style: base)];
+      }
+      final out = <TextSpan>[];
+      var start = 0;
+      while (true) {
+        final i = part.indexOf(q, start);
+        if (i < 0) {
+          out.add(TextSpan(
+              text: part.substring(start), style: base));
+          break;
+        }
+        if (i > start) {
+          out.add(TextSpan(
+              text: part.substring(start, i), style: base));
+        }
+        out.add(TextSpan(text: q, style: matchStyle));
+        start = i + q.length;
+      }
+      return out;
+    }
+
+    final children = <TextSpan>[];
+    if (parts.quote == null) {
+      children.addAll(spans(parts.before, quoteStyle));
+    } else {
+      if (parts.before.isNotEmpty) {
+        children.addAll(spans(parts.before, chainStyle));
+      }
+      children.addAll(spans(parts.quote!, quoteStyle));
+      if (parts.after != null && parts.after!.isNotEmpty) {
+        children.addAll(spans(parts.after!, chainStyle));
+      }
+    }
+    return RichText(
+      textDirection: TextDirection.rtl,
+      textAlign: TextAlign.right,
+      text: TextSpan(children: children),
+    );
+  }
+}
+
+class _GradeRow extends StatelessWidget {  const _GradeRow({required this.hadith});
 
   final Hadith hadith;
 

@@ -124,7 +124,9 @@ class _SunnahHomeScreenState
                             bottom: 8),
                         child: HadithCard(
                             hadith: h,
-                            missingMessage: null),
+                            missingMessage: null,
+                            highlight: filter.query ??
+                                filter.narrator),
                       );
                     },
                   ),
@@ -149,11 +151,65 @@ class _SourceBar extends ConsumerWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              filter.collectionIds.isEmpty
-                  ? s.t('sourcesNone')
-                  : '${filter.collectionIds.length} ${s.t('sourcesSelected')}',
-              style: Theme.of(context).textTheme.bodySmall,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  filter.collectionIds.isEmpty
+                      ? s.t('sourcesNone')
+                      : '${filter.collectionIds.length} ${s.t('sourcesSelected')}',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                if ((filter.narrator ?? '').isNotEmpty ||
+                    (filter.query ?? '').isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Wrap(
+                      spacing: 6,
+                      children: [
+                        if ((filter.narrator ?? '').isNotEmpty)
+                          Chip(
+                            label: Text(
+                              '${s.t('tabNarrator')}: ${filter.narrator}',
+                              textDirection: TextDirection.rtl,
+                            ),
+                            visualDensity:
+                                VisualDensity.compact,
+                            onDeleted: () => ref
+                                .read(hadithFilterProvider.notifier)
+                                .state = HadithFilter(
+                              collectionIds:
+                                  filter.collectionIds,
+                              book: filter.book,
+                              number: filter.number,
+                              grade: filter.grade,
+                              topic: filter.topic,
+                              query: filter.query,
+                            ),
+                          ),
+                        if ((filter.query ?? '').isNotEmpty)
+                          Chip(
+                            label: Text(
+                              '${s.t('search')}: ${filter.query}',
+                            ),
+                            visualDensity:
+                                VisualDensity.compact,
+                            onDeleted: () => ref
+                                .read(hadithFilterProvider.notifier)
+                                .state = HadithFilter(
+                              collectionIds:
+                                  filter.collectionIds,
+                              book: filter.book,
+                              number: filter.number,
+                              narrator: filter.narrator,
+                              grade: filter.grade,
+                              topic: filter.topic,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+              ],
             ),
           ),
           FilledButton.tonal(

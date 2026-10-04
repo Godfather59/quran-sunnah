@@ -4,8 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quran_sunnah_app/core/l10n/app_strings.dart';
 import 'package:quran_sunnah_app/data/content/content_packages.dart';
+import 'package:quran_sunnah_app/data/models/hadith.dart';
 import 'package:quran_sunnah_app/data/repositories/hadith_repository.dart';
 import 'package:quran_sunnah_app/data/repositories/verified_asset_hadith_repository.dart';
+import 'package:quran_sunnah_app/features/sunnah/hadith_reader_screen.dart';
 import 'package:quran_sunnah_app/features/sunnah/hadith_filter_screen.dart';
 import 'package:quran_sunnah_app/features/sunnah/topic_collections_screen.dart';
 import 'dart:io';
@@ -65,6 +67,61 @@ void main() {
       secs.fold<int>(0, (sum, s) => sum + s.count),
       7589,
     );
+  });
+
+  test('splitQuotedMatn isolates the quoted utterance', () {
+    const text = 'حَدَّثَنَا فُلَانٌ قَالَ : " إِنَّمَا الْأَعْمَالُ " تم.';
+    final parts = splitQuotedMatn(text);
+    expect(parts.quote, '" إِنَّمَا الْأَعْمَالُ "');
+    expect(parts.before.endsWith(':'), isFalse);
+    expect(parts.before.contains('حَدَّثَنَا'), isTrue);
+    expect(parts.after, ' تم.');
+  });
+
+  test('splitQuotedMatn leaves unquoted matn untouched', () {
+    const text = 'متن بلا علامات اقتباس';
+    final parts = splitQuotedMatn(text);
+    expect(parts.quote, isNull);
+    expect(parts.before, text);
+  });
+
+  testWidgets('hadith matn highlights the active query', (tester) async {
+    const hadith = Hadith(
+      id: 'bukhari:1',
+      collectionId: 'bukhari',
+      book: 'Book',
+      bookAr: '',
+      chapter: 'Book',
+      chapterAr: '',
+      hadithNumber: '1',
+      matnAr: 'حَدَّثَنَا فُلَانٌ قَالَ : " إِنَّمَا الْأَعْمَالُ "',
+    );
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          home: Scaffold(
+            body: HadithCard(
+              hadith: hadith,
+              missingMessage: null,
+              highlight: 'الْأَعْمَالُ',
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    final candidates = tester
+        .widgetList<RichText>(find.byType(RichText))
+        .map((w) => w.text as TextSpan)
+        .where((s) => s.toPlainText().contains('حَدَّثَنَا'))
+        .toList();
+    expect(candidates, hasLength(1));
+    final span = candidates.single;
+    expect(span.toPlainText().contains('الْأَعْمَالُ'), isTrue);
+    // Chain, quote and highlight produce several styled spans.
+    expect(span.children!.length, greaterThan(2));
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('topics screen lists verified book collections',

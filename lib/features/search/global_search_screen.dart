@@ -276,7 +276,10 @@ class _GlobalSearchScreenState
                 padding: const EdgeInsets.all(12),
                 child: HadithCard(
                     hadith: h.hadith,
-                    missingMessage: null),
+                    missingMessage: null,
+                    highlight: _ctrl.text.trim().isEmpty
+                        ? null
+                        : _ctrl.text.trim()),
               ),
             ),
           ),
