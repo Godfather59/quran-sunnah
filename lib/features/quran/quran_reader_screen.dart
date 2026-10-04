@@ -196,7 +196,7 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
                       : const EdgeInsets.all(8),
                   child: InkWell(
                   key: _keys.putIfAbsent(
-                      a.displayAyahNumber, () => GlobalKey()),
+                      a.canonicalAyahNumber, () => GlobalKey()),
                   borderRadius: BorderRadius.circular(12),
                   onTap: () =>
                       showAyahActionSheet(context, a),
