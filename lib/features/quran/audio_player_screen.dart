@@ -238,6 +238,7 @@ class _AudioPlayerScreenState extends ConsumerState<AudioPlayerScreen> {
                     surah: _surah,
                     offline: offline,
                     task: task,
+                    localBytes: audio.surahStorageBytes[_surah] ?? 0,
                     onDownload: canStream
                         ? () => _confirmAndQueue(context, reciter, _surah)
                         : null,
@@ -277,6 +278,9 @@ class _AudioPlayerScreenState extends ConsumerState<AudioPlayerScreen> {
                   ListTile(
                     leading: const Icon(Icons.storage_outlined),
                     title: Text(s.t('storageUsed')),
+                    subtitle: Text(
+                      '${s.t('reciterStorage')}: ${_formatBytes(audio.reciterStorageBytes)}',
+                    ),
                     trailing: Text(_formatBytes(audio.storageBytes)),
                   ),
                 ],
@@ -362,6 +366,7 @@ class _OfflineRow extends StatelessWidget {
     required this.surah,
     required this.offline,
     required this.task,
+    required this.localBytes,
     required this.onDownload,
     required this.onDelete,
     required this.onPause,
@@ -373,6 +378,7 @@ class _OfflineRow extends StatelessWidget {
   final int surah;
   final bool offline;
   final AudioDownloadTask? task;
+  final int localBytes;
   final VoidCallback? onDownload;
   final VoidCallback onDelete;
   final VoidCallback? onPause;
@@ -389,6 +395,7 @@ class _OfflineRow extends StatelessWidget {
       return ListTile(
         leading: const Icon(Icons.offline_pin_outlined),
         title: Text('${s.t('surah')} $surah · ${s.t('downloaded')}'),
+        subtitle: Text('${s.t('surahStorage')}: ${_AudioPlayerScreenState._formatBytes(localBytes)}'),
         trailing: IconButton(
           tooltip: s.t('remove'),
           icon: const Icon(Icons.delete_outline),
