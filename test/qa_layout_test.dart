@@ -51,7 +51,7 @@ void main() {
 
   testWidgets('phone layout is RTL and dark in Arabic without overflow',
       (tester) async {
-    final db = await _pumpAdaptive(
+    await _pumpAdaptive(
       tester,
       size: const Size(360, 640),
       locale: const Locale('ar'),
