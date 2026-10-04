@@ -48,6 +48,7 @@ const List<QuranTranslation> kTranslationCatalog = [
 final translationTextsProvider =
     FutureProvider.family<Map<String, String>, String>(
         (ref, id) async {
+  ref.watch(contentRevisionProvider);
   final path = kTranslationAssets[id];
   if (path == null) {
     return const {};
