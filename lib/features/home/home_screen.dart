@@ -128,15 +128,20 @@ class _ContinueReadingHero extends ConsumerWidget {
                   Icon(Icons.menu_book,
                       color: scheme.onPrimaryContainer),
                   const SizedBox(width: 8),
-                  Text(s.t('continueReading'),
+                  Expanded(
+                    child: Text(
+                      s.t('continueReading'),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       style: Theme.of(context)
                           .textTheme
                           .titleMedium
                           ?.copyWith(
-                              color:
-                                  scheme.onPrimaryContainer,
-                              fontWeight: FontWeight.w700)),
-                  const Spacer(),
+                              color: scheme.onPrimaryContainer,
+                              fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
                   const Icon(Icons.arrow_forward),
                 ],
               ),
@@ -467,31 +472,49 @@ class _LibraryStats extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeader(title: s.t('atAGlance')),
-        Row(
-          children: stats
-              .map((e) => Expanded(
-                      child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 16),
-                      child: Column(
-                        children: [
-                          Icon(e.$1),
-                          const SizedBox(height: 4),
-                          Text(e.$2,
+        if (MediaQuery.textScalerOf(context).scale(1) >= 1.5)
+          ...stats.map(
+            (e) => Card(
+              child: ListTile(
+                leading: Icon(e.$1),
+                title: Text(e.$3),
+                trailing: Text(
+                  e.$2,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
+            ),
+          )
+        else
+          Row(
+            children: stats
+                .map((e) => Expanded(
+                        child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Column(
+                          children: [
+                            Icon(e.$1),
+                            const SizedBox(height: 4),
+                            Text(e.$2,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge),
+                            Text(
+                              e.$3,
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                               style: Theme.of(context)
                                   .textTheme
-                                  .titleLarge),
-                          Text(e.$3,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall),
-                        ],
+                                  .labelSmall,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  )))
-              .toList(),
-        ),
+                    )))
+                .toList(),
+          ),
       ],
     );
   }
