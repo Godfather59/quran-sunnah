@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../data/models/hadith.dart';
 import '../../data/repositories/hadith_repository.dart';
@@ -129,11 +131,19 @@ class HadithCard extends ConsumerWidget {
                 spacing: 8,
                 children: [
                   OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (_) => NarratorViewScreen(
+                                name: (h?.narrator?.isNotEmpty == true)
+                                    ? h!.narrator!
+                                    : s.t('narratorLabel')))),
                     child: Text(s.t('chainOfNarration')),
                   ),
                   OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () => ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(
+                            content:
+                                Text(s.t('relatedNarrationsHint')))),
                     child: Text(s.t('relatedNarrations')),
                   ),
                 ],
@@ -147,10 +157,48 @@ class HadithCard extends ConsumerWidget {
                   textDirection: TextDirection.rtl,
                   style: const TextStyle(
                       fontSize: 20, height: 2.0)),
-              if (h.matnTranslation != null) ...[
-                const SizedBox(height: 8),
+              const SizedBox(height: 8),
+              // Meaning / translation: verified source only, never invented.
+              if (h.matnTranslation != null &&
+                  h.matnTranslation!.trim().isNotEmpty) ...[
+                Text(
+                  '[${s.t('translationLabel')}]',
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
+                const SizedBox(height: 4),
                 Text(h.matnTranslation!),
+              ] else ...[
+                Text(
+                  '${s.t('translation')} · ${s.t('contentUnavailable')}',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
               ],
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  OutlinedButton.icon(
+                    icon: const Icon(Icons.copy, size: 18),
+                    label: Text(s.t('copy')),
+                    onPressed: () {
+                      Clipboard.setData(ClipboardData(text: h.matnAr));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(s.t('copy'))));
+                    },
+                  ),
+                  OutlinedButton.icon(
+                    icon: const Icon(Icons.share, size: 18),
+                    label: Text(s.t('share')),
+                    onPressed: () => SharePlus.instance.share(
+                      ShareParams(
+                        text:
+                            '${_collectionName(h.collectionId)} · ${s.t('hadith')} ${h.hadithNumber}\n${h.matnAr}',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 12),
               if (app.displayGrade) _GradeRow(hadith: h),
               if (h.narrator != null &&
