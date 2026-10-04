@@ -68,7 +68,11 @@ void main() {
 
   testWidgets('hadith card exposes copy, share and meaning', (tester) async {
     await _pumpHadith(tester, hadith: _hadith);
-    expect(find.textContaining('إِنَّمَا'), findsOneWidget);
+    final matn = tester
+        .widgetList<RichText>(find.byType(RichText))
+        .map((w) => (w.text as TextSpan).toPlainText())
+        .join(' ');
+    expect(matn.contains('إِنَّمَا'), isTrue);
     // Copy + share actions exist and are enabled.
     expect(find.text('Copy'), findsOneWidget);
     expect(find.text('Share'), findsOneWidget);
