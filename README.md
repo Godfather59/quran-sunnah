@@ -18,7 +18,7 @@ lib/
   data/models (QuranEdition/Ayah, HadithCollection/Hadith, library)
   data/seed (114 surah metadata, 14-riwaya catalog, 11 collections — metadata only)
   data/repositories (Quran/Hadith interfaces + stubs — swap in verified loaders)
-  data/services (add Drift/SQLite + just_audio wiring here)
+  data/services (verified asset loaders, bounded search, just_audio)
   state (Riverpod: QuranPrefs, AppPrefs, library, downloads)
   features/ splash, onboarding(5 pages), home, quran (surah list, reader,
      mushaf, riwaya selector, script selector, font sheet, ayah sheet,
@@ -28,14 +28,14 @@ lib/
 
 ## Key architecture decisions
 
-- **Riwaya ≠ script ≠ font** — three independent settings (`QuranPrefs`).
-  `editionId = "<riwaya-storageKey>__<script>"`, each backed by its own file.
+- **Riwaya ≠ script ≠ font ≠ Tajweed**. A Quran edition is backed by an
+  explicit verified Riwaya + script asset. Tajweed is an optional annotation
+  overlay only for Hafs/Uthmani; it never creates or alters Quran wording.
 - **Adding a Riwaya** = append to `kRiwayaCatalog` + ship its verified file.
   No UI change needed.
 - **Search** normalizes Arabic (tashkeel/tatweel/alef) for the index only
   (`normalizeArabic`); display text is never mutated.
-- **Audio** Qaris are bound to the Riwaya they actually recite
-  (`kQariCatalog`); never mislabel a Hafs recording as Warsh/Qalun.
+- **Audio** reciters are bound to the Riwaya they actually recite (`kReciters`); never mislabel a Hafs recording as Warsh/Qalun.
 - **Notes** render in `UserNoteCard`, visually distinct from sacred text.
 - **Translations** use a muted latin-first style, never Quran-styled.
 
@@ -96,7 +96,7 @@ flutter run -d "iPad"          # rail layout ≥840dp
 flutter test
 ```
 
-Requires Flutter 3.22+. iOS: Xcode 15+, `pod install` under `ios/`.
+Requires Flutter 3.44+. iOS: Xcode 15+, `pod install` under `ios/`.
 Android: AGP 8+, dynamic color via `dynamic_color`.
 
 ## Screens covered (§32)
@@ -112,5 +112,15 @@ view · Global search · Library (bookmarks/notes/collections/recent/downloads)
 ## Accessibility & performance
 
 - Dynamic text, screen-reader labels, ≥48dp targets, RTL-first layout.
-- Paginated queries, indexed local DB (FTS5 recommended), no full-DB-in-RAM.
+- Hadith queries stream bundled sections and stop at the requested page; a future SQLite/FTS5 index remains the recommended next step for very large future corpora.
 - 60/120Hz scrolling: reader uses `ListView.separated`, no heavy shadows.
+
+
+## Release safety
+
+- Android release builds are never signed with the debug key. Put your private
+  upload-keystore settings in `android/key.properties` (ignored by Git).
+- The current Android application id is `com.godfather59.quransunnah`.
+- Do not publish a dataset until its provenance and redistribution terms have
+  been checked. Upstream API repositories may be permissively licensed while
+  individual source editions/translations can have separate terms.
