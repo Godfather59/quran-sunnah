@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/repositories/hadith_repository.dart';
 
-/// Hadith filters (§17): collection/book/chapter/narrator/topic/
-/// number/grade + grading authority. Disputed grades shown as-is.
+/// Filters backed by fields actually present in the bundled datasets.
+/// Unsupported narrator/grade filters are explained rather than faked.
 class HadithFilterScreen extends ConsumerStatefulWidget {
   const HadithFilterScreen({super.key});
 
@@ -15,9 +15,7 @@ class HadithFilterScreen extends ConsumerStatefulWidget {
 class _HadithFilterScreenState
     extends ConsumerState<HadithFilterScreen> {
   final _book = TextEditingController();
-  final _narrator = TextEditingController();
   final _number = TextEditingController();
-  String? _grade;
 
   @override
   Widget build(BuildContext context) {
@@ -32,27 +30,20 @@ class _HadithFilterScreenState
               decoration:
                   const InputDecoration(labelText: 'Book')),
           TextField(
-              controller: _narrator,
-              decoration: const InputDecoration(
-                  labelText: 'Narrator / Companion')),
-          TextField(
               controller: _number,
               decoration: const InputDecoration(
                   labelText: 'Hadith number')),
           const SizedBox(height: 12),
-          DropdownButtonFormField<String>(
-            initialValue: _grade,
-            hint: const Text('Grade (Sahih / Hasan / Da’if…)'),
-            items: const ['Sahih', 'Hasan', 'Da’if', 'Mawdu‘']
-                .map((g) =>
-                    DropdownMenuItem(value: g, child: Text(g)))
-                .toList(),
-            onChanged: (v) => setState(() => _grade = v),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Grade is always shown with its scholar/source. Disputed grading is never presented as consensus.',
-            style: TextStyle(fontSize: 12),
+          const Card(
+            child: ListTile(
+              leading: Icon(Icons.info_outline),
+              title: Text('Narrator and grading filters are unavailable'),
+              subtitle: Text(
+                'The bundled Arabic editions do not provide structured '
+                'narrator or grading fields. These filters stay disabled '
+                'until a verified structured source is added.',
+              ),
+            ),
           ),
           const SizedBox(height: 20),
           FilledButton(
@@ -61,10 +52,8 @@ class _HadithFilterScreenState
                   filter.copyWith(
                 book:
                     _book.text.isEmpty ? null : _book.text,
-                narrator: _narrator.text.isEmpty
-                    ? null
-                    : _narrator.text,
-                grade: _grade,
+                number:
+                    _number.text.isEmpty ? null : _number.text,
               );
               Navigator.pop(context);
             },
