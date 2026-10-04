@@ -153,8 +153,7 @@ class SettingsScreen extends ConsumerWidget {
                 secondary:
                     const Icon(Icons.color_lens_outlined),
                 title: Text(s.t('dynamicColor')),
-                subtitle:
-                    const Text('Android · optional'),
+                subtitle: Text(s.t('dynamicColorHint')),
                 value: app.useDynamicColor,
                 onChanged: (v) => ref
                     .read(appPrefsProvider.notifier)
@@ -219,8 +218,8 @@ class SettingsScreen extends ConsumerWidget {
               ),
               _Nav(
                 icon: Icons.source_outlined,
-                title: 'Data sources & licenses',
-                subtitle: 'Provenance, attribution & unresolved terms',
+                title: s.t('dataSourcesLicenses'),
+                subtitle: s.t('contentProvenance'),
                 onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (_) =>
