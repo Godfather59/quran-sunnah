@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:quran_sunnah_app/app.dart';
+import 'package:quran_sunnah_app/core/navigation/adaptive_scaffold.dart';
 import 'package:quran_sunnah_app/data/database/app_database.dart';
 import 'package:quran_sunnah_app/data/repositories/verified_asset_hadith_repository.dart';
 import 'package:quran_sunnah_app/data/repositories/verified_asset_quran_repository.dart';
@@ -35,8 +36,8 @@ void main() {
     await tester.pump(const Duration(seconds: 2));
     startup.stop();
 
-    expect(find.byType(MaterialApp), findsOneWidget);
-    final context = tester.element(find.byType(MaterialApp));
+    expect(find.byType(AdaptiveScaffold), findsOneWidget);
+    final context = tester.element(find.byType(AdaptiveScaffold));
     expect(Directionality.of(context), TextDirection.rtl);
 
     final quran = VerifiedAssetQuranRepository();
