@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../data/models/quran.dart';
 import '../data/repositories/quran_metadata.dart';
+import '../data/repositories/verified_asset_quran_repository.dart';
 
 /// Verified structural metadata (Juz/Hizb/Page). Hafs/Medina mapping.
 final quranMetadataProvider = FutureProvider<QuranMetadata>(
@@ -25,6 +26,7 @@ class QuranPrefs {
     this.lastSurah = 2,
     this.lastAyah = 255,
     this.showTranslation = true,
+    this.showTajweed = false,
   });
 
   final RiwayaId riwaya;
@@ -41,8 +43,14 @@ class QuranPrefs {
   final int lastSurah;
   final int lastAyah;
   final bool showTranslation;
+  final bool showTajweed;
 
-  String get editionId => '${riwaya.storageKey}__${script.name}';
+  QuranScript get datasetScript => script.datasetScript;
+  String get editionId => '${riwaya.storageKey}__${datasetScript.name}';
+
+  bool get tajweedAvailable =>
+      riwaya == RiwayaId.hafsAsim &&
+      datasetScript == QuranScript.uthmani;
 
   QuranPrefs copyWith({
     RiwayaId? riwaya,
@@ -59,6 +67,7 @@ class QuranPrefs {
     int? lastSurah,
     int? lastAyah,
     bool? showTranslation,
+    bool? showTajweed,
   }) =>
       QuranPrefs(
         riwaya: riwaya ?? this.riwaya,
@@ -75,6 +84,7 @@ class QuranPrefs {
         lastSurah: lastSurah ?? this.lastSurah,
         lastAyah: lastAyah ?? this.lastAyah,
         showTranslation: showTranslation ?? this.showTranslation,
+        showTajweed: showTajweed ?? this.showTajweed,
       );
 }
 
@@ -85,27 +95,88 @@ class QuranPrefsNotifier extends StateNotifier<QuranPrefs> {
 
   Future<void> _load() async {
     final p = await SharedPreferences.getInstance();
-    state = state.copyWith(
-      riwaya: RiwayaId.values[p.getInt('q.riwaya') ?? 0],
-      script: QuranScript.values[p.getInt('q.script') ?? 0],
-      readingMode: ReadingMode.values[p.getInt('q.mode') ?? 0],
+    final riwayaIndex = p.getInt('q.riwaya') ?? 0;
+    final scriptIndex = p.getInt('q.script') ?? 0;
+    final modeIndex = p.getInt('q.mode') ?? 0;
+    final fontIndex = p.getInt('q.font') ?? 0;
+    final numberStyleIndex = p.getInt('q.ayahNumberStyle') ?? 0;
+
+    final riwaya = riwayaIndex >= 0 && riwayaIndex < RiwayaId.values.length
+        ? RiwayaId.values[riwayaIndex]
+        : RiwayaId.hafsAsim;
+    var script = scriptIndex >= 0 && scriptIndex < QuranScript.values.length
+        ? QuranScript.values[scriptIndex]
+        : QuranScript.uthmani;
+    final legacyTajweed = script == QuranScript.tajweed;
+    script = script.datasetScript;
+
+    var loaded = state.copyWith(
+      riwaya: riwaya,
+      script: script,
+      font: fontIndex >= 0 && fontIndex < QuranFont.values.length
+          ? QuranFont.values[fontIndex]
+          : QuranFont.uthmani,
+      readingMode: modeIndex >= 0 && modeIndex < ReadingMode.values.length
+          ? ReadingMode.values[modeIndex]
+          : ReadingMode.reading,
+      ayahNumberStyle: numberStyleIndex >= 0 &&
+              numberStyleIndex < AyahNumberStyle.values.length
+          ? AyahNumberStyle.values[numberStyleIndex]
+          : AyahNumberStyle.arabicIndic,
       fontSize: p.getDouble('q.fontSize') ?? 24,
+      lineHeight: p.getDouble('q.lineHeight') ?? 1.9,
+      ayahSpacing: p.getDouble('q.ayahSpacing') ?? 12,
+      margins: p.getDouble('q.margins') ?? 16,
+      translations: p.getStringList('q.translations') ?? const ['en-sahih'],
+      tafsirId: p.getString('q.tafsirId') ?? 'jalalayn',
       lastSurah: p.getInt('q.lastSurah') ?? 2,
       lastAyah: p.getInt('q.lastAyah') ?? 255,
       showTranslation: p.getBool('q.showTr') ?? true,
+      showTajweed: p.getBool('q.showTajweed') ?? legacyTajweed,
+    );
+    loaded = _normalize(loaded);
+    state = loaded;
+  }
+
+  QuranPrefs _normalize(QuranPrefs next) {
+    var script = next.datasetScript;
+    var editionId = '${next.riwaya.storageKey}__${script.name}';
+    if (!kVerifiedQuranAssets.containsKey(editionId)) {
+      script = QuranScript.uthmani;
+      editionId = '${next.riwaya.storageKey}__${script.name}';
+    }
+    // Pending riwayat have no verified text yet. Keep the previous valid
+    // riwaya rather than persisting a selection that can never render.
+    var riwaya = next.riwaya;
+    if (!kVerifiedQuranAssets.containsKey(editionId)) {
+      riwaya = RiwayaId.hafsAsim;
+      script = QuranScript.uthmani;
+    }
+    final normalized = next.copyWith(riwaya: riwaya, script: script);
+    return normalized.copyWith(
+      showTajweed: normalized.tajweedAvailable && next.showTajweed,
     );
   }
 
   Future<void> update(QuranPrefs next) async {
-    state = next;
+    final normalized = _normalize(next);
+    state = normalized;
     final p = await SharedPreferences.getInstance();
-    await p.setInt('q.riwaya', next.riwaya.index);
-    await p.setInt('q.script', next.script.index);
-    await p.setInt('q.mode', next.readingMode.index);
-    await p.setDouble('q.fontSize', next.fontSize);
-    await p.setInt('q.lastSurah', next.lastSurah);
-    await p.setInt('q.lastAyah', next.lastAyah);
-    await p.setBool('q.showTr', next.showTranslation);
+    await p.setInt('q.riwaya', normalized.riwaya.index);
+    await p.setInt('q.script', normalized.script.index);
+    await p.setInt('q.font', normalized.font.index);
+    await p.setInt('q.mode', normalized.readingMode.index);
+    await p.setInt('q.ayahNumberStyle', normalized.ayahNumberStyle.index);
+    await p.setDouble('q.fontSize', normalized.fontSize);
+    await p.setDouble('q.lineHeight', normalized.lineHeight);
+    await p.setDouble('q.ayahSpacing', normalized.ayahSpacing);
+    await p.setDouble('q.margins', normalized.margins);
+    await p.setStringList('q.translations', normalized.translations);
+    await p.setString('q.tafsirId', normalized.tafsirId);
+    await p.setInt('q.lastSurah', normalized.lastSurah);
+    await p.setInt('q.lastAyah', normalized.lastAyah);
+    await p.setBool('q.showTr', normalized.showTranslation);
+    await p.setBool('q.showTajweed', normalized.showTajweed);
   }
 }
 
@@ -167,6 +238,9 @@ class AppPrefsNotifier extends StateNotifier<AppPrefs> {
       locale: p.getString('app.locale') ?? 'ar',
       themeMode:
           AppThemeMode.values[p.getInt('app.theme') ?? 0],
+      useDynamicColor: p.getBool('app.dynamicColor') ?? false,
+      qari: p.getString('app.qari') ?? '',
+      playbackSpeed: p.getDouble('app.playbackSpeed') ?? 1.0,
       onboarded: p.getBool('app.onboarded') ?? false,
       displaySanad: p.getBool('app.sanad') ?? true,
       displayGrade: p.getBool('app.grade') ?? true,
@@ -178,6 +252,9 @@ class AppPrefsNotifier extends StateNotifier<AppPrefs> {
     final p = await SharedPreferences.getInstance();
     await p.setString('app.locale', next.locale);
     await p.setInt('app.theme', next.themeMode.index);
+    await p.setBool('app.dynamicColor', next.useDynamicColor);
+    await p.setString('app.qari', next.qari);
+    await p.setDouble('app.playbackSpeed', next.playbackSpeed);
     await p.setBool('app.onboarded', next.onboarded);
     await p.setBool('app.sanad', next.displaySanad);
     await p.setBool('app.grade', next.displayGrade);
