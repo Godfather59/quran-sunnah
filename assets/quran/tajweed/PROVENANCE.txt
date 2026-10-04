@@ -10,5 +10,9 @@ Verified  : 6236 entries; 59,126 annotations; every [start,end) bounds-
 Rules     : 18 (ghunnah, hamzat_wasl, idghaam_*, ikhfa*, iqlab,
             lam_shamsiyyah, madd_*, qalqalah, silent).
 Rendering : colors spans only; verse text never altered.
-License   : generator repo has no license file — treat output as
-            derived study aid; rulings must be learned from a teacher.
+License   : cpfair/quran-tajweed states its Tajweed data file is
+            Creative Commons Attribution 4.0 International (CC BY 4.0).
+            Attribute the project. The underlying Quran text remains
+            governed by the Tanzil Quran Text terms.
+Study use : color annotations are a reading aid; tajweed rulings should
+            still be learned from qualified instruction.
