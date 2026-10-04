@@ -231,8 +231,7 @@ class ContentPackageStore {
       // package revision. Remove it so stale bytes never consume hidden
       // storage or get mistaken for current verified content.
       final dir = await packageDirectory(pkg.id);
-      final marker = await markerFile(pkg.id);
-      if (await dir.exists() && await marker.exists()) {
+      if (await dir.exists()) {
         await dir.delete(recursive: true);
       }
     }
