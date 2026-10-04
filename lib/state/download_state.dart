@@ -22,6 +22,7 @@ class DownloadState {
 const kBundledDatasetIds = {
   'quran:hafs-an-asim__uthmani',
   'quran:hafs-an-asim__imlai',
+  'quran:hafs-an-asim__indopak',
   'quran:warsh-an-nafi__uthmani',
   'quran:qalun-an-nafi__uthmani',
   'quran:metadata',
@@ -50,17 +51,13 @@ class DownloadNotifier extends StateNotifier<DownloadState> {
   /// Bundled ids cannot be removed (they ship with the app).
   bool isProtected(String id) => kBundledDatasetIds.contains(id);
 
+  /// General remote dataset installation is intentionally unavailable
+  /// until a verified downloader with checksums/provenance is wired.
+  /// Never simulate a successful religious-dataset download.
   Future<void> install(String id) async {
-    // Real implementation: chunked download w/ size check,
-    // checksum verify, then mark installed. Stub simulates.
-    for (var i = 1; i <= 10; i++) {
-      await Future<void>.delayed(const Duration(milliseconds: 120));
-      state = state.copyWith(
-          p: {...state.progress, id: i / 10});
-    }
-    state = DownloadState(
-      installed: {...state.installed, id},
-      progress: {...state.progress}..remove(id),
+    throw UnsupportedError(
+      'Remote dataset installation is not available for $id. '
+      'Only verified bundled datasets are exposed as installed.',
     );
   }
 
@@ -79,17 +76,3 @@ final downloadProvider =
     StateNotifierProvider<DownloadNotifier, DownloadState>(
         (ref) => DownloadNotifier());
 
-/// Audio: qari MUST be bound to the riwaya it actually recites.
-/// Never label a Hafs recording as Warsh/Qalun.
-class QariBinding {
-  const QariBinding(this.name, this.riwayaKey, this.sizeMb);
-  final String name;
-  final String riwayaKey; // must match RiwayaId.storageKey
-  final double sizeMb;
-}
-
-const kQariCatalog = [
-  QariBinding('Mishary Alafasy', 'hafs-an-asim', 1850),
-  QariBinding('Abdul Basit (Murattal)', 'hafs-an-asim', 1620),
-  QariBinding('Yassin Al-Jazaery (Warsh)', 'warsh-an-nafi', 1900),
-];
