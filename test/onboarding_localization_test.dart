@@ -40,7 +40,7 @@ void main() {
     expect(find.text('اختر اللغة'), findsOneWidget);
     expect(find.text('التالي'), findsOneWidget);
 
-    final context = tester.element(find.byType(OnboardingScreen));
+    final context = tester.element(find.byType(Scaffold));
     expect(Directionality.of(context), TextDirection.rtl);
   });
 
