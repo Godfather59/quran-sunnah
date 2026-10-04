@@ -169,8 +169,8 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
                 final a = ayahs[i];
                 final num = switch (q.ayahNumberStyle) {
                   AyahNumberStyle.arabicIndic =>
-                    toArabicIndic(a.ayah),
-                  _ => '${a.ayah}',
+                    toArabicIndic(a.displayAyahNumber),
+                  _ => '${a.displayAyahNumber}',
                 };
                 final bookmarked = ref
                     .watch(libraryProvider)
@@ -196,7 +196,7 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
                       : const EdgeInsets.all(8),
                   child: InkWell(
                   key: _keys.putIfAbsent(
-                      a.ayah, () => GlobalKey()),
+                      a.displayAyahNumber, () => GlobalKey()),
                   borderRadius: BorderRadius.circular(12),
                   onTap: () =>
                       showAyahActionSheet(context, a),
