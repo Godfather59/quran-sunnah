@@ -48,13 +48,15 @@ class _TafsirScreenState extends ConsumerState<TafsirScreen> {
                 .map((t) => ChoiceChip(
                       label: Text(s.isArabic ? t.titleAr : t.titleEn),
                       selected: _tafsir == t.id,
-                      onSelected: (_) async {
-                        setState(() => _tafsir = t.id);
-                        final q = ref.read(quranPrefsProvider);
-                        await ref
-                            .read(quranPrefsProvider.notifier)
-                            .update(q.copyWith(tafsirId: t.id));
-                      },
+                      onSelected: !t.bundled
+                          ? null
+                          : (_) async {
+                              setState(() => _tafsir = t.id);
+                              final q = ref.read(quranPrefsProvider);
+                              await ref
+                                  .read(quranPrefsProvider.notifier)
+                                  .update(q.copyWith(tafsirId: t.id));
+                            },
                     ))
                 .toList(),
           ),
