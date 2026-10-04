@@ -410,6 +410,8 @@ class AppStrings {
     },
     'makki': {'ar': 'مكية', 'en': 'Makki', 'fr': 'Mecquoise'},    'madani': {'ar': 'مدنية', 'en': 'Madani', 'fr': 'Médinoise'},
     'ayat': {'ar': 'آية', 'en': 'ayat', 'fr': 'versets'},
+    'ayahLabel': {'ar': 'آية', 'en': 'Ayah', 'fr': 'Verset'},
+    'progress': {'ar': 'التقدم', 'en': 'Progress', 'fr': 'Progression'},
     'surahWord': {'ar': 'سورة', 'en': 'Surah', 'fr': 'Sourate'},
     // ── Search tabs ──
     'tabAll': {'ar': 'الكل', 'en': 'All', 'fr': 'Tout'},
