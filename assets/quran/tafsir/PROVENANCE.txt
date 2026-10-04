@@ -8,7 +8,12 @@ siraj/    : Al-Siraj fi Tafsir al-Quran (concise Arabic tafsir).
             "ara-sirajtafseer" (source: quranenc.com).
 Fetched   : 2026-10-04. 6236 entries each, zero gaps, verbatim.
 Layout    : <id>/<surah>.json with [{ayah, text}].
-License   : verify upstream terms before redistribution.
+Terms     : Jalalayn is sourced through Tanzil; Tanzil's download-page
+            terms are non-commercial unless necessary permission is obtained.
+            Al-Siraj provenance points to QuranEnc, whose API permits
+            republication with no modification, clear source/publisher
+            attribution, version/transcript retention and update obligations.
+            The exact QuranEnc version/key still needs to be recorded.
 More      : Ibn Kathir / Tabari / Sa'di plug in via the same layout +
             one catalog row (see TafsirRepository); classic Arabic
             editions preferred from Shamela-verified digitizations.
