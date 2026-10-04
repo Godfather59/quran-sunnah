@@ -435,3 +435,6 @@ final contentPackageManifestProvider =
     FutureProvider<ContentPackageManifest>(
   (ref) => ContentPackageStore.instance.manifest(),
 );
+
+/// Bumped by package install/remove UI so cached content providers reload.
+final contentRevisionProvider = StateProvider<int>((ref) => 0);
