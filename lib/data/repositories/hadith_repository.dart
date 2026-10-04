@@ -12,6 +12,7 @@ class HadithFilter {
     this.grade,
     this.topic,
     this.query,
+    this.number,
   });
 
   final Set<String> collectionIds;
@@ -20,6 +21,7 @@ class HadithFilter {
   final String? grade;
   final String? topic;
   final String? query;
+  final String? number;
 
   HadithFilter copyWith({
     Set<String>? collectionIds,
@@ -28,6 +30,7 @@ class HadithFilter {
     String? grade,
     String? topic,
     String? query,
+    String? number,
   }) =>
       HadithFilter(
         collectionIds: collectionIds ?? this.collectionIds,
@@ -36,6 +39,7 @@ class HadithFilter {
         grade: grade ?? this.grade,
         topic: topic ?? this.topic,
         query: query ?? this.query,
+        number: number ?? this.number,
       );
 }
 
