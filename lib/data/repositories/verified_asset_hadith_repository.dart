@@ -12,6 +12,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import '../../core/utils/text_utils.dart';
+import '../content/content_packages.dart';
 import '../models/hadith.dart';
 import '../seed/hadith_collections.dart';
 import 'hadith_repository.dart';
@@ -179,17 +180,24 @@ class VerifiedAssetHadithRepository implements HadithRepository {
 
   bool get isBundled => true;
 
-  bool isCollectionBundled(String id) =>
+  bool isCollectionKnown(String id) =>
       _bundled.any((b) => b.id == id);
+
+  Future<bool> isCollectionInstalled(String id) =>
+      ContentPackageStore.instance.isInstalled('hadith:$id');
 
   Future<List<BundledSection>> _loadIndex(String collectionId) async {
     final hit = _indices[collectionId];
     if (hit != null) {
       return hit;
     }
-    final raw = await _bundle.loadString(
-        'assets/hadith/$collectionId/index.json',
-        cache: false);
+    if (!await isCollectionInstalled(collectionId)) {
+      return const [];
+    }
+    final raw = await ContentPackageStore.instance.loadString(
+      'assets/hadith/$collectionId/index.json',
+      bundle: _bundle,
+    );
     final json = jsonDecode(raw) as Map<String, dynamic>;
     final out = <BundledSection>[];
     for (final e in (json['sections'] as List)) {
@@ -245,11 +253,13 @@ class VerifiedAssetHadithRepository implements HadithRepository {
 
   Future<List<Hadith>> _loadSection(
       String collectionId, int section) async {
-    final meta = (await _loadIndex(collectionId))
-        .firstWhere((e) => e.section == section);
-    final raw = await _bundle.loadString(
-        'assets/hadith/$collectionId/sections/$section.json',
-        cache: false);
+    final index = await _loadIndex(collectionId);
+    if (index.isEmpty) return const [];
+    final meta = index.firstWhere((e) => e.section == section);
+    final raw = await ContentPackageStore.instance.loadString(
+      'assets/hadith/$collectionId/sections/$section.json',
+      bundle: _bundle,
+    );
     final json = jsonDecode(raw) as Map<String, dynamic>;
     final out = <Hadith>[];
     for (final e in (json['hadiths'] as List)) {
@@ -286,18 +296,40 @@ class VerifiedAssetHadithRepository implements HadithRepository {
   Future<List<Hadith>> allBukhari() => allIn('bukhari');
 
   @override
-  Future<List<Hadith>> allForIndex(String collectionId) =>
-      allIn(collectionId);
+  Future<List<Hadith>> allForIndex(String collectionId) async {
+    if (!await isCollectionInstalled(collectionId)) return const [];
+    return allIn(collectionId);
+  }
 
   @override
-  Future<List<HadithCollection>> collections() async =>
-      kBundledHadithCollections;
+  Future<List<HadithCollection>> collections() async {
+    final installed = await ContentPackageStore.instance.installedIds();
+    final byId = {for (final b in _bundled) b.id: b};
+    return kHadithCollections.map((item) {
+      final meta = byId[item.id];
+      if (meta == null) return item;
+      return HadithCollection(
+        id: item.id,
+        nameAr: item.nameAr,
+        nameEn: item.nameEn,
+        nameFr: item.nameFr,
+        compiler: item.compiler,
+        source: meta.source,
+        version: meta.version,
+        totalHadith: meta.totalHadith,
+        isDownloaded: installed.contains('hadith:${item.id}'),
+        downloadSizeMb: meta.sizeMb,
+      );
+    }).toList(growable: false);
+  }
 
   @override
   Future<List<Hadith>> query(HadithFilter filter,
       {int limit = 30, int offset = 0}) async {
+    final installed = await ContentPackageStore.instance.installedIds();
     final ids = _bundled
         .map((b) => b.id)
+        .where((id) => installed.contains('hadith:$id'))
         .where((id) =>
             filter.collectionIds.isEmpty ||
             filter.collectionIds.contains(id))
