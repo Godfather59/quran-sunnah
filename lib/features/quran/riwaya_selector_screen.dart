@@ -1,56 +1,71 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../core/l10n/app_strings.dart';
 import '../../data/models/quran.dart';
-import '../../data/seed/riwayat_catalog.dart';
 import '../../data/repositories/verified_asset_quran_repository.dart';
+import '../../data/seed/riwayat_catalog.dart';
 import '../../state/download_state.dart';
 import '../../state/providers.dart';
 
-/// Dedicated Riwaya selector (§6). Terminology: Qira'a / Riwaya.
-/// Each row shows source + version + offline state.
 class RiwayaSelectorScreen extends ConsumerWidget {
   const RiwayaSelectorScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = AppStrings.of(context);
     final q = ref.watch(quranPrefsProvider);
     final dl = ref.watch(downloadProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Riwaya · الرواية')),
+      appBar: AppBar(title: Text(s.t('riwaya'))),
       body: ListView(
         padding: const EdgeInsets.all(12),
         children: [
-          const Padding(
-            padding: EdgeInsets.all(8),
+          Padding(
+            padding: const EdgeInsets.all(8),
             child: Text(
-              'Qirā’a = قراءة · Riwaya = رواية. Each Riwaya uses its own verified dataset — never a text substitution.',
-              style: TextStyle(fontSize: 13),
+              s.t('riwayaExplanation'),
+              style: const TextStyle(fontSize: 13),
             ),
           ),
           ...kRiwayaCatalog.map((r) {
             final preferredEdition =
                 '${r.id.storageKey}__${q.datasetScript.name}';
             final fallbackEdition = '${r.id.storageKey}__uthmani';
-            final available = kVerifiedQuranAssets.containsKey(preferredEdition) ||
-                kVerifiedQuranAssets.containsKey(fallbackEdition);
-            final editionId = kVerifiedQuranAssets.containsKey(preferredEdition)
-                ? preferredEdition
-                : fallbackEdition;
+            final available =
+                kVerifiedQuranAssets.containsKey(preferredEdition) ||
+                    kVerifiedQuranAssets.containsKey(fallbackEdition);
+            final editionId =
+                kVerifiedQuranAssets.containsKey(preferredEdition)
+                    ? preferredEdition
+                    : fallbackEdition;
             final selected = q.riwaya == r.id;
             final installed =
                 available && dl.installed.contains('quran:$editionId');
+
+            final subtitle = s.isArabic
+                ? '${s.t('qiraaLabel')}: ${r.qiraaAr} · '
+                    '${installed ? s.t('downloaded') : s.t('notDownloaded')}'
+                : '${_riwayaName(s, r)}\n'
+                    '${s.t('qiraaLabel')} ${_qiraaName(s, r)} · '
+                    '${s.t('versionLabel')} ${r.datasetVersion} · '
+                    '${installed ? s.t('downloaded') : s.t('notDownloaded')}';
+
             return Card(
               child: ListTile(
                 selected: selected,
                 leading: selected
                     ? const Icon(Icons.check_circle)
                     : const Icon(Icons.circle_outlined),
-                title: Text(r.riwayaAr,
-                    textDirection: TextDirection.rtl),
+                title: Text(
+                  r.riwayaAr,
+                  textDirection: TextDirection.rtl,
+                ),
                 subtitle: Text(
-                    '${r.riwayaEn}\nQirā’at ${r.qiraaEn} · v${r.datasetVersion} · ${installed ? 'Downloaded' : 'Not downloaded'}'),
-                isThreeLine: true,
+                  available ? subtitle : s.t('datasetUnavailable'),
+                ),
+                isThreeLine: !s.isArabic,
                 enabled: available,
                 trailing: available
                     ? (installed
@@ -66,13 +81,16 @@ class RiwayaSelectorScreen extends ConsumerWidget {
                                 : QuranScript.uthmani;
                         await ref
                             .read(quranPrefsProvider.notifier)
-                            .update(q.copyWith(
-                              riwaya: r.id,
-                              script: nextScript,
-                              showTajweed: r.id == RiwayaId.hafsAsim &&
-                                  nextScript == QuranScript.uthmani &&
-                                  q.showTajweed,
-                            ));
+                            .update(
+                              q.copyWith(
+                                riwaya: r.id,
+                                script: nextScript,
+                                showTajweed:
+                                    r.id == RiwayaId.hafsAsim &&
+                                        nextScript == QuranScript.uthmani &&
+                                        q.showTajweed,
+                              ),
+                            );
                         if (context.mounted) Navigator.pop(context);
                       },
               ),
@@ -82,33 +100,35 @@ class RiwayaSelectorScreen extends ConsumerWidget {
       ),
     );
   }
+
+  String _riwayaName(AppStrings s, RiwayaInfo info) =>
+      s.locale.languageCode == 'fr' ? info.riwayaFr : info.riwayaEn;
+
+  String _qiraaName(AppStrings s, RiwayaInfo info) =>
+      s.locale.languageCode == 'fr' ? info.qiraaFr : info.qiraaEn;
 }
 
-/// Quran Text Style selector (§7) — independent from Riwaya.
 class ScriptSelectorScreen extends ConsumerWidget {
   const ScriptSelectorScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = AppStrings.of(context);
     final q = ref.watch(quranPrefsProvider);
-    const items = [
-      (QuranScript.uthmani, 'Uthmani — عثماني',
-          'Traditional orthography with Quranic marks.'),
-      (QuranScript.imlai, 'Simple / Imla’i — إملائي',
-          'Simplified modern reading & search-friendly.'),
-      (QuranScript.indopak, 'IndoPak',
-          'Bundled for Hafs with Extended Arabic marks.'),
+    final items = [
+      (QuranScript.uthmani, s.t('uthmani'), s.t('uthmaniHint')),
+      (QuranScript.imlai, s.t('imlai'), s.t('imlaiHint')),
+      (QuranScript.indopak, s.t('indopak'), s.t('indopakHint')),
     ];
+
     return Scaffold(
-      appBar: AppBar(
-          title: const Text('Quran Text Style · رسم المصحف')),
+      appBar: AppBar(title: Text(s.t('scriptStyle'))),
       body: ListView(
         padding: const EdgeInsets.all(12),
         children: [
-          const Padding(
-            padding: EdgeInsets.all(8),
-            child: Text(
-                'Style changes presentation only — never the wording or meaning.'),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Text(s.t('scriptExplanation')),
           ),
           ...items.map((e) {
             final editionId = '${q.riwaya.storageKey}__${e.$1.name}';
@@ -118,21 +138,23 @@ class ScriptSelectorScreen extends ConsumerWidget {
                 groupValue: q.datasetScript,
                 onChanged: (v) {
                   if (!available || v == null) return;
-                  ref
-                      .read(quranPrefsProvider.notifier)
-                      .update(q.copyWith(
-                        script: v,
-                        showTajweed:
-                            v == QuranScript.uthmani && q.showTajweed,
-                      ));
+                  ref.read(quranPrefsProvider.notifier).update(
+                        q.copyWith(
+                          script: v,
+                          showTajweed:
+                              v == QuranScript.uthmani && q.showTajweed,
+                        ),
+                      );
                 },
                 child: RadioListTile<QuranScript>(
                   value: e.$1,
                   enabled: available,
                   title: Text(e.$2),
-                  subtitle: Text(available
-                      ? e.$3
-                      : '${e.$3} · Dataset unavailable for this Riwaya'),
+                  subtitle: Text(
+                    available
+                        ? e.$3
+                        : '${e.$3} · ${s.t('datasetUnavailableForRiwaya')}',
+                  ),
                 ),
               ),
             );
@@ -140,10 +162,12 @@ class ScriptSelectorScreen extends ConsumerWidget {
           Card(
             child: SwitchListTile(
               secondary: const Icon(Icons.palette_outlined),
-              title: const Text('Tajweed colors · ألوان التجويد'),
-              subtitle: Text(q.tajweedAvailable
-                  ? 'Verified Hafs/Uthmani annotations; Quran text stays unchanged.'
-                  : 'Available only with Hafs + Uthmani.'),
+              title: Text(s.t('tajweedColors')),
+              subtitle: Text(
+                q.tajweedAvailable
+                    ? s.t('tajweedVerifiedHint')
+                    : s.t('tajweedHafsOnly'),
+              ),
               value: q.showTajweed && q.tajweedAvailable,
               onChanged: q.tajweedAvailable
                   ? (v) => ref
@@ -158,13 +182,14 @@ class ScriptSelectorScreen extends ConsumerWidget {
   }
 }
 
-/// Font / typography controls (§8). Licensed fonts only.
 class FontSettingsSheet extends ConsumerWidget {
   const FontSettingsSheet({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = AppStrings.of(context);
     final q = ref.watch(quranPrefsProvider);
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -172,48 +197,92 @@ class FontSettingsSheet extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Quran typography',
-                style:
-                    TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+            Text(
+              s.t('quranTypography'),
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
             Wrap(
               spacing: 8,
               children: QuranFont.values
-                  .map((f) => ChoiceChip(
-                        label: Text(f.name),
-                        selected: q.font == f,
-                        onSelected: (_) => ref
-                            .read(quranPrefsProvider.notifier)
-                            .update(q.copyWith(font: f)),
-                      ))
+                  .map(
+                    (font) => ChoiceChip(
+                      label: Text(_fontLabel(s, font)),
+                      selected: q.font == font,
+                      onSelected: (_) => ref
+                          .read(quranPrefsProvider.notifier)
+                          .update(q.copyWith(font: font)),
+                    ),
+                  )
                   .toList(),
             ),
-            _slider('Font size', q.fontSize, 16, 40, (v) => ref
-                .read(quranPrefsProvider.notifier)
-                .update(q.copyWith(fontSize: v))),
-            _slider('Line height', q.lineHeight, 1.4, 2.6, (v) => ref
-                .read(quranPrefsProvider.notifier)
-                .update(q.copyWith(lineHeight: v))),
-            _slider('Ayah spacing', q.ayahSpacing, 4, 32, (v) => ref
-                .read(quranPrefsProvider.notifier)
-                .update(q.copyWith(ayahSpacing: v))),
+            _slider(
+              s.t('fontSize'),
+              q.fontSize,
+              16,
+              40,
+              (v) => ref
+                  .read(quranPrefsProvider.notifier)
+                  .update(q.copyWith(fontSize: v)),
+            ),
+            _slider(
+              s.t('lineHeight'),
+              q.lineHeight,
+              1.4,
+              2.6,
+              (v) => ref
+                  .read(quranPrefsProvider.notifier)
+                  .update(q.copyWith(lineHeight: v)),
+            ),
+            _slider(
+              s.t('ayahSpacing'),
+              q.ayahSpacing,
+              4,
+              32,
+              (v) => ref
+                  .read(quranPrefsProvider.notifier)
+                  .update(q.copyWith(ayahSpacing: v)),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _slider(String label, double value, double min, double max,
-      ValueChanged<double> onChanged) {
+  String _fontLabel(AppStrings s, QuranFont font) => switch (font) {
+        QuranFont.uthmani => s.t('uthmani'),
+        QuranFont.naskh => s.isArabic ? 'نسخ' : 'Naskh',
+        QuranFont.notoNaskh => s.isArabic ? 'نوتو نسخ عربي' : 'Noto Naskh Arabic',
+        QuranFont.indopak => s.t('indopak'),
+      };
+
+  Widget _slider(
+    String label,
+    double value,
+    double min,
+    double max,
+    ValueChanged<double> onChanged,
+  ) {
     return Row(
       children: [
         SizedBox(width: 110, child: Text(label)),
         Expanded(
-            child: Slider(
-                value: value, min: min, max: max, onChanged: onChanged)),
+          child: Slider(
+            value: value,
+            min: min,
+            max: max,
+            onChanged: onChanged,
+          ),
+        ),
         SizedBox(
-            width: 44,
-            child: Text(value.toStringAsFixed(1),
-                textAlign: TextAlign.end)),
+          width: 44,
+          child: Text(
+            value.toStringAsFixed(1),
+            textAlign: TextAlign.end,
+          ),
+        ),
       ],
     );
   }
