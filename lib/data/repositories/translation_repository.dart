@@ -4,9 +4,9 @@
 // translator's name in a muted style (see AppTheme.translation) and
 // NEVER styled like Quran text.
 
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/quran.dart';
+import '../content/content_packages.dart';
 
 const Map<String, String> kTranslationAssets = {
   'en-sahih': 'assets/quran/translations/en-sahih.txt',
@@ -52,8 +52,11 @@ final translationTextsProvider =
   if (path == null) {
     return const {};
   }
-  final raw =
-      await rootBundle.loadString(path, cache: false);
+  final packageId = 'quran:$id';
+  if (!await ContentPackageStore.instance.isInstalled(packageId)) {
+    return const {};
+  }
+  final raw = await ContentPackageStore.instance.loadString(path);
   final out = <String, String>{};
   for (final line in raw.split('\n')) {
     final first = line.indexOf('|');
