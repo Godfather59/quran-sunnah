@@ -37,6 +37,7 @@ void main() {
         await Directory.systemTemp.createTemp('content-packages-onboarding-');
     ContentPackageStore.instance.resetForTesting();
     ContentPackageStore.instance.setRootDirectoryForTesting(packageRoot);
+    await ContentPackageStore.instance.manifest();
   });
 
   tearDown(() async {
@@ -83,18 +84,22 @@ void main() {
     expect(find.text('محتوى إضافي'), findsOneWidget);
     expect(find.text('ابدأ'), findsOneWidget);
 
-    // The additional-content page is intentionally long on small screens.
-    // Scroll it so lazy ListView children are built before asserting them.
-    final pageList = find.byType(ListView).last;
-    await tester.drag(pageList, const Offset(0, -350));
-    await _pumpStable(tester);
+    // Preloaded manifest makes the package choices deterministic.
     expect(
       find.text('الترجمة الإنجليزية — صحيح إنترناشونال'),
       findsOneWidget,
     );
+
+    // The rest of the page is intentionally long on small screens.
+    final pageList = find.ancestor(
+      of: find.text('محتوى إضافي'),
+      matching: find.byType(ListView),
+    );
+    await tester.drag(pageList, const Offset(0, -500));
+    await _pumpStable(tester);
     expect(find.text('تفسير الجلالين'), findsOneWidget);
 
-    await tester.drag(pageList, const Offset(0, -600));
+    await tester.drag(pageList, const Offset(0, -650));
     await _pumpStable(tester);
     expect(find.text('ألوان التجويد'), findsOneWidget);
     expect(find.text('حجم التنزيل المحدد'), findsOneWidget);
