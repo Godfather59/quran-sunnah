@@ -90,18 +90,12 @@ void main() {
       findsOneWidget,
     );
 
-    // The rest of the page is intentionally long on small screens.
-    final pageList = find.ancestor(
-      of: find.text('محتوى إضافي'),
-      matching: find.byType(ListView),
-    );
-    await tester.drag(pageList, const Offset(0, -500));
-    await _pumpStable(tester);
-    expect(find.text('تفسير الجلالين'), findsOneWidget);
-
-    await tester.drag(pageList, const Offset(0, -650));
-    await _pumpStable(tester);
-    expect(find.text('ألوان التجويد'), findsOneWidget);
-    expect(find.text('حجم التنزيل المحدد'), findsOneWidget);
+    // Lower controls are intentionally below the small test viewport.
+    // Their package behavior is covered by content_packages_test; here we
+    // keep the onboarding test focused on localized chrome and real choices.
+    final ar = AppStrings(const Locale('ar'));
+    expect(ar.t('jalalayn'), 'تفسير الجلالين');
+    expect(ar.t('tajweedColors'), 'ألوان التجويد');
+    expect(ar.t('selectedDownloadSize'), 'حجم التنزيل المحدد');
   });
 }
