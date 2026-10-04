@@ -263,6 +263,10 @@ class VerifiedAssetHadithRepository implements HadithRepository {
   Future<List<Hadith>> allBukhari() => allIn('bukhari');
 
   @override
+  Future<List<Hadith>> allForIndex(String collectionId) =>
+      allIn(collectionId);
+
+  @override
   Future<List<HadithCollection>> collections() async =>
       kBundledHadithCollections;
 
