@@ -75,6 +75,8 @@ void main() {
     // No verified translation bundled -> honest unavailable, never invented.
     expect(find.textContaining('Translation'), findsWidgets);
     expect(find.textContaining('unavailable'), findsWidgets);
+    // No verified grade ships: the row stays hidden instead of nagging.
+    expect(find.textContaining('Grade unavailable'), findsNothing);
     expect(tester.takeException(), isNull);
   });
 

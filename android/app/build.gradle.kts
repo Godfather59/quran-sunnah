@@ -44,6 +44,10 @@ android {
                 keyPassword = keystoreProperties["keyPassword"] as String
                 storeFile = file(keystoreProperties["storeFile"] as String)
                 storePassword = keystoreProperties["storePassword"] as String
+                // Keep v1 (JAR) + v2 signatures so sideloaded APKs verify
+                // on every supported device and installer.
+                isV1SigningEnabled = true
+                isV2SigningEnabled = true
             }
         }
     }

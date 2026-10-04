@@ -133,10 +133,18 @@ class DownloadNotifier extends StateNotifier<DownloadState> {
   }
 
   Future<void> installMany(Iterable<String> ids) async {
+    Object? firstError;
     for (final id in ids.toSet()) {
       if (isProtected(id) || state.installed.contains(id)) continue;
-      await install(id);
+      try {
+        await install(id);
+      } catch (e) {
+        // Keep going so one failing package never blocks the rest;
+        // per-package errors stay visible in DownloadState.
+        firstError ??= e;
+      }
     }
+    if (firstError != null) throw firstError;
   }
 
   void pause(String id) {

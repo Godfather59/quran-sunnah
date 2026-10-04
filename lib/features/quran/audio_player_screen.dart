@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -337,7 +339,18 @@ class _AudioPlayerScreenState extends ConsumerState<AudioPlayerScreen> {
     final s = AppStrings.of(context);
     final messenger = ScaffoldMessenger.of(context);
 
-    final total = await svc.estimateSurahBytes(reciter, surah);
+    int total;
+    try {
+      total = await svc.estimateSurahBytes(reciter, surah).timeout(
+            const Duration(seconds: 60),
+          );
+    } catch (_) {
+      if (!context.mounted) return;
+      messenger.showSnackBar(
+        SnackBar(content: Text(s.t('downloadFailed'))),
+      );
+      return;
+    }
     if (!context.mounted) return;
     final size = _formatBytes(total);
     final accepted = await showDialog<bool>(

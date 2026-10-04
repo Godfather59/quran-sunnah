@@ -259,6 +259,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       ]),
       error: (error, _) => _wrap(s.t('obDownloads'), [
         Text('${s.t('contentUnavailable')}\n$error'),
+        const SizedBox(height: 12),
+        Text(
+          s.t('obDownloadsHint'),
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        const SizedBox(height: 12),
+        OutlinedButton(
+          onPressed: _finishing ? null : () => _finish(skipAll: true),
+          child: Text(s.t('skip')),
+        ),
       ]),
       data: (manifest) {
         final ids = _selectedPackageIds();
@@ -300,6 +310,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               style: TextStyle(
                 color: Theme.of(context).colorScheme.error,
               ),
+            ),
+            const SizedBox(height: 8),
+            OutlinedButton(
+              onPressed: _finishing ? null : () => _finish(skipAll: true),
+              child: Text(s.t('skip')),
             ),
             const SizedBox(height: 8),
           ],
@@ -464,21 +479,23 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     return '${(kb / 1024).toStringAsFixed(1)} MB';
   }
 
-  Future<void> _finish() async {
+  Future<void> _finish({bool skipAll = false}) async {
     setState(() {
       _finishing = true;
       _finishError = null;
     });
 
     try {
-      final manifest =
-          await ref.read(contentPackageManifestProvider.future);
-      final known = manifest.packages.map((p) => p.id).toSet();
-      final selected =
-          _selectedPackageIds().where(known.contains).toSet();
+      if (!skipAll) {
+        final manifest =
+            await ref.read(contentPackageManifestProvider.future);
+        final known = manifest.packages.map((p) => p.id).toSet();
+        final selected =
+            _selectedPackageIds().where(known.contains).toSet();
 
-      await ref.read(downloadProvider.notifier).installMany(selected);
-      ref.read(contentRevisionProvider.notifier).state++;
+        await ref.read(downloadProvider.notifier).installMany(selected);
+        ref.read(contentRevisionProvider.notifier).state++;
+      }
 
       await ref.read(appPrefsProvider.notifier).update(
             ref.read(appPrefsProvider).copyWith(

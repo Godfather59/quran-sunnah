@@ -6,6 +6,7 @@ import 'package:quran_sunnah_app/core/l10n/app_strings.dart';
 import 'package:quran_sunnah_app/data/content/content_packages.dart';
 import 'package:quran_sunnah_app/data/repositories/hadith_repository.dart';
 import 'package:quran_sunnah_app/data/repositories/verified_asset_hadith_repository.dart';
+import 'package:quran_sunnah_app/features/sunnah/hadith_filter_screen.dart';
 import 'package:quran_sunnah_app/features/sunnah/topic_collections_screen.dart';
 import 'dart:io';
 
@@ -90,7 +91,49 @@ void main() {
     expect(find.text('Topic'), findsOneWidget);
     expect(find.byType(SearchBar), findsOneWidget);
     expect(tester.takeException(), isNull);
-    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('rawi dropdown offers one-tap narrators', (tester) async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const MaterialApp(
+          locale: Locale('ar'),
+          supportedLocales: AppStrings.supported,
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          home: HadithFilterScreen(),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+
+    expect(find.byType(DropdownMenu<String>), findsOneWidget);
+    await tester.tap(find.byType(DropdownMenu<String>));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.text('أبو هريرة'), findsWidgets);
+
+    await tester.tap(find.text('أبو هريرة').last);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+
+    final scrollable = find.byType(Scrollable).first;
+    await tester.scrollUntilVisible(
+      find.text('تطبيق التصفية'),
+      200,
+      scrollable: scrollable,
+    );
+    await tester.tap(find.text('تطبيق التصفية'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(container.read(hadithFilterProvider).narrator, 'أبو هريرة');
     expect(tester.takeException(), isNull);
   });
 }

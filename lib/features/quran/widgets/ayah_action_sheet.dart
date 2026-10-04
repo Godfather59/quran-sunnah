@@ -61,9 +61,15 @@ class _AyahSheet extends ConsumerWidget {
               ? Icons.pause
               : Icons.play_arrow,
           s.t('play'),
-          canStream ? () => play(repeat: false) : () {}),
+          canStream
+              ? () => play(repeat: false)
+              : () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(s.t('noVerifiedRecitation'))))),
       _Action(Icons.repeat, s.t('repeat'),
-          canStream ? () => play(repeat: true) : () {}),
+          canStream
+              ? () => play(repeat: true)
+              : () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(s.t('noVerifiedRecitation'))))),
       _Action(Icons.menu_book, s.t('tafsir'), () {
         Navigator.pop(context);
         Navigator.of(context).push(MaterialPageRoute(

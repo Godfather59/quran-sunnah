@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -360,23 +361,32 @@ class ContentPackageDownloader {
       final url = Uri.parse(
         '${manifest.sourceBaseUrl}${fileSpec.path}',
       );
-      final client = HttpClient();
+      final client = HttpClient()
+        ..connectionTimeout = const Duration(seconds: 20);
       try {
-        var request = await client.getUrl(url);
+        var request = await client
+            .getUrl(url)
+            .timeout(const Duration(seconds: 30));
         if (existing > 0) {
           request.headers.set(
             HttpHeaders.rangeHeader,
             'bytes=$existing-',
           );
         }
-        var response = await request.close();
+        var response = await request
+            .close()
+            .timeout(const Duration(seconds: 30));
 
         if (existing > 0 &&
             response.statusCode != HttpStatus.partialContent) {
           await part.delete();
           existing = 0;
-          request = await client.getUrl(url);
-          response = await request.close();
+          request = await client
+              .getUrl(url)
+              .timeout(const Duration(seconds: 30));
+          response = await request
+              .close()
+              .timeout(const Duration(seconds: 30));
         }
         if (response.statusCode != HttpStatus.ok &&
             response.statusCode != HttpStatus.partialContent) {
@@ -390,7 +400,14 @@ class ContentPackageDownloader {
         );
         var written = existing;
         try {
-          await for (final chunk in response) {
+          await for (final chunk in response.timeout(
+            const Duration(seconds: 90),
+            onTimeout: (sink) => sink.addError(
+              TimeoutException(
+                'Stalled download for ${fileSpec.path}',
+              ),
+            ),
+          )) {
             if (_cancelRequested.contains(packageId)) {
               throw const PackageDownloadCancelled();
             }

@@ -200,7 +200,8 @@ class HadithCard extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 12),
-              if (app.displayGrade) _GradeRow(hadith: h),
+              if (app.displayGrade && h.grade != null)
+                _GradeRow(hadith: h),
               if (h.narrator != null &&
                   h.narrator!.isNotEmpty)
                 TextButton(

@@ -390,7 +390,8 @@ class AudioService extends StateNotifier<AudioState> {
 
   Future<int> estimateSurahBytes(Reciter reciter, int surah) async {
     final meta = kSurahMetadata.firstWhere((m) => m.number == surah);
-    final client = HttpClient();
+    final client = HttpClient()
+      ..connectionTimeout = const Duration(seconds: 15);
     try {
       var total = 0;
       for (var ayah = 1; ayah <= meta.ayahCount; ayah++) {
@@ -502,7 +503,8 @@ class AudioService extends StateNotifier<AudioState> {
   ) async {
     final key = _downloadKey(reciter, surah);
     final meta = kSurahMetadata.firstWhere((m) => m.number == surah);
-    final client = HttpClient();
+    final client = HttpClient()
+      ..connectionTimeout = const Duration(seconds: 15);
     try {
       var completedBytes = 0;
       _setDownloadTask(AudioDownloadTask(
@@ -668,9 +670,11 @@ class AudioCache {
   Future<int> remoteSize(HttpClient client, Reciter reciter,
       int surah, int ayah) async {
     try {
-      final req = await client.headUrl(Uri.parse(
-          reciter.fileUrl(globalAyahNumber(surah, ayah))));
-      final res = await req.close();
+      final req = await client
+          .headUrl(Uri.parse(
+              reciter.fileUrl(globalAyahNumber(surah, ayah))))
+          .timeout(const Duration(seconds: 20));
+      final res = await req.close().timeout(const Duration(seconds: 20));
       await res.drain();
       return res.contentLength < 0 ? 0 : res.contentLength;
     } catch (_) {
@@ -685,9 +689,11 @@ class AudioCache {
     if (await file.exists() && await file.length() > 0) {
       return;
     }
-    final req = await client.getUrl(Uri.parse(
-        reciter.fileUrl(globalAyahNumber(surah, ayah))));
-    final res = await req.close();
+    final req = await client
+        .getUrl(Uri.parse(
+            reciter.fileUrl(globalAyahNumber(surah, ayah))))
+        .timeout(const Duration(seconds: 20));
+    final res = await req.close().timeout(const Duration(seconds: 30));
     if (res.statusCode != 200) {
       throw HttpException(
           'audio ${res.statusCode} for $surah:$ayah');

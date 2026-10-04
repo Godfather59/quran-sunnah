@@ -65,14 +65,44 @@ class _HadithFilterScreenState extends ConsumerState<HadithFilterScreen> {
                 decoration: InputDecoration(labelText: s.t('hadithNumber')),
               ),
               const SizedBox(height: 12),
-              TextField(
+              // Rawi chooser: famous narrators as one-tap shortcuts plus
+              // free text. Always an honest matn text search — no
+              // structured narrator dataset ships yet.
+              DropdownMenu<String>(
                 controller: _narrator,
-                decoration: InputDecoration(
-                  labelText: s.t('tabNarrator'),
-                  helperText: s.isArabic
-                      ? 'بحث نصي في متن الحديث (لا توجد بيانات رواة منظمة بعد).'
-                      : 'Text search inside hadith matn (no structured narrator dataset yet).',
-                ),
+                enableFilter: true,
+                requestFocusOnTap: true,
+                expandedInsets: EdgeInsets.zero,
+                label: Text(s.t('tabNarrator')),
+                helperText: s.isArabic
+                    ? 'اختر راويًا أو اكتب اسمًا — بحث نصي في المتن.'
+                    : 'Pick a narrator or type a name — matn text search.',
+                dropdownMenuEntries: const [
+                  DropdownMenuEntry(value: 'أبو هريرة', label: 'أبو هريرة'),
+                  DropdownMenuEntry(value: 'عائشة', label: 'عائشة'),
+                  DropdownMenuEntry(
+                      value: 'عبد الله بن عباس',
+                      label: 'عبد الله بن عباس'),
+                  DropdownMenuEntry(
+                      value: 'عبد الله بن عمر',
+                      label: 'عبد الله بن عمر'),
+                  DropdownMenuEntry(
+                      value: 'أنس بن مالك', label: 'أنس بن مالك'),
+                  DropdownMenuEntry(
+                      value: 'جابر بن عبد الله',
+                      label: 'جابر بن عبد الله'),
+                  DropdownMenuEntry(
+                      value: 'أبو سعيد الخدري',
+                      label: 'أبو سعيد الخدري'),
+                  DropdownMenuEntry(
+                      value: 'عبد الله بن مسعود',
+                      label: 'عبد الله بن مسعود'),
+                  DropdownMenuEntry(
+                      value: 'عمر بن الخطاب', label: 'عمر بن الخطاب'),
+                  DropdownMenuEntry(
+                      value: 'علي بن أبي طالب',
+                      label: 'علي بن أبي طالب'),
+                ],
               ),
               TextField(
                 controller: _grade,

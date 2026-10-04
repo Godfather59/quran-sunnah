@@ -509,6 +509,7 @@ class AppStrings {
       'fr': 'Traduction (pas le Coran)',
     },
     'cancel': {'ar': 'إلغاء', 'en': 'Cancel', 'fr': 'Annuler'},
+    'skip': {'ar': 'تخطي', 'en': 'Skip', 'fr': 'Passer'},
     'rename': {'ar': 'إعادة تسمية', 'en': 'Rename', 'fr': 'Renommer'},
     'delete': {'ar': 'حذف', 'en': 'Delete', 'fr': 'Supprimer'},
     'downloadedCount': {
