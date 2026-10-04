@@ -141,3 +141,15 @@ See `docs/DATA_LICENSES.md` for the dataset-by-dataset audit and
 `assets/licenses/DATA_NOTICES.txt` for the notices bundled with the app.
 Unresolved underlying-text redistribution rights are explicitly marked
 unresolved rather than inferred from an aggregator repository license.
+
+## Phase 3 product/content tooling
+
+- **Verified content gate:** `tool/content_pipeline.dart` validates incoming Quran/translation and Hadith packages before registration. Quran-style pipe datasets must contain exactly 6236 unique references with the expected 114-surah structure; structured Hadith grades are rejected without a grading authority.
+- **QuranEnc acquisition:** `tool/quranenc_fetch.dart` retains raw API responses plus version/publisher/terms metadata and SHA-256 fingerprints before producing normalized text. Candidate English Rowwad, French Rachid Maach and Arabic al-Sa‘di sources are recorded but remain disabled until their raw package and transcript/footnote metadata have been reviewed.
+- **Riwayat expansion:** al-Bazzi is recorded as a source candidate only. It is not exposed as a bundled edition while direct redistribution rights for the underlying edition remain unresolved.
+- **Mushaf polish:** verified Medina pages now persist reading position and show Juz/Hizb/Rubʿ and sajda metadata. Medina page layout is never borrowed for another Riwaya.
+- **Audio downloads:** per-surah queue with pause/resume/cancel/retry, partial-file safety, local-first resume and storage accounting.
+- **Library:** searchable bookmarks/notes/collections/highlights plus versioned JSON backup/restore of personal data only.
+- **Sunnah structured fields:** narrator/sanad/grade/topic filters are capability-driven and automatically remain locked until a registered verified source actually supplies those fields.
+- **Device QA:** `integration_test/device_smoke_test.dart` measures startup, verified Quran asset load and first/repeat FTS search on a real device. See `docs/PHASE3_CONTENT_AND_DEVICE_QA.md`.
+
