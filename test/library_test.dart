@@ -83,7 +83,7 @@ void main() {
     first.dispose();
 
     final second = ProviderContainer();
-    await Future<void>.delayed(const Duration(milliseconds: 20));
+    await second.read(libraryProvider.notifier).ready;
     expect(
       second.read(libraryProvider).any((b) => b.refKey == '2:255'),
       isTrue,
