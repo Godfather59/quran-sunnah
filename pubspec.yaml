@@ -15,7 +15,6 @@ dependencies:
   flutter_riverpod: ^2.5.1
   shared_preferences: ^2.2.3
   intl: ^0.20.3
-  google_fonts: ^6.2.1
   just_audio: ^0.9.40
   just_audio_background: ^0.0.1-beta.11
   dynamic_color: ^1.7.0
@@ -66,3 +65,11 @@ flutter:
     - assets/hadith/qudsi/sections/
     - assets/hadith/dehlawi/index.json
     - assets/hadith/dehlawi/sections/
+
+  fonts:
+    - family: Amiri Quran
+      fonts:
+        - asset: assets/fonts/AmiriQuran-Regular.ttf
+    - family: Noto Naskh Arabic
+      fonts:
+        - asset: assets/fonts/NotoNaskhArabic-Variable.ttf
