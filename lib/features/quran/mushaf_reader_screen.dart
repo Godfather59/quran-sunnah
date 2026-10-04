@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/l10n/app_strings.dart';
@@ -309,6 +310,10 @@ class _PageAyah extends StatelessWidget {
     };
     return InkWell(
       onTap: () => showAyahActionSheet(context, ayah),
+      onLongPress: () {
+        HapticFeedback.lightImpact();
+        showAyahActionSheet(context, ayah);
+      },
       child: Semantics(
         button: true,
         label: 'Ayah ${ayah.surah}:${ayah.displayAyahNumber}',

@@ -291,8 +291,31 @@ class _DailyAyah extends ConsumerWidget {
             child: Padding(
               padding: const EdgeInsets.all(18),
               child: ayahsAsync.when(
-                loading: () => const Center(
-                    child: CircularProgressIndicator()),
+                loading: () => Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Container(
+                      height: 22,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      height: 22,
+                      width: 180,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                    ),
+                  ],
+                ),
                 error: (e, _) => Text('$e'),
                 data: (list) {
                   final match = list
@@ -360,6 +383,37 @@ class _DailyHadith extends ConsumerWidget {
                 : FutureBuilder(
                     future: verified.allBukhari(),
                     builder: (context, snap) {
+                      if (snap.connectionState ==
+                          ConnectionState.waiting) {
+                        return Column(
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 18,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainerHighest,
+                                borderRadius:
+                                    BorderRadius.circular(6),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Container(
+                              height: 18,
+                              width: 160,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainerHighest,
+                                borderRadius:
+                                    BorderRadius.circular(6),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
                       final all = (snap.data ?? [])
                           .where((h) => !h.isPlaceholder)
                           .toList();

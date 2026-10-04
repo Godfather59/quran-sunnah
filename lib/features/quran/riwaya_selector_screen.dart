@@ -266,6 +266,31 @@ class FontSettingsSheet extends ConsumerWidget {
                   .read(quranPrefsProvider.notifier)
                   .update(q.copyWith(ayahSpacing: v)),
             ),
+            const SizedBox(height: 12),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                border: Border.all(
+                    color:
+                        Theme.of(context).colorScheme.outlineVariant),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                'بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ ﴿١﴾',
+                textDirection: TextDirection.rtl,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: switch (q.font) {
+                    QuranFont.uthmani => 'Amiri Quran',
+                    QuranFont.indopak => 'Amiri Quran',
+                    _ => 'Noto Naskh Arabic',
+                  },
+                  fontSize: q.fontSize.clamp(16, 40),
+                  height: q.lineHeight.clamp(1.4, 2.6),
+                ),
+              ),
+            ),
           ],
         ),
       ),

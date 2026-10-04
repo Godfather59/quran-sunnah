@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../core/theme/app_theme.dart';
@@ -59,25 +60,13 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
                 children: [
                   Text(meta.nameAr, textDirection: TextDirection.rtl),
                   GestureDetector(
-                    onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (_) =>
-                                const RiwayaSelectorScreen())),
+                    onTap: () => _showEditionSheet(context, s),
                     child: Text(
-                      '${s.t('riwaya')} · ${riwaya.riwayaAr} ▾',
+                      '${riwaya.riwayaAr} · ${_scriptLabel(s, q.datasetScript)} ▾',
                       style:
                           Theme.of(context).textTheme.labelSmall,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (_) =>
-                                const ScriptSelectorScreen())),
-                    child: Text(
-                      '${s.t('quranScript')} · ${_scriptLabel(s, q.datasetScript)} ▾',
-                      style:
-                          Theme.of(context).textTheme.labelSmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
@@ -211,6 +200,10 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
                   borderRadius: BorderRadius.circular(12),
                   onTap: () =>
                       showAyahActionSheet(context, a),
+                  onLongPress: () {
+                    HapticFeedback.lightImpact();
+                    showAyahActionSheet(context, a);
+                  },
                   child: Column(
                     crossAxisAlignment:
                         CrossAxisAlignment.stretch,
@@ -336,3 +329,38 @@ String _scriptLabel(AppStrings s, QuranScript script) => switch (script) {
       QuranScript.indopak => s.t('indopak'),
       QuranScript.tajweed => s.t('uthmani'),
     };
+
+void _showEditionSheet(BuildContext context, AppStrings s) {
+  showModalBottomSheet(
+    context: context,
+    showDragHandle: true,
+    builder: (ctx) => SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.menu_book_outlined),
+            title: Text(s.t('riwaya')),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              Navigator.pop(ctx);
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => const RiwayaSelectorScreen()));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.font_download_outlined),
+            title: Text(s.t('quranScript')),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              Navigator.pop(ctx);
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => const ScriptSelectorScreen()));
+            },
+          ),
+          const SizedBox(height: 8),
+        ],
+      ),
+    ),
+  );
+}

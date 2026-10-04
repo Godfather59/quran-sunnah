@@ -242,7 +242,7 @@ class _GlobalSearchScreenState
               const SizedBox(height: 4),
               Text(h.snippet,
                   textDirection: TextDirection.rtl,
-                  maxLines: 3,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: AppTheme.quranArabic(context,
                       size: 19)),
@@ -262,7 +262,7 @@ class _GlobalSearchScreenState
           title: Text(h.title,
               style: Theme.of(context).textTheme.labelLarge),
           subtitle: Text('${h.subtitle}\n${h.snippet}',
-              maxLines: 3, overflow: TextOverflow.ellipsis),
+              maxLines: 2, overflow: TextOverflow.ellipsis),
           isThreeLine: true,
           onTap: () => showModalBottomSheet(
             context: context,
@@ -288,7 +288,7 @@ class _GlobalSearchScreenState
           title: Text(h.title,
               style: Theme.of(context).textTheme.labelLarge),
           subtitle: Text(h.snippet,
-              maxLines: 3, overflow: TextOverflow.ellipsis),
+              maxLines: 2, overflow: TextOverflow.ellipsis),
           isThreeLine: true,
           onTap: () => Navigator.of(context).push(
               MaterialPageRoute(

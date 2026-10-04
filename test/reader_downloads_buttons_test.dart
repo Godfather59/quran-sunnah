@@ -129,11 +129,16 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 500));
 
-    // Riwaya + kitaba lines both present in reader AppBar.
-    expect(find.textContaining('Riwaya'), findsOneWidget);
-    expect(find.textContaining('Quran script'), findsOneWidget);
+    // Single collapsed edition line opens sheet with both options.
+    expect(find.textContaining('▾'), findsOneWidget);
 
-    await tester.tap(find.textContaining('Quran script'));
+    await tester.tap(find.textContaining('▾'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.text('Riwaya'), findsOneWidget);
+    expect(find.text('Quran script'), findsOneWidget);
+
+    await tester.tap(find.text('Quran script'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
     expect(find.byType(ScriptSelectorScreen), findsOneWidget);
@@ -205,8 +210,7 @@ void main() {
     final context = tester.element(find.byType(QuranReaderScreen));
     expect(Directionality.of(context), TextDirection.rtl);
     expect(Theme.of(context).brightness, Brightness.dark);
-    expect(find.textContaining('الرواية'), findsOneWidget);
-    expect(find.textContaining('رسم المصحف'), findsOneWidget);
+    expect(find.textContaining('▾'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
