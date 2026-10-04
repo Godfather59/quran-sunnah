@@ -334,6 +334,7 @@ class SettingsScreen extends ConsumerWidget {
             children: kTafsirCatalog
                 .map((t) => RadioListTile<String>(
                       value: t.id,
+                      enabled: t.bundled,
                       title: Text(s.isArabic
                           ? t.titleAr
                           : t.titleEn),
