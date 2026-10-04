@@ -55,7 +55,7 @@ class HomeScreen extends ConsumerWidget {
           ),
           IconButton(
             icon: const Icon(Icons.dashboard_customize_outlined),
-            tooltip: 'Customize',
+            tooltip: s.t('customizeHome'),
             onPressed: () => _customize(context, ref, locale),
           ),
         ],
@@ -128,21 +128,30 @@ class _ContinueReadingHero extends ConsumerWidget {
                   Icon(Icons.menu_book,
                       color: scheme.onPrimaryContainer),
                   const SizedBox(width: 8),
-                  Text(s.t('continueReading'),
+                  Expanded(
+                    child: Text(
+                      s.t('continueReading'),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       style: Theme.of(context)
                           .textTheme
                           .titleMedium
                           ?.copyWith(
-                              color:
-                                  scheme.onPrimaryContainer,
-                              fontWeight: FontWeight.w700)),
-                  const Spacer(),
+                              color: scheme.onPrimaryContainer,
+                              fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
                   const Icon(Icons.arrow_forward),
                 ],
               ),
               const SizedBox(height: 12),
               Text(
-                '${meta.nameAr} · ${meta.nameEn}',
+                s.isArabic
+                    ? meta.nameAr
+                    : s.locale.languageCode == 'fr'
+                        ? '${meta.nameAr} · ${meta.nameFr}'
+                        : '${meta.nameAr} · ${meta.nameEn}',
                 textDirection: TextDirection.rtl,
                 style: Theme.of(context)
                     .textTheme
@@ -152,7 +161,7 @@ class _ContinueReadingHero extends ConsumerWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'Ayah ${q.lastAyah} of ${meta.ayahCount} · ${(progress * 100).toStringAsFixed(0)}%',
+                '${s.t('ayahLabel')} ${q.lastAyah} ${s.t('of')} ${meta.ayahCount} · ${(progress * 100).toStringAsFixed(0)}%',
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall
@@ -171,7 +180,8 @@ class _ContinueReadingHero extends ConsumerWidget {
               const SizedBox(height: 10),
               Chip(
                 label: Text(
-                    '${s.t('riwaya')}: ${riwaya.riwayaEn}'),
+                  '${s.t('riwaya')}: ${s.isArabic ? riwaya.riwayaAr : riwaya.riwayaEn}',
+                ),
                 visualDensity: VisualDensity.compact,
               ),
             ],
@@ -306,10 +316,10 @@ class _DailyAyah extends ConsumerWidget {
                               context,
                               size: 22)),
                       const SizedBox(height: 8),
-                      Text('Surah $surah · Ayah $ayah',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelSmall),
+                      Text(
+                        '${s.t('surah')} $surah · ${s.t('ayahLabel')} $ayah',
+                        style: Theme.of(context).textTheme.labelSmall,
+                      ),
                     ],
                   );
                 },
@@ -379,10 +389,11 @@ class _DailyHadith extends ConsumerWidget {
                                   height: 1.9)),
                           const SizedBox(height: 8),
                           Text(
-                              'Sahih al-Bukhari · Hadith ${h.hadithNumber}',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall),
+                            s.isArabic
+                                ? 'صحيح البخاري · ${s.t('hadith')} ${h.hadithNumber}'
+                                : 'Sahih al-Bukhari · ${s.t('hadith')} ${h.hadithNumber}',
+                            style: Theme.of(context).textTheme.labelSmall,
+                          ),
                         ],
                       );
                     },
@@ -467,31 +478,49 @@ class _LibraryStats extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeader(title: s.t('atAGlance')),
-        Row(
-          children: stats
-              .map((e) => Expanded(
-                      child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 16),
-                      child: Column(
-                        children: [
-                          Icon(e.$1),
-                          const SizedBox(height: 4),
-                          Text(e.$2,
+        if (MediaQuery.textScalerOf(context).scale(1) >= 1.5)
+          ...stats.map(
+            (e) => Card(
+              child: ListTile(
+                leading: Icon(e.$1),
+                title: Text(e.$3),
+                trailing: Text(
+                  e.$2,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
+            ),
+          )
+        else
+          Row(
+            children: stats
+                .map((e) => Expanded(
+                        child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Column(
+                          children: [
+                            Icon(e.$1),
+                            const SizedBox(height: 4),
+                            Text(e.$2,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge),
+                            Text(
+                              e.$3,
+                              textAlign: TextAlign.center,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                               style: Theme.of(context)
                                   .textTheme
-                                  .titleLarge),
-                          Text(e.$3,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall),
-                        ],
+                                  .labelSmall,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  )))
-              .toList(),
-        ),
+                    )))
+                .toList(),
+          ),
       ],
     );
   }

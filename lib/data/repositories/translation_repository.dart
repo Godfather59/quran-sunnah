@@ -26,6 +26,22 @@ const List<QuranTranslation> kTranslationCatalog = [
     translator: 'Muhammad Hamidullah',
     source: 'Tanzil — https://tanzil.net/trans/fr.hamidullah',
   ),
+  QuranTranslation(
+    id: 'en-rowwad',
+    language: 'en',
+    translator: 'Rowwad Translation Center',
+    source: 'QuranEnc · key english_rwwad',
+    version: '1.0.19 (2026-03-12)',
+    bundled: false,
+  ),
+  QuranTranslation(
+    id: 'fr-rachid',
+    language: 'fr',
+    translator: 'Rachid Maach',
+    source: 'QuranEnc · key french_rashid',
+    version: '1.0.3 (2026-06-21)',
+    bundled: false,
+  ),
 ];
 
 /// refKey "surah:ayah" → translation text. Cached per translation id.

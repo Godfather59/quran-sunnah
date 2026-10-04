@@ -108,6 +108,16 @@ void main() {
     expect(after, before);
   });
 
+  test('bundled Hadith collections expose no invented structured fields',
+      () async {
+    final repo = VerifiedAssetHadithRepository();
+    final caps = await repo.capabilities({'bukhari', 'muslim'});
+    expect(caps.narrator, isFalse);
+    expect(caps.grade, isFalse);
+    expect(caps.topics, isFalse);
+    expect(caps.sanad, isFalse);
+  });
+
   test('global ayah numbering anchors CDN files', () {
     expect(globalAyahNumber(1, 1), 1);
     expect(globalAyahNumber(1, 7), 7);

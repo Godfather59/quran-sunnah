@@ -82,4 +82,21 @@ void main() {
     expect(Theme.of(context).brightness, Brightness.light);
     expect(tester.takeException(), isNull);
   });
+  testWidgets('phone layout tolerates 200 percent text scaling',
+      (tester) async {
+    tester.platformDispatcher.textScaleFactorTestValue = 2.0;
+    addTearDown(
+        tester.platformDispatcher.clearTextScaleFactorTestValue);
+
+    await _pumpAdaptive(
+      tester,
+      size: const Size(390, 844),
+      locale: const Locale('ar'),
+      themeMode: ThemeMode.light,
+    );
+
+    expect(find.byType(AdaptiveScaffold), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
 }

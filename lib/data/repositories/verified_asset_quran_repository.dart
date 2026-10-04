@@ -70,6 +70,7 @@ class VerifiedAssetQuranRepository implements QuranRepository {
         hizb: meta?.hizbOf(surah, ayah),
         rub: meta?.rubOf(surah, ayah),
         page: pageMapped ? meta?.pageOf(surah, ayah) : null,
+        isSajda: meta?.isSajda(surah, ayah) ?? false,
       ));
     }
     _cache[editionId] = ayahs;

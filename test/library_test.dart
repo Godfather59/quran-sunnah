@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quran_sunnah_app/data/database/app_database.dart';
+import 'package:quran_sunnah_app/data/database/library_store.dart';
 import 'package:quran_sunnah_app/state/database_provider.dart';
 import 'package:quran_sunnah_app/state/library_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -170,4 +171,40 @@ void main() {
       hasLength(1),
     );
   });
+  test('versioned backup restores personal library into a clean database',
+      () async {
+    final sourceDb = AppDatabase.memory();
+    addTearDown(sourceDb.close);
+    final source = LibraryStore(sourceDb);
+    await source.initialize();
+    await source.addCollection('Backup Study');
+    final collections = await source.collections();
+    final collection =
+        collections.firstWhere((c) => c.name == 'Backup Study');
+    await source.setAyahCollection(2, 255, collection.id);
+    await source.upsertNote('2:255', 'backup note');
+    await source.toggleHighlight('2:255', 0xFFFFD54F);
+
+    final backup = await source.backup();
+    expect(backup['format'], 'quran-sunnah-library');
+    expect(backup['version'], 1);
+
+    final targetDb = AppDatabase.memory();
+    addTearDown(targetDb.close);
+    final target = LibraryStore(targetDb);
+    await target.initialize();
+    await target.restoreBackup(backup);
+
+    expect(
+      (await target.bookmarks()).any((b) => b.refKey == '2:255'),
+      isTrue,
+    );
+    expect((await target.notes()).single.text, 'backup note');
+    expect((await target.highlights()).single.refKey, '2:255');
+    expect(
+      (await target.collections()).any((c) => c.name == 'Backup Study'),
+      isTrue,
+    );
+  });
+
 }

@@ -23,6 +23,7 @@ class _BundledCollection {
     required this.version,
     required this.totalHadith,
     required this.sizeMb,
+    required this.capabilities,
   });
 
   final String id;
@@ -30,6 +31,7 @@ class _BundledCollection {
   final String version;
   final int totalHadith;
   final double sizeMb;
+  final HadithCapabilities capabilities;
 }
 
 const _bundled = [
@@ -40,6 +42,7 @@ const _bundled = [
     version: 'hadith-api@1',
     totalHadith: 7589,
     sizeMb: 9.0,
+    capabilities: HadithCapabilities(),
   ),
   _BundledCollection(
     id: 'muslim',
@@ -48,6 +51,7 @@ const _bundled = [
     version: 'hadith-api@1',
     totalHadith: 7563,
     sizeMb: 8.0,
+    capabilities: HadithCapabilities(),
   ),
   _BundledCollection(
     id: 'abudawud',
@@ -56,6 +60,7 @@ const _bundled = [
     version: 'hadith-api@1',
     totalHadith: 5274,
     sizeMb: 6.5,
+    capabilities: HadithCapabilities(),
   ),
   _BundledCollection(
     id: 'tirmidhi',
@@ -64,6 +69,7 @@ const _bundled = [
     version: 'hadith-api@1',
     totalHadith: 3998,
     sizeMb: 5.0,
+    capabilities: HadithCapabilities(),
   ),
   _BundledCollection(
     id: 'nasai',
@@ -72,6 +78,7 @@ const _bundled = [
     version: 'hadith-api@1',
     totalHadith: 5765,
     sizeMb: 7.0,
+    capabilities: HadithCapabilities(),
   ),
   _BundledCollection(
     id: 'ibnmajah',
@@ -80,6 +87,7 @@ const _bundled = [
     version: 'hadith-api@1',
     totalHadith: 4343,
     sizeMb: 5.5,
+    capabilities: HadithCapabilities(),
   ),
   _BundledCollection(
     id: 'malik',
@@ -88,6 +96,7 @@ const _bundled = [
     version: 'hadith-api@1',
     totalHadith: 1858,
     sizeMb: 2.5,
+    capabilities: HadithCapabilities(),
   ),
   _BundledCollection(
     id: 'nawawi',
@@ -96,6 +105,7 @@ const _bundled = [
     version: 'hadith-api@1',
     totalHadith: 42,
     sizeMb: 0.3,
+    capabilities: HadithCapabilities(),
   ),
   _BundledCollection(
     id: 'qudsi',
@@ -104,6 +114,7 @@ const _bundled = [
     version: 'hadith-api@1',
     totalHadith: 40,
     sizeMb: 0.3,
+    capabilities: HadithCapabilities(),
   ),
   _BundledCollection(
     id: 'dehlawi',
@@ -112,6 +123,7 @@ const _bundled = [
     version: 'hadith-api@1',
     totalHadith: 40,
     sizeMb: 0.3,
+    capabilities: HadithCapabilities(),
   ),
 ];
 
@@ -202,6 +214,16 @@ class VerifiedAssetHadithRepository implements HadithRepository {
     final id = sameCount == 0
         ? '$collectionId:$number'
         : '$collectionId:$number#${sameCount + 1}';
+    final narrator = (m['narrator'] as String?)?.trim();
+    final sanad = (m['sanadAr'] as String?)?.trim();
+    final grade = (m['grade'] as String?)?.trim();
+    final authority = (m['gradingAuthority'] as String?)?.trim();
+    final topics = (m['topics'] as List?)
+            ?.map((e) => e.toString().trim())
+            .where((e) => e.isNotEmpty)
+            .toList(growable: false) ??
+        const <String>[];
+
     return Hadith(
       id: id,
       collectionId: collectionId,
@@ -211,10 +233,11 @@ class VerifiedAssetHadithRepository implements HadithRepository {
       chapterAr: '',
       hadithNumber: '$number',
       matnAr: text,
-      narrator: null,
-      sanadAr: null,
-      grade: null,
-      gradingAuthority: null,
+      narrator: narrator?.isEmpty == true ? null : narrator,
+      sanadAr: sanad?.isEmpty == true ? null : sanad,
+      grade: grade?.isEmpty == true ? null : grade,
+      gradingAuthority: authority?.isEmpty == true ? null : authority,
+      topics: topics,
       // Upstream numbers without matn keep their reference honestly.
       isPlaceholder: text.isEmpty,
     );
@@ -301,6 +324,26 @@ class VerifiedAssetHadithRepository implements HadithRepository {
           h.hadithNumber != filter.number!.trim()) {
         return false;
       }
+      if (filter.narrator != null &&
+          filter.narrator!.trim().isNotEmpty &&
+          !(h.narrator ?? '')
+              .toLowerCase()
+              .contains(filter.narrator!.trim().toLowerCase())) {
+        return false;
+      }
+      if (filter.grade != null &&
+          filter.grade!.trim().isNotEmpty &&
+          (h.grade ?? '').toLowerCase() !=
+              filter.grade!.trim().toLowerCase()) {
+        return false;
+      }
+      if (filter.topic != null &&
+          filter.topic!.trim().isNotEmpty &&
+          !h.topics.any((t) => t
+              .toLowerCase()
+              .contains(filter.topic!.trim().toLowerCase()))) {
+        return false;
+      }
       if (q.isNotEmpty &&
           !normalizeArabic(h.matnAr).contains(normQ) &&
           !h.hadithNumber.contains(q)) {
@@ -325,6 +368,18 @@ class VerifiedAssetHadithRepository implements HadithRepository {
       }
     }
     return out;
+  }
+
+  @override
+  Future<HadithCapabilities> capabilities(Set<String> collectionIds) async {
+    final ids = collectionIds.isEmpty
+        ? _bundled.map((b) => b.id).toSet()
+        : collectionIds;
+    var result = const HadithCapabilities();
+    for (final item in _bundled.where((b) => ids.contains(b.id))) {
+      result = result.merge(item.capabilities);
+    }
+    return result;
   }
 
   @override

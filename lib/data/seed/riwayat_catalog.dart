@@ -37,7 +37,8 @@ const List<RiwayaInfo> kRiwayaCatalog = [
     id: RiwayaId.bazziIbnKathir,
     qiraaAr: 'ابن كثير', qiraaEn: 'Ibn Kathīr', qiraaFr: 'Ibn Kathīr',
     riwayaAr: 'البزي عن ابن كثير', riwayaEn: 'Al-Bazzī ʿan Ibn Kathīr', riwayaFr: 'Al-Bazzī ʿan Ibn Kathīr',
-    datasetVersion: 'pending', source: 'Verified dataset required',
+    datasetVersion: 'quran-api@1 candidate',
+    source: 'quran-api ara-quranbazzi · direct redistribution terms unresolved',
   ),
   RiwayaInfo(
     id: RiwayaId.qunbulIbnKathir,

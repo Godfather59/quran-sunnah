@@ -38,7 +38,7 @@ class _TafsirScreenState extends ConsumerState<TafsirScreen> {
 
     return Scaffold(
       appBar: AppBar(
-          title: Text('Tafsir · ${widget.surah}:${widget.ayah}')),
+          title: Text('${s.t('tafsir')} · ${widget.surah}:${widget.ayah}')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -46,15 +46,17 @@ class _TafsirScreenState extends ConsumerState<TafsirScreen> {
             spacing: 8,
             children: kTafsirCatalog
                 .map((t) => ChoiceChip(
-                      label: Text(t.titleEn),
+                      label: Text(s.isArabic ? t.titleAr : t.titleEn),
                       selected: _tafsir == t.id,
-                      onSelected: (_) async {
-                        setState(() => _tafsir = t.id);
-                        final q = ref.read(quranPrefsProvider);
-                        await ref
-                            .read(quranPrefsProvider.notifier)
-                            .update(q.copyWith(tafsirId: t.id));
-                      },
+                      onSelected: !t.bundled
+                          ? null
+                          : (_) async {
+                              setState(() => _tafsir = t.id);
+                              final q = ref.read(quranPrefsProvider);
+                              await ref
+                                  .read(quranPrefsProvider.notifier)
+                                  .update(q.copyWith(tafsirId: t.id));
+                            },
                     ))
                 .toList(),
           ),
@@ -66,7 +68,7 @@ class _TafsirScreenState extends ConsumerState<TafsirScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                      'Source: ${info.titleAr} · ${info.titleEn}\n${info.source}',
+                      '${s.t('source')}: ${info.titleAr} · ${info.titleEn}\n${info.source}',
                       textDirection: TextDirection.ltr,
                       style:
                           Theme.of(context).textTheme.labelSmall),
@@ -74,8 +76,7 @@ class _TafsirScreenState extends ConsumerState<TafsirScreen> {
                   if (!info.bundled) ...[
                     Text(s.t('contentUnavailable')),
                     const SizedBox(height: 8),
-                    const Text(
-                        'This tafsir needs its verified licensed dataset before it can be shown.'),
+                    Text(s.t('tafsirDatasetRequired')),
                   ] else
                     entriesAsync.when(
                       loading: () => const Center(

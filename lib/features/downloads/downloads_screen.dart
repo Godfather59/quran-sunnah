@@ -34,7 +34,7 @@ class DownloadsScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const Text('Quran Riwayat',
+          Text(s.t('quranRiwayat'),
               style:
                   TextStyle(fontWeight: FontWeight.w700)),
           ...kRiwayaCatalog.take(4).map((r) {
@@ -51,7 +51,7 @@ class DownloadsScreen extends ConsumerWidget {
             );
           }),
           const SizedBox(height: 12),
-          const Text('Hadith collections',
+          Text(s.t('hadithCollections'),
               style:
                   TextStyle(fontWeight: FontWeight.w700)),
           ...kHadithCollections.map((c) {
@@ -72,10 +72,8 @@ class DownloadsScreen extends ConsumerWidget {
           Card(
             child: ListTile(
               leading: const Icon(Icons.headphones_outlined),
-              title: const Text('Quran audio'),
-              subtitle: const Text(
-                'Audio downloads are managed by the real per-surah audio downloader.',
-              ),
+              title: Text(s.t('quranAudioDownloads')),
+              subtitle: Text(s.t('audioDownloadsHint')),
               trailing: const Icon(Icons.chevron_right),
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const AudioPlayerScreen()),
@@ -83,7 +81,7 @@ class DownloadsScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 16),
-          Text('${dl.installed.length} verified bundled datasets installed'),
+          Text('${dl.installed.length} ${s.t('verifiedDatasetsInstalled')}'),
         ],
       ),
     );
@@ -99,10 +97,10 @@ class DownloadsScreen extends ConsumerWidget {
       child: ListTile(
         title: Text(label),
         subtitle: Text(installed
-            ? 'Installed${protected ? ' · ships with app' : ''} · ${sizeMb.toStringAsFixed(1)} MB'
+            ? '${AppStrings.of(context).t('installed')}${protected ? ' · ${AppStrings.of(context).t('shipsWithApp')}' : ''} · ${sizeMb.toStringAsFixed(1)} MB'
             : available
                 ? '${sizeMb.toStringAsFixed(1)} MB'
-                : 'Verified dataset not bundled yet'),
+                : AppStrings.of(context).t('datasetUnavailable')),
         trailing: installed
             ? (protected
                 ? const Icon(Icons.check_circle_outline)

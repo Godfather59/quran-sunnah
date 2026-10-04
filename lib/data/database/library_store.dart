@@ -263,6 +263,185 @@ class LibraryStore {
     );
   }
 
+  Future<Map<String, dynamic>> backup() async {
+    final bookmarkRows = await bookmarks();
+    final noteRows = await notes();
+    final highlightRows = await highlights();
+    final collectionRows = await collections();
+    final recentRows = await recent();
+    return {
+      'format': 'quran-sunnah-library',
+      'version': 1,
+      'exportedAt': DateTime.now().toUtc().toIso8601String(),
+      'bookmarks': [
+        for (final b in bookmarkRows)
+          {
+            'id': b.id,
+            'kind': b.kind.index,
+            'refKey': b.refKey,
+            'title': b.title,
+            'subtitle': b.subtitle,
+            'collectionId': b.collectionId,
+            'createdAt': b.createdAt?.toUtc().toIso8601String(),
+          }
+      ],
+      'notes': [
+        for (final n in noteRows)
+          {
+            'id': n.id,
+            'refKey': n.refKey,
+            'text': n.text,
+            'createdAt': n.createdAt?.toUtc().toIso8601String(),
+          }
+      ],
+      'highlights': [
+        for (final h in highlightRows)
+          {
+            'id': h.id,
+            'refKey': h.refKey,
+            'colorValue': h.colorValue,
+          }
+      ],
+      'collections': [
+        for (final collection in collectionRows)
+          {'id': collection.id, 'name': collection.name}
+      ],
+      'recent': [
+        for (final item in recentRows)
+          {
+            'refKey': item.refKey,
+            'title': item.title,
+            'subtitle': item.subtitle,
+            'kind': item.kind.index,
+          }
+      ],
+    };
+  }
+
+  Future<void> restoreBackup(Map<String, dynamic> backup) async {
+    if (backup['format'] != 'quran-sunnah-library' ||
+        backup['version'] != 1) {
+      throw const FormatException('Unsupported library backup format.');
+    }
+
+    List<Map<String, dynamic>> maps(String key) {
+      final value = backup[key];
+      if (value is! List) return const [];
+      return value
+          .whereType<Map>()
+          .map((e) => Map<String, dynamic>.from(e))
+          .toList(growable: false);
+    }
+
+    final collectionRows = maps('collections');
+    final bookmarkRows = maps('bookmarks');
+    final noteRows = maps('notes');
+    final highlightRows = maps('highlights');
+    final recentRows = maps('recent');
+
+    await db.transaction(() async {
+      await db.customStatement('DELETE FROM bookmarks');
+      await db.customStatement('DELETE FROM notes');
+      await db.customStatement('DELETE FROM highlights');
+      await db.customStatement('DELETE FROM recent_items');
+      await db.customStatement('DELETE FROM collections');
+
+      for (final row in collectionRows) {
+        final id = (row['id'] ?? '').toString();
+        final name = (row['name'] ?? '').toString().trim();
+        if (id.isEmpty || name.isEmpty) continue;
+        await db.customStatement(
+          'INSERT OR IGNORE INTO collections(id, name) VALUES (?, ?)',
+          [id, name],
+        );
+      }
+
+      for (final row in bookmarkRows) {
+        final id = (row['id'] ?? '').toString();
+        final refKey = (row['refKey'] ?? '').toString();
+        final kind = row['kind'];
+        if (id.isEmpty ||
+            refKey.isEmpty ||
+            kind is! int ||
+            kind < 0 ||
+            kind >= BookmarkKind.values.length) {
+          continue;
+        }
+        final collectionId = row['collectionId']?.toString();
+        final knownCollection = collectionId == null ||
+            collectionRows.any((c) => c['id']?.toString() == collectionId);
+        final created = DateTime.tryParse((row['createdAt'] ?? '').toString()) ??
+            DateTime.now();
+        await db.customStatement(
+          'INSERT OR REPLACE INTO bookmarks('
+          'id, kind, ref_key, title, subtitle, collection_id, created_at'
+          ') VALUES (?, ?, ?, ?, ?, ?, ?)',
+          [
+            id,
+            kind,
+            refKey,
+            (row['title'] ?? '').toString(),
+            (row['subtitle'] ?? '').toString(),
+            knownCollection ? collectionId : null,
+            _seconds(created),
+          ],
+        );
+      }
+
+      for (final row in noteRows) {
+        final id = (row['id'] ?? '').toString();
+        final refKey = (row['refKey'] ?? '').toString();
+        final text = (row['text'] ?? '').toString().trim();
+        if (id.isEmpty || refKey.isEmpty || text.isEmpty) continue;
+        final created = DateTime.tryParse((row['createdAt'] ?? '').toString()) ??
+            DateTime.now();
+        await db.customStatement(
+          'INSERT OR REPLACE INTO notes(id, ref_key, text_value, created_at) '
+          'VALUES (?, ?, ?, ?)',
+          [id, refKey, text, _seconds(created)],
+        );
+      }
+
+      for (final row in highlightRows) {
+        final id = (row['id'] ?? '').toString();
+        final refKey = (row['refKey'] ?? '').toString();
+        final color = row['colorValue'];
+        if (id.isEmpty || refKey.isEmpty || color is! int) continue;
+        await db.customStatement(
+          'INSERT OR REPLACE INTO highlights(id, ref_key, color_value) '
+          'VALUES (?, ?, ?)',
+          [id, refKey, color],
+        );
+      }
+
+      var offset = 0;
+      for (final row in recentRows.take(50)) {
+        final refKey = (row['refKey'] ?? '').toString();
+        final kind = row['kind'];
+        if (refKey.isEmpty ||
+            kind is! int ||
+            kind < 0 ||
+            kind >= BookmarkKind.values.length) {
+          continue;
+        }
+        await db.customStatement(
+          'INSERT OR REPLACE INTO recent_items('
+          'ref_key, title, subtitle, kind, touched_at'
+          ') VALUES (?, ?, ?, ?, ?)',
+          [
+            refKey,
+            (row['title'] ?? '').toString(),
+            (row['subtitle'] ?? '').toString(),
+            kind,
+            _seconds(DateTime.now().subtract(Duration(seconds: offset++))),
+          ],
+        );
+      }
+    });
+
+    await _ensureDefaultCollections();
+  }
+
   Future<void> _ensureDefaultCollections() async {
     final rows = await db.customSelect('SELECT COUNT(*) AS c FROM collections').get();
     if (rows.first.read<int>('c') != 0) return;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../core/l10n/app_strings.dart';
 
 class DataSourcesScreen extends StatelessWidget {
   const DataSourcesScreen({super.key});
@@ -9,8 +10,9 @@ class DataSourcesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = AppStrings.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Data sources & licenses')),
+      appBar: AppBar(title: Text(s.t('dataSourcesLicenses'))),
       body: FutureBuilder<String>(
         future: _load(),
         builder: (context, snapshot) {
@@ -18,24 +20,19 @@ class DataSourcesScreen extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData) {
-            return const Center(
-              child: Text('Data notices are unavailable.'),
-            );
+            return Center(child: Text(s.t('dataNoticesUnavailable')));
           }
           return SelectionArea(
             child: ListView(
               padding: const EdgeInsets.all(20),
               children: [
                 Text(
-                  'Content provenance',
+                  s.t('contentProvenance'),
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Quran text, translations, tafsir, Hadith, morphology, '
-                  'Tajweed annotations and fonts have separate provenance '
-                  'and redistribution terms. Unresolved entries are stated '
-                  'explicitly rather than inferred from an aggregator license.',
+                  s.t('provenanceExplanation'),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 20),

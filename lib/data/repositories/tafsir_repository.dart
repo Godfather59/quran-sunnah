@@ -65,7 +65,7 @@ const List<TafsirInfo> kTafsirCatalog = [
     titleAr: 'تفسير السعدي',
     titleEn: 'Tafsir al-Sa‘di',
     language: 'ar',
-    source: 'Verified licensed dataset required',
+    source: 'QuranEnc · key arabic_saadi · V1.0.0 (2026-07-27)',
     bundled: false,
   ),
   TafsirInfo(

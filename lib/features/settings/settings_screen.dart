@@ -153,8 +153,7 @@ class SettingsScreen extends ConsumerWidget {
                 secondary:
                     const Icon(Icons.color_lens_outlined),
                 title: Text(s.t('dynamicColor')),
-                subtitle:
-                    const Text('Android · optional'),
+                subtitle: Text(s.t('dynamicColorHint')),
                 value: app.useDynamicColor,
                 onChanged: (v) => ref
                     .read(appPrefsProvider.notifier)
@@ -219,8 +218,8 @@ class SettingsScreen extends ConsumerWidget {
               ),
               _Nav(
                 icon: Icons.source_outlined,
-                title: 'Data sources & licenses',
-                subtitle: 'Provenance, attribution & unresolved terms',
+                title: s.t('dataSourcesLicenses'),
+                subtitle: s.t('contentProvenance'),
                 onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (_) =>
@@ -281,27 +280,27 @@ class SettingsScreen extends ConsumerWidget {
                       fontSize: 18,
                       fontWeight: FontWeight.w700)),
               ...kTranslationCatalog.map((t) => CheckboxListTile(
-                    value:
-                        q.translations.contains(t.id),
-                    onChanged: (v) {
-                      final next = [...q.translations];
-                      v == true
-                          ? next.add(t.id)
-                          : next.remove(t.id);
-                      ref
-                          .read(quranPrefsProvider.notifier)
-                          .update(
-                              q.copyWith(translations: next));
-                    },
+                    value: q.translations.contains(t.id),
+                    onChanged: !t.bundled
+                        ? null
+                        : (v) {
+                            final next = [...q.translations];
+                            v == true
+                                ? next.add(t.id)
+                                : next.remove(t.id);
+                            ref
+                                .read(quranPrefsProvider.notifier)
+                                .update(q.copyWith(translations: next));
+                          },
                     title: Text(s.isArabic
                         ? t.language == 'ar'
                             ? t.translator
                             : '${t.translator} (${t.language})'
                         : '${t.translator} · ${t.language}'),
-                    subtitle: Text(t.source,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall),
+                    subtitle: Text(
+                      '${t.source}${t.version == null ? '' : ' · ${t.version}'}${t.bundled ? '' : ' · ${s.t('notDownloaded')}'}',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   )),
             ],
           ),
@@ -335,6 +334,7 @@ class SettingsScreen extends ConsumerWidget {
             children: kTafsirCatalog
                 .map((t) => RadioListTile<String>(
                       value: t.id,
+                      enabled: t.bundled,
                       title: Text(s.isArabic
                           ? t.titleAr
                           : t.titleEn),

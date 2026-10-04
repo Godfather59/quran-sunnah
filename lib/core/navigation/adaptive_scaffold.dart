@@ -94,6 +94,9 @@ class _AdaptiveScaffoldState extends ConsumerState<AdaptiveScaffold> {
     return Scaffold(
       body: SafeArea(child: _pages[_index]),
       bottomNavigationBar: NavigationBar(
+        labelBehavior: MediaQuery.textScalerOf(context).scale(1) >= 1.5
+            ? NavigationDestinationLabelBehavior.onlyShowSelected
+            : NavigationDestinationLabelBehavior.alwaysShow,
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),
         destinations: destinations,

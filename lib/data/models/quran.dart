@@ -164,6 +164,7 @@ class Ayah {
     this.canonicalSurah,
     this.canonicalAyah,
     this.displayAyah,
+    this.isSajda = false,
     this.isPlaceholder = false,
   }) : assert(
           (canonicalSurah == null) == (canonicalAyah == null),
@@ -178,6 +179,7 @@ class Ayah {
   final int? hizb;
   final int? rub;
   final int? page;
+  final bool isSajda;
 
   /// Optional mapping to the app-wide canonical verse identity.
   ///
@@ -211,12 +213,16 @@ class QuranTranslation {
     required this.language,
     required this.translator,
     required this.source,
+    this.version,
+    this.bundled = true,
   });
 
   final String id;
   final String language;
   final String translator;
   final String source;
+  final String? version;
+  final bool bundled;
 }
 
 class TafsirEntry {

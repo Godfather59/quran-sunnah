@@ -74,6 +74,12 @@ class NotesNotifier extends StateNotifier<List<UserNote>> {
     state = await store.notes();
   }
 
+  Future<void> reload() async {
+    await ready;
+    final store = await _storeFuture;
+    state = await store.notes();
+  }
+
   UserNote? forRef(String refKey) =>
       state.where((n) => n.refKey == refKey).firstOrNull;
 
@@ -109,6 +115,12 @@ class CollectionsNotifier
   late final Future<void> ready;
 
   Future<void> _load() async {
+    final store = await _storeFuture;
+    state = await store.collections();
+  }
+
+  Future<void> reload() async {
+    await ready;
     final store = await _storeFuture;
     state = await store.collections();
   }
@@ -157,6 +169,12 @@ class HighlightsNotifier extends StateNotifier<List<Highlight>> {
     state = await store.highlights();
   }
 
+  Future<void> reload() async {
+    await ready;
+    final store = await _storeFuture;
+    state = await store.highlights();
+  }
+
   Highlight? forRef(String refKey) =>
       state.where((h) => h.refKey == refKey).firstOrNull;
 
@@ -189,6 +207,12 @@ class RecentNotifier extends StateNotifier<List<RecentItem>> {
   late final Future<void> ready;
 
   Future<void> _load() async {
+    final store = await _storeFuture;
+    state = await store.recent();
+  }
+
+  Future<void> reload() async {
+    await ready;
     final store = await _storeFuture;
     state = await store.recent();
   }

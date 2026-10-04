@@ -84,6 +84,51 @@ Reciter? reciterById(String identifier) =>
 List<Reciter> recitersForRiwaya(String riwayaKey) =>
     kReciters.where((r) => r.riwayaKey == riwayaKey).toList();
 
+enum AudioDownloadStatus {
+  queued,
+  measuring,
+  downloading,
+  paused,
+  completed,
+  failed,
+  canceled,
+}
+
+class AudioDownloadTask {
+  const AudioDownloadTask({
+    required this.reciterId,
+    required this.surah,
+    required this.status,
+    this.progress = 0,
+    this.totalBytes = 0,
+    this.error,
+  });
+
+  final String reciterId;
+  final int surah;
+  final AudioDownloadStatus status;
+  final double progress;
+  final int totalBytes;
+  final String? error;
+
+  String get key => '$reciterId:$surah';
+
+  AudioDownloadTask copyWith({
+    AudioDownloadStatus? status,
+    double? progress,
+    int? totalBytes,
+    String? error,
+  }) =>
+      AudioDownloadTask(
+        reciterId: reciterId,
+        surah: surah,
+        status: status ?? this.status,
+        progress: progress ?? this.progress,
+        totalBytes: totalBytes ?? this.totalBytes,
+        error: error,
+      );
+}
+
 class AudioState {
   const AudioState({
     this.playing = false,
@@ -93,6 +138,10 @@ class AudioState {
     this.error,
     this.reciterId = 'ar.alafasy',
     this.offlineSurahs = const {},
+    this.downloads = const {},
+    this.storageBytes = 0,
+    this.reciterStorageBytes = 0,
+    this.surahStorageBytes = const {},
   });
 
   final bool playing;
@@ -102,6 +151,10 @@ class AudioState {
   final String? error;
   final String reciterId;
   final Set<int> offlineSurahs;
+  final Map<String, AudioDownloadTask> downloads;
+  final int storageBytes;
+  final int reciterStorageBytes;
+  final Map<int, int> surahStorageBytes;
 
   AudioState copyWith({
     bool? playing,
@@ -111,6 +164,10 @@ class AudioState {
     String? error,
     String? reciterId,
     Set<int>? offlineSurahs,
+    Map<String, AudioDownloadTask>? downloads,
+    int? storageBytes,
+    int? reciterStorageBytes,
+    Map<int, int>? surahStorageBytes,
   }) =>
       AudioState(
         playing: playing ?? this.playing,
@@ -120,6 +177,12 @@ class AudioState {
         error: error,
         reciterId: reciterId ?? this.reciterId,
         offlineSurahs: offlineSurahs ?? this.offlineSurahs,
+        downloads: downloads ?? this.downloads,
+        storageBytes: storageBytes ?? this.storageBytes,
+        reciterStorageBytes:
+            reciterStorageBytes ?? this.reciterStorageBytes,
+        surahStorageBytes:
+            surahStorageBytes ?? this.surahStorageBytes,
       );
 }
 
@@ -146,12 +209,14 @@ class AudioService extends StateNotifier<AudioState> {
           speed: _ref.read(appPrefsProvider).playbackSpeed,
         )) {
     _player.playbackEventStream.listen((_) {
+      if (!mounted) return;
       final playing = _player.playing;
       if (playing != state.playing) {
         state = state.copyWith(playing: playing);
       }
     });
     _player.currentIndexStream.listen((i) {
+      if (!mounted) return;
       final seq = _player.sequence;
       if (i != null && seq != null && i < seq.length) {
         final tag = seq[i].tag;
@@ -167,6 +232,10 @@ class AudioService extends StateNotifier<AudioState> {
   final AudioCache _cache;
   final Ref _ref;
   Timer? _sleepTimer;
+  final List<(Reciter, int, int)> _downloadQueue = [];
+  final Set<String> _pausedDownloads = {};
+  final Set<String> _cancelledDownloads = {};
+  bool _drainingDownloads = false;
 
   static String _initialReciter(Ref ref) {
     final saved = ref.read(appPrefsProvider).qari;
@@ -201,10 +270,20 @@ class AudioService extends StateNotifier<AudioState> {
   }
 
   Future<void> refreshOffline() async {
-    final surahs =
-        await _cache.downloadedSurahs(state.reciterId);
+    if (!mounted) return;
+    final reciterId = state.reciterId;
+    final surahs = await _cache.downloadedSurahs(reciterId);
+    final perSurah = await _cache.surahStorageBytes(reciterId);
+    final reciterStorage =
+        perSurah.values.fold<int>(0, (sum, bytes) => sum + bytes);
+    final storage = await _cache.storageBytes();
     if (mounted) {
-      state = state.copyWith(offlineSurahs: surahs);
+      state = state.copyWith(
+        offlineSurahs: surahs,
+        storageBytes: storage,
+        reciterStorageBytes: reciterStorage,
+        surahStorageBytes: perSurah,
+      );
     }
   }
 
@@ -281,6 +360,183 @@ class AudioService extends StateNotifier<AudioState> {
     }
   }
 
+  String _downloadKey(Reciter reciter, int surah) =>
+      '${reciter.identifier}:$surah';
+
+  Future<int> estimateSurahBytes(Reciter reciter, int surah) async {
+    final meta = kSurahMetadata.firstWhere((m) => m.number == surah);
+    final client = HttpClient();
+    try {
+      var total = 0;
+      for (var ayah = 1; ayah <= meta.ayahCount; ayah++) {
+        total += await _cache.remoteSize(client, reciter, surah, ayah);
+      }
+      return total;
+    } finally {
+      client.close();
+    }
+  }
+
+  Future<void> queueSurahDownload({
+    required Reciter reciter,
+    required int surah,
+    required int totalBytes,
+  }) async {
+    final key = _downloadKey(reciter, surah);
+    final existing = state.downloads[key];
+    if (existing != null &&
+        (existing.status == AudioDownloadStatus.queued ||
+            existing.status == AudioDownloadStatus.downloading ||
+            existing.status == AudioDownloadStatus.measuring ||
+            existing.status == AudioDownloadStatus.paused)) {
+      return;
+    }
+    _cancelledDownloads.remove(key);
+    _pausedDownloads.remove(key);
+    _downloadQueue.add((reciter, surah, totalBytes));
+    _setDownloadTask(AudioDownloadTask(
+      reciterId: reciter.identifier,
+      surah: surah,
+      status: AudioDownloadStatus.queued,
+      totalBytes: totalBytes,
+    ));
+    unawaited(_drainDownloadQueue());
+  }
+
+  void pauseDownload(String key) {
+    final task = state.downloads[key];
+    if (task == null ||
+        task.status != AudioDownloadStatus.downloading) {
+      return;
+    }
+    _pausedDownloads.add(key);
+    _setDownloadTask(task.copyWith(status: AudioDownloadStatus.paused));
+  }
+
+  void resumeDownload(String key) {
+    final task = state.downloads[key];
+    if (task == null || task.status != AudioDownloadStatus.paused) {
+      return;
+    }
+    _pausedDownloads.remove(key);
+    _setDownloadTask(task.copyWith(status: AudioDownloadStatus.downloading));
+  }
+
+  void cancelDownload(String key) {
+    _cancelledDownloads.add(key);
+    _pausedDownloads.remove(key);
+    final task = state.downloads[key];
+    if (task != null) {
+      _setDownloadTask(task.copyWith(status: AudioDownloadStatus.canceled));
+    }
+  }
+
+  Future<void> retryDownload(String key) async {
+    final task = state.downloads[key];
+    if (task == null) return;
+    final reciter = reciterById(task.reciterId);
+    if (reciter == null) return;
+    await queueSurahDownload(
+      reciter: reciter,
+      surah: task.surah,
+      totalBytes: task.totalBytes,
+    );
+  }
+
+  void dismissDownload(String key) {
+    final next = Map<String, AudioDownloadTask>.from(state.downloads)
+      ..remove(key);
+    state = state.copyWith(downloads: next);
+  }
+
+  void _setDownloadTask(AudioDownloadTask task) {
+    final next = Map<String, AudioDownloadTask>.from(state.downloads)
+      ..[task.key] = task;
+    state = state.copyWith(downloads: next);
+  }
+
+  Future<void> _drainDownloadQueue() async {
+    if (_drainingDownloads) return;
+    _drainingDownloads = true;
+    try {
+      while (_downloadQueue.isNotEmpty) {
+        final (reciter, surah, totalBytes) = _downloadQueue.removeAt(0);
+        final key = _downloadKey(reciter, surah);
+        if (_cancelledDownloads.contains(key)) continue;
+        await _runDownload(reciter, surah, totalBytes);
+      }
+    } finally {
+      _drainingDownloads = false;
+    }
+  }
+
+  Future<void> _runDownload(
+    Reciter reciter,
+    int surah,
+    int totalBytes,
+  ) async {
+    final key = _downloadKey(reciter, surah);
+    final meta = kSurahMetadata.firstWhere((m) => m.number == surah);
+    final client = HttpClient();
+    try {
+      var completedBytes = 0;
+      _setDownloadTask(AudioDownloadTask(
+        reciterId: reciter.identifier,
+        surah: surah,
+        status: AudioDownloadStatus.downloading,
+        totalBytes: totalBytes,
+      ));
+      for (var ayah = 1; ayah <= meta.ayahCount; ayah++) {
+        while (_pausedDownloads.contains(key) &&
+            !_cancelledDownloads.contains(key)) {
+          await Future<void>.delayed(const Duration(milliseconds: 200));
+        }
+        if (_cancelledDownloads.contains(key)) {
+          _setDownloadTask((state.downloads[key]!).copyWith(
+            status: AudioDownloadStatus.canceled,
+          ));
+          return;
+        }
+
+        final expected =
+            await _cache.remoteSize(client, reciter, surah, ayah);
+        await _cache.fetch(client, reciter, surah, ayah);
+        completedBytes += expected;
+        final progress = totalBytes <= 0
+            ? ayah / meta.ayahCount
+            : (completedBytes / totalBytes).clamp(0.0, 1.0);
+        final current = state.downloads[key];
+        if (current != null) {
+          _setDownloadTask(current.copyWith(
+            status: AudioDownloadStatus.downloading,
+            progress: progress,
+          ));
+        }
+      }
+
+      final current = state.downloads[key];
+      if (current != null) {
+        _setDownloadTask(current.copyWith(
+          status: AudioDownloadStatus.completed,
+          progress: 1,
+        ));
+      }
+      await refreshOffline();
+    } catch (e) {
+      final current = state.downloads[key];
+      if (current != null) {
+        _setDownloadTask(current.copyWith(
+          status: AudioDownloadStatus.failed,
+          error: '$e',
+        ));
+      }
+    } finally {
+      client.close();
+      _cancelledDownloads.remove(key);
+      _pausedDownloads.remove(key);
+    }
+  }
+
   /// Download a whole surah for offline use. Size is computed with
   /// HEAD requests BEFORE downloading; [onProgress] gets 0..1.
   /// Returns total bytes downloaded.
@@ -322,6 +578,7 @@ class AudioService extends StateNotifier<AudioState> {
 
   Future<void> deleteSurah(Reciter reciter, int surah) async {
     await _cache.deleteSurah(reciter, surah);
+    dismissDownload(_downloadKey(reciter, surah));
     await refreshOffline();
   }
 
@@ -418,6 +675,48 @@ class AudioCache {
         await part.delete();
       }
       rethrow;
+    }
+  }
+
+  Future<Map<int, int>> surahStorageBytes(String reciterId) async {
+    try {
+      final base = await getApplicationDocumentsDirectory();
+      final root = Directory('${base.path}/audio/$reciterId');
+      if (!await root.exists()) return const {};
+      final out = <int, int>{};
+      await for (final entity in root.list()) {
+        if (entity is! Directory) continue;
+        final surah =
+            int.tryParse(entity.path.split(Platform.pathSeparator).last);
+        if (surah == null) continue;
+        var bytes = 0;
+        await for (final file in entity.list()) {
+          if (file is File && file.path.endsWith('.mp3')) {
+            bytes += await file.length();
+          }
+        }
+        if (bytes > 0) out[surah] = bytes;
+      }
+      return out;
+    } catch (_) {
+      return const {};
+    }
+  }
+
+  Future<int> storageBytes() async {
+    try {
+      final base = await getApplicationDocumentsDirectory();
+      final root = Directory('${base.path}/audio');
+      if (!await root.exists()) return 0;
+      var total = 0;
+      await for (final entity in root.list(recursive: true)) {
+        if (entity is File && entity.path.endsWith('.mp3')) {
+          total += await entity.length();
+        }
+      }
+      return total;
+    } catch (_) {
+      return 0;
     }
   }
 

@@ -107,7 +107,11 @@ class _AyahSheet extends ConsumerWidget {
             SnackBar(content: Text(s.t('copy'))));
       }),
       _Action(Icons.share, s.t('share'), () {
-        Share.share('Quran ${ayah.surah}:${ayah.displayAyahNumber}');
+        SharePlus.instance.share(
+          ShareParams(
+            text: 'Quran ${ayah.surah}:${ayah.displayAyahNumber}',
+          ),
+        );
       }),
       _Action(Icons.edit_note, s.t('notes'), () {
         Navigator.pop(context);
