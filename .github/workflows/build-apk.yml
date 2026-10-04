@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    paths:
+      - ".github/workflows/build-apk.yml"
+      - "android/**"
+      - "pubspec.yaml"
+      - "pubspec.lock"
   workflow_dispatch:
 
 jobs:
@@ -18,8 +24,29 @@ jobs:
           flutter-version: '3.44.0'
           cache: true
       - run: flutter pub get
-      - name: Build release APK
+      - name: Create ephemeral test signing key
+        shell: bash
+        run: |
+          keytool -genkeypair -v \
+            -keystore android/app/test-release.keystore \
+            -storetype JKS \
+            -storepass android \
+            -keypass android \
+            -alias test \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -dname "CN=Quran Sunnah Test,O=Godfather59,C=MA"
+          cat > android/key.properties <<'EOF'
+          storePassword=android
+          keyPassword=android
+          keyAlias=test
+          storeFile=test-release.keystore
+          EOF
+      - name: Build signed release APK
         run: flutter build apk --release
+      - name: Verify APK signature
+        run: jarsigner -verify -strict -certs build/app/outputs/flutter-apk/app-release.apk
       - name: Report APK size and checksum
         shell: bash
         run: |
