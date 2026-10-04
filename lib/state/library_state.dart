@@ -25,8 +25,11 @@ List<dynamic> _decodeList(String? raw) {
 class LibraryNotifier extends StateNotifier<List<Bookmark>> {
   LibraryNotifier() : super(const []) {
     final initial = state;
-    unawaited(_load(initial));
+    ready = _load(initial);
   }
+
+  /// Completes when persisted bookmarks have been hydrated.
+  late final Future<void> ready;
 
   Future<void> _load(List<Bookmark> initial) async {
     final p = await SharedPreferences.getInstance();
