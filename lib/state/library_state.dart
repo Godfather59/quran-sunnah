@@ -18,6 +18,12 @@ class LibraryNotifier extends StateNotifier<List<Bookmark>> {
     state = await store.bookmarks();
   }
 
+  Future<void> reload() async {
+    await ready;
+    final store = await _storeFuture;
+    state = await store.bookmarks();
+  }
+
   Future<void> toggleAyah(int surah, int ayah) async {
     await ready;
     final store = await _storeFuture;
@@ -93,11 +99,13 @@ final notesProvider =
 
 class CollectionsNotifier
     extends StateNotifier<List<CustomCollection>> {
-  CollectionsNotifier(this._storeFuture) : super(defaultCollections) {
+  CollectionsNotifier(this._storeFuture, this._afterRemove)
+      : super(defaultCollections) {
     ready = _load();
   }
 
   final Future<LibraryStore> _storeFuture;
+  final Future<void> Function() _afterRemove;
   late final Future<void> ready;
 
   Future<void> _load() async {
@@ -124,12 +132,16 @@ class CollectionsNotifier
     final store = await _storeFuture;
     await store.removeCollection(id);
     state = await store.collections();
+    await _afterRemove();
   }
 }
 
 final collectionsProvider =
     StateNotifierProvider<CollectionsNotifier, List<CustomCollection>>(
-  (ref) => CollectionsNotifier(ref.watch(libraryStoreProvider)),
+  (ref) => CollectionsNotifier(
+    ref.watch(libraryStoreProvider),
+    () => ref.read(libraryProvider.notifier).reload(),
+  ),
 );
 
 class HighlightsNotifier extends StateNotifier<List<Highlight>> {
