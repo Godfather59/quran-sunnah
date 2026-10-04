@@ -19,8 +19,9 @@ class CollectionSelectorScreen extends ConsumerWidget {
     final dl = ref.watch(downloadProvider);
 
     void set(Set<String> ids) {
-      ref.read(hadithFilterProvider.notifier).state =
-          filter.copyWith(collectionIds: ids);
+      ref.read(hadithFilterProvider.notifier).set(
+            filter.copyWith(collectionIds: ids),
+          );
     }
 
     return Scaffold(
@@ -102,7 +103,7 @@ class CollectionSelectorScreen extends ConsumerWidget {
                                       .install(packageId);
                                   ref
                                       .read(contentRevisionProvider.notifier)
-                                      .state++;
+                                      .bump();
                                 } catch (_) {
                                   return;
                                 }

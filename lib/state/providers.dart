@@ -88,14 +88,17 @@ class QuranPrefs {
       );
 }
 
-class QuranPrefsNotifier extends StateNotifier<QuranPrefs> {
-  QuranPrefsNotifier() : super(const QuranPrefs()) {
-    final initial = state;
-    _load(initial);
+class QuranPrefsNotifier extends Notifier<QuranPrefs> {
+  @override
+  QuranPrefs build() {
+    const initial = QuranPrefs();
+    Future.microtask(() => _load(initial));
+    return initial;
   }
 
   Future<void> _load(QuranPrefs initial) async {
     final p = await SharedPreferences.getInstance();
+    if (!ref.mounted) return;
     if (!identical(state, initial)) return;
     final riwayaIndex = p.getInt('q.riwaya') ?? 0;
     final scriptIndex = p.getInt('q.script') ?? 0;
@@ -229,14 +232,17 @@ class AppPrefs {
       );
 }
 
-class AppPrefsNotifier extends StateNotifier<AppPrefs> {
-  AppPrefsNotifier() : super(const AppPrefs()) {
-    final initial = state;
-    _load(initial);
+class AppPrefsNotifier extends Notifier<AppPrefs> {
+  @override
+  AppPrefs build() {
+    const initial = AppPrefs();
+    Future.microtask(() => _load(initial));
+    return initial;
   }
 
   Future<void> _load(AppPrefs initial) async {
     final p = await SharedPreferences.getInstance();
+    if (!ref.mounted) return;
     if (!identical(state, initial)) return;
     final themeIndex = p.getInt('app.theme') ?? 0;
     state = state.copyWith(
@@ -268,9 +274,9 @@ class AppPrefsNotifier extends StateNotifier<AppPrefs> {
 }
 
 final quranPrefsProvider =
-    StateNotifierProvider<QuranPrefsNotifier, QuranPrefs>(
-        (ref) => QuranPrefsNotifier());
+    NotifierProvider<QuranPrefsNotifier, QuranPrefs>(
+        QuranPrefsNotifier.new);
 
 final appPrefsProvider =
-    StateNotifierProvider<AppPrefsNotifier, AppPrefs>(
-        (ref) => AppPrefsNotifier());
+    NotifierProvider<AppPrefsNotifier, AppPrefs>(
+        AppPrefsNotifier.new);

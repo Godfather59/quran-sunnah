@@ -112,6 +112,14 @@ final hadithRepositoryProvider =
         (ref) => VerifiedAssetHadithRepository());
 
 final hadithFilterProvider =
-    StateProvider<HadithFilter>((ref) => const HadithFilter(
-          collectionIds: {'bukhari', 'muslim'},
-        ));
+    NotifierProvider<HadithFilterNotifier, HadithFilter>(
+        HadithFilterNotifier.new);
+
+class HadithFilterNotifier extends Notifier<HadithFilter> {
+  @override
+  HadithFilter build() => const HadithFilter(
+        collectionIds: {'bukhari', 'muslim'},
+      );
+
+  void set(HadithFilter filter) => state = filter;
+}

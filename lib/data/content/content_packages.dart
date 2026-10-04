@@ -474,4 +474,12 @@ final contentPackageManifestProvider =
 );
 
 /// Bumped by package install/remove UI so cached content providers reload.
-final contentRevisionProvider = StateProvider<int>((ref) => 0);
+class ContentRevision extends Notifier<int> {
+  @override
+  int build() => 0;
+
+  void bump() => state++;
+}
+
+final contentRevisionProvider =
+    NotifierProvider<ContentRevision, int>(ContentRevision.new);

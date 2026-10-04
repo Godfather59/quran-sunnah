@@ -181,7 +181,7 @@ class DownloadsScreen extends ConsumerWidget {
     Future<void> changed(Future<void> Function() action) async {
       try {
         await action();
-        ref.read(contentRevisionProvider.notifier).state++;
+        ref.read(contentRevisionProvider.notifier).bump();
       } catch (_) {
         // Error text is already kept in DownloadState.
       }

@@ -60,7 +60,7 @@ class _SunnahHomeScreenState
     final s = AppStrings.of(context);
     final filter = ref.watch(hadithFilterProvider);
     // Refetch when the filter changes.
-    ref.listen(hadithFilterProvider, (_, __) => _reset());
+    ref.listen(hadithFilterProvider, (_, _) => _reset());
 
     return Scaffold(
       appBar: AppBar(

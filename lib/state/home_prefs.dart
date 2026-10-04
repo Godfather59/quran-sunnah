@@ -64,16 +64,18 @@ class HomeLayout {
       order.where((s) => !hidden.contains(s)).toList();
 }
 
-class HomeLayoutNotifier extends StateNotifier<HomeLayout> {
-  HomeLayoutNotifier()
-      : super(const HomeLayout(
-            order: HomeSection.values, hidden: {})) {
-    final initial = state;
-    _load(initial);
+class HomeLayoutNotifier extends Notifier<HomeLayout> {
+  @override
+  HomeLayout build() {
+    final initial =
+        const HomeLayout(order: HomeSection.values, hidden: {});
+    Future.microtask(() => _load(initial));
+    return initial;
   }
 
   Future<void> _load(HomeLayout initial) async {
     final p = await SharedPreferences.getInstance();
+    if (!ref.mounted) return;
     // Don't clobber changes made while loading.
     if (!identical(state, initial)) {
       return;
@@ -131,5 +133,5 @@ class HomeLayoutNotifier extends StateNotifier<HomeLayout> {
 }
 
 final homeLayoutProvider =
-    StateNotifierProvider<HomeLayoutNotifier, HomeLayout>(
-        (ref) => HomeLayoutNotifier());
+    NotifierProvider<HomeLayoutNotifier, HomeLayout>(
+        HomeLayoutNotifier.new);

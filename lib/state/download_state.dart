@@ -45,23 +45,24 @@ class DownloadState {
 
 const kBundledDatasetIds = kCoreDatasetIds;
 
-class DownloadNotifier extends StateNotifier<DownloadState> {
-  DownloadNotifier({
-    ContentPackageStore? store,
-    ContentPackageDownloader? downloader,
-  })  : _store = store ?? ContentPackageStore.instance,
-        _downloader = downloader ?? ContentPackageDownloader(),
-        super(const DownloadState()) {
-    ready = _hydrate();
-  }
-
-  final ContentPackageStore _store;
-  final ContentPackageDownloader _downloader;
+class DownloadNotifier extends Notifier<DownloadState> {
+  late final ContentPackageStore _store;
+  late final ContentPackageDownloader _downloader;
   late final Future<void> ready;
+
+  @override
+  DownloadState build() {
+    _store = ContentPackageStore.instance;
+    _downloader = ContentPackageDownloader();
+    ready = _hydrate();
+    return const DownloadState();
+  }
 
   Future<void> _hydrate() async {
     final installed = await _store.installedIds();
+    if (!ref.mounted) return;
     final used = await _store.installedStorageBytes();
+    if (!ref.mounted) return;
     final statuses = <String, PackageTransferStatus>{
       for (final id in installed)
         id: PackageTransferStatus.installed,
@@ -184,6 +185,6 @@ class DownloadNotifier extends StateNotifier<DownloadState> {
 }
 
 final downloadProvider =
-    StateNotifierProvider<DownloadNotifier, DownloadState>(
-  (ref) => DownloadNotifier(),
+    NotifierProvider<DownloadNotifier, DownloadState>(
+  DownloadNotifier.new,
 );

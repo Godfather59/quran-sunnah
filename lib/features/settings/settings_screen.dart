@@ -297,7 +297,7 @@ class SettingsScreen extends ConsumerWidget {
                                   .install(packageId);
                               ref
                                   .read(contentRevisionProvider.notifier)
-                                  .state++;
+                                  .bump();
                             } catch (_) {
                               return;
                             }
@@ -356,7 +356,7 @@ class SettingsScreen extends ConsumerWidget {
                 await ref
                     .read(downloadProvider.notifier)
                     .install(packageId);
-                ref.read(contentRevisionProvider.notifier).state++;
+                ref.read(contentRevisionProvider.notifier).bump();
               } catch (_) {
                 return;
               }

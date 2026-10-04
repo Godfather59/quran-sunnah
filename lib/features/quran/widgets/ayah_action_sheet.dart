@@ -229,7 +229,7 @@ class _TranslationSheet extends ConsumerWidget {
                                   .install(packageId);
                               ref
                                   .read(contentRevisionProvider.notifier)
-                                  .state++;
+                                  .bump();
                             } catch (_) {}
                           },
                         ),
@@ -243,7 +243,7 @@ class _TranslationSheet extends ConsumerWidget {
                       padding: EdgeInsets.all(16),
                       child: Center(child: CircularProgressIndicator()),
                     ),
-                    error: (_, __) => Text(s.t('contentUnavailable')),
+                    error: (_, _) => Text(s.t('contentUnavailable')),
                     data: (map) {
                       final text = map[ayah.key];
                       if (text == null) {
@@ -559,7 +559,7 @@ class _WordMeaningsSheet extends ConsumerWidget {
                                     .install('quran:words-hafs');
                                 ref
                                     .read(contentRevisionProvider.notifier)
-                                    .state++;
+                                    .bump();
                               } catch (_) {}
                             },
                             icon: const Icon(Icons.download),
@@ -570,7 +570,7 @@ class _WordMeaningsSheet extends ConsumerWidget {
                           loading: () => const Center(
                             child: CircularProgressIndicator(),
                           ),
-                          error: (_, __) =>
+                          error: (_, _) =>
                               Text(s.t('contentUnavailable')),
                           data: (map) {
                             final words =
@@ -581,7 +581,7 @@ class _WordMeaningsSheet extends ConsumerWidget {
                             return ListView.separated(
                               shrinkWrap: true,
                               itemCount: words.length,
-                              separatorBuilder: (_, __) =>
+                              separatorBuilder: (_, _) =>
                                   const Divider(height: 1),
                               itemBuilder: (context, i) {
                                 final w = words[i];

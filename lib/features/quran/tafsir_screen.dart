@@ -67,7 +67,7 @@ class _TafsirScreenState extends ConsumerState<TafsirScreen> {
                                       .install(id);
                                   ref
                                       .read(contentRevisionProvider.notifier)
-                                      .state++;
+                                      .bump();
                                 } catch (_) {
                                   return;
                                 }
@@ -110,7 +110,7 @@ class _TafsirScreenState extends ConsumerState<TafsirScreen> {
                               .install(packageId);
                           ref
                               .read(contentRevisionProvider.notifier)
-                              .state++;
+                              .bump();
                         } catch (_) {}
                       },
                       icon: const Icon(Icons.download),

@@ -109,7 +109,7 @@ class _HadithFilterScreenState extends ConsumerState<HadithFilterScreen> {
                     return trimmed.isEmpty ? null : trimmed;
                   }
 
-                  ref.read(hadithFilterProvider.notifier).state = HadithFilter(
+                  ref.read(hadithFilterProvider.notifier).set(HadithFilter(
                     collectionIds: filter.collectionIds,
                     book: value(_book, true),
                     number: value(_number, true),
@@ -117,7 +117,7 @@ class _HadithFilterScreenState extends ConsumerState<HadithFilterScreen> {
                     grade: value(_grade, caps.grade),
                     topic: value(_topic, caps.topics),
                     query: filter.query,
-                  );
+                  ));
                   Navigator.pop(context);
                 },
                 child: Text(s.t('applyFilters')),

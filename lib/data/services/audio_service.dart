@@ -226,49 +226,56 @@ int globalAyahNumber(int surah, int ayah) {
   throw ArgumentError('invalid $surah:$ayah');
 }
 
-class AudioService extends StateNotifier<AudioState> {
-  AudioService(this._ref, {AudioCache? cache})
-      : _cache = cache ?? AudioCache(),
-        super(AudioState(
-          reciterId: _initialReciter(_ref),
-          speed: _ref.read(appPrefsProvider).playbackSpeed,
-        )) {
-    _player.playbackEventStream.listen((_) {
-      if (!mounted) return;
-      final playing = _player.playing;
-      if (playing != state.playing) {
-        state = state.copyWith(playing: playing);
-      }
-    });
-    _player.currentIndexStream.listen((i) {
-      if (!mounted) return;
-      final seq = _player.sequence;
-      if (i != null && seq != null && i < seq.length) {
-        final tag = seq[i].tag;
-        if (tag is MediaItem) {
-          state = state.copyWith(refKey: tag.id);
-        }
-      }
-    });
-    refreshOffline();
-  }
-
-  final _player = AudioPlayer();
-  final AudioCache _cache;
-  final Ref _ref;
+class AudioService extends Notifier<AudioState> {
+  late final AudioPlayer _player;
+  late final AudioCache _cache;
   Timer? _sleepTimer;
   final List<(Reciter, int, int)> _downloadQueue = [];
   final Set<String> _pausedDownloads = {};
   final Set<String> _cancelledDownloads = {};
   bool _drainingDownloads = false;
 
-  static String _initialReciter(Ref ref) {
+  @override
+  AudioState build() {
+    _player = AudioPlayer();
+    _cache = AudioCache();
+    ref.onDispose(() {
+      _sleepTimer?.cancel();
+      _player.dispose();
+    });
+    _player.playbackEventStream.listen((_) {
+      if (!ref.mounted) return;
+      final playing = _player.playing;
+      if (playing != state.playing) {
+        state = state.copyWith(playing: playing);
+      }
+    });
+    _player.currentIndexStream.listen((i) {
+      if (!ref.mounted) return;
+      final seq = _player.sequence;
+      if (i != null && i < seq.length) {
+        final tag = seq[i].tag;
+        if (tag is MediaItem) {
+          state = state.copyWith(refKey: tag.id);
+        }
+      }
+    });
+    Future.microtask(refreshOffline);
+    return AudioState(
+      reciterId: _initialReciter(),
+      speed: _initialSpeed(),
+    );
+  }
+
+  String _initialReciter() {
     final saved = ref.read(appPrefsProvider).qari;
     if (reciterById(saved) != null) {
       return saved;
     }
     return kReciters.first.identifier;
   }
+
+  double _initialSpeed() => ref.read(appPrefsProvider).playbackSpeed;
 
   /// Reciters verified for [riwayaKey]. Empty = honestly no recitation.
   List<Reciter> recitersFor(String riwayaKey) =>
@@ -286,8 +293,8 @@ class AudioService extends StateNotifier<AudioState> {
   void selectReciter(String identifier) {
     if (reciterById(identifier) != null) {
       state = state.copyWith(reciterId: identifier);
-      final prefs = _ref.read(appPrefsProvider);
-      _ref
+      final prefs = ref.read(appPrefsProvider);
+      ref
           .read(appPrefsProvider.notifier)
           .update(prefs.copyWith(qari: identifier));
       refreshOffline();
@@ -295,14 +302,14 @@ class AudioService extends StateNotifier<AudioState> {
   }
 
   Future<void> refreshOffline() async {
-    if (!mounted) return;
+    if (!ref.mounted) return;
     final reciterId = state.reciterId;
     final surahs = await _cache.downloadedSurahs(reciterId);
     final perSurah = await _cache.surahStorageBytes(reciterId);
     final reciterStorage =
         perSurah.values.fold<int>(0, (sum, bytes) => sum + bytes);
     final storage = await _cache.storageBytes();
-    if (mounted) {
+    if (ref.mounted) {
       state = state.copyWith(
         offlineSurahs: surahs,
         storageBytes: storage,
@@ -348,8 +355,7 @@ class AudioService extends StateNotifier<AudioState> {
               album: 'Surah ${meta.nameEn}',
             )));
       }
-      await _player.setAudioSource(
-          ConcatenatingAudioSource(children: sources));
+      await _player.setAudioSources(sources);
       await _player.setSpeed(state.speed);
       await _player.setLoopMode(
           repeatAyah ? LoopMode.one : LoopMode.off);
@@ -367,8 +373,8 @@ class AudioService extends StateNotifier<AudioState> {
 
   Future<void> setSpeed(double speed) async {
     state = state.copyWith(speed: speed);
-    final prefs = _ref.read(appPrefsProvider);
-    await _ref
+    final prefs = ref.read(appPrefsProvider);
+    await ref
         .read(appPrefsProvider.notifier)
         .update(prefs.copyWith(playbackSpeed: speed));
     await _player.setSpeed(speed);
@@ -622,13 +628,6 @@ class AudioService extends StateNotifier<AudioState> {
     dismissDownload(_downloadKey(reciter, surah));
     await refreshOffline();
   }
-
-  @override
-  void dispose() {
-    _sleepTimer?.cancel();
-    _player.dispose();
-    super.dispose();
-  }
 }
 
 /// Local-first ayah audio cache:
@@ -814,5 +813,5 @@ class AudioCache {
 }
 
 final audioServiceProvider =
-    StateNotifierProvider<AudioService, AudioState>(
-        (ref) => AudioService(ref));
+    NotifierProvider<AudioService, AudioState>(
+        AudioService.new);

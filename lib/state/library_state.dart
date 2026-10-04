@@ -5,23 +5,32 @@ import '../data/database/library_store.dart';
 import '../data/models/library.dart';
 import 'database_provider.dart';
 
-class LibraryNotifier extends StateNotifier<List<Bookmark>> {
-  LibraryNotifier(this._storeFuture) : super(const []) {
-    ready = _load();
-  }
-
-  final Future<LibraryStore> _storeFuture;
+class LibraryNotifier extends Notifier<List<Bookmark>> {
+  late final Future<LibraryStore> _storeFuture;
   late final Future<void> ready;
+
+  @override
+  List<Bookmark> build() {
+    _storeFuture = ref.watch(libraryStoreProvider);
+    ready = _load();
+    return const [];
+  }
 
   Future<void> _load() async {
     final store = await _storeFuture;
-    state = await store.bookmarks();
+    if (!ref.mounted) return;
+    final data = await store.bookmarks();
+    if (!ref.mounted) return;
+    state = data;
   }
 
   Future<void> reload() async {
     await ready;
     final store = await _storeFuture;
-    state = await store.bookmarks();
+    if (!ref.mounted) return;
+    final data = await store.bookmarks();
+    if (!ref.mounted) return;
+    state = data;
   }
 
   Future<void> toggleAyah(int surah, int ayah) async {
@@ -57,27 +66,36 @@ class LibraryNotifier extends StateNotifier<List<Bookmark>> {
 }
 
 final libraryProvider =
-    StateNotifierProvider<LibraryNotifier, List<Bookmark>>(
-  (ref) => LibraryNotifier(ref.watch(libraryStoreProvider)),
+    NotifierProvider<LibraryNotifier, List<Bookmark>>(
+  LibraryNotifier.new,
 );
 
-class NotesNotifier extends StateNotifier<List<UserNote>> {
-  NotesNotifier(this._storeFuture) : super(const []) {
-    ready = _load();
-  }
-
-  final Future<LibraryStore> _storeFuture;
+class NotesNotifier extends Notifier<List<UserNote>> {
+  late final Future<LibraryStore> _storeFuture;
   late final Future<void> ready;
+
+  @override
+  List<UserNote> build() {
+    _storeFuture = ref.watch(libraryStoreProvider);
+    ready = _load();
+    return const [];
+  }
 
   Future<void> _load() async {
     final store = await _storeFuture;
-    state = await store.notes();
+    if (!ref.mounted) return;
+    final data = await store.notes();
+    if (!ref.mounted) return;
+    state = data;
   }
 
   Future<void> reload() async {
     await ready;
     final store = await _storeFuture;
-    state = await store.notes();
+    if (!ref.mounted) return;
+    final data = await store.notes();
+    if (!ref.mounted) return;
+    state = data;
   }
 
   UserNote? forRef(String refKey) =>
@@ -99,30 +117,36 @@ class NotesNotifier extends StateNotifier<List<UserNote>> {
 }
 
 final notesProvider =
-    StateNotifierProvider<NotesNotifier, List<UserNote>>(
-  (ref) => NotesNotifier(ref.watch(libraryStoreProvider)),
+    NotifierProvider<NotesNotifier, List<UserNote>>(
+  NotesNotifier.new,
 );
 
-class CollectionsNotifier
-    extends StateNotifier<List<CustomCollection>> {
-  CollectionsNotifier(this._storeFuture, this._afterRemove)
-      : super(defaultCollections) {
-    ready = _load();
-  }
-
-  final Future<LibraryStore> _storeFuture;
-  final Future<void> Function() _afterRemove;
+class CollectionsNotifier extends Notifier<List<CustomCollection>> {
+  late final Future<LibraryStore> _storeFuture;
   late final Future<void> ready;
+
+  @override
+  List<CustomCollection> build() {
+    _storeFuture = ref.watch(libraryStoreProvider);
+    ready = _load();
+    return defaultCollections;
+  }
 
   Future<void> _load() async {
     final store = await _storeFuture;
-    state = await store.collections();
+    if (!ref.mounted) return;
+    final data = await store.collections();
+    if (!ref.mounted) return;
+    state = data;
   }
 
   Future<void> reload() async {
     await ready;
     final store = await _storeFuture;
-    state = await store.collections();
+    if (!ref.mounted) return;
+    final data = await store.collections();
+    if (!ref.mounted) return;
+    state = data;
   }
 
   Future<void> add(String name) async {
@@ -144,35 +168,41 @@ class CollectionsNotifier
     final store = await _storeFuture;
     await store.removeCollection(id);
     state = await store.collections();
-    await _afterRemove();
+    await ref.read(libraryProvider.notifier).reload();
   }
 }
 
 final collectionsProvider =
-    StateNotifierProvider<CollectionsNotifier, List<CustomCollection>>(
-  (ref) => CollectionsNotifier(
-    ref.watch(libraryStoreProvider),
-    () => ref.read(libraryProvider.notifier).reload(),
-  ),
+    NotifierProvider<CollectionsNotifier, List<CustomCollection>>(
+  CollectionsNotifier.new,
 );
 
-class HighlightsNotifier extends StateNotifier<List<Highlight>> {
-  HighlightsNotifier(this._storeFuture) : super(const []) {
-    ready = _load();
-  }
-
-  final Future<LibraryStore> _storeFuture;
+class HighlightsNotifier extends Notifier<List<Highlight>> {
+  late final Future<LibraryStore> _storeFuture;
   late final Future<void> ready;
+
+  @override
+  List<Highlight> build() {
+    _storeFuture = ref.watch(libraryStoreProvider);
+    ready = _load();
+    return const [];
+  }
 
   Future<void> _load() async {
     final store = await _storeFuture;
-    state = await store.highlights();
+    if (!ref.mounted) return;
+    final data = await store.highlights();
+    if (!ref.mounted) return;
+    state = data;
   }
 
   Future<void> reload() async {
     await ready;
     final store = await _storeFuture;
-    state = await store.highlights();
+    if (!ref.mounted) return;
+    final data = await store.highlights();
+    if (!ref.mounted) return;
+    state = data;
   }
 
   Highlight? forRef(String refKey) =>
@@ -194,27 +224,36 @@ class HighlightsNotifier extends StateNotifier<List<Highlight>> {
 }
 
 final highlightsProvider =
-    StateNotifierProvider<HighlightsNotifier, List<Highlight>>(
-  (ref) => HighlightsNotifier(ref.watch(libraryStoreProvider)),
+    NotifierProvider<HighlightsNotifier, List<Highlight>>(
+  HighlightsNotifier.new,
 );
 
-class RecentNotifier extends StateNotifier<List<RecentItem>> {
-  RecentNotifier(this._storeFuture) : super(const []) {
-    ready = _load();
-  }
-
-  final Future<LibraryStore> _storeFuture;
+class RecentNotifier extends Notifier<List<RecentItem>> {
+  late final Future<LibraryStore> _storeFuture;
   late final Future<void> ready;
+
+  @override
+  List<RecentItem> build() {
+    _storeFuture = ref.watch(libraryStoreProvider);
+    ready = _load();
+    return const [];
+  }
 
   Future<void> _load() async {
     final store = await _storeFuture;
-    state = await store.recent();
+    if (!ref.mounted) return;
+    final data = await store.recent();
+    if (!ref.mounted) return;
+    state = data;
   }
 
   Future<void> reload() async {
     await ready;
     final store = await _storeFuture;
-    state = await store.recent();
+    if (!ref.mounted) return;
+    final data = await store.recent();
+    if (!ref.mounted) return;
+    state = data;
   }
 
   Future<void> touch(RecentItem item) async {
@@ -226,8 +265,8 @@ class RecentNotifier extends StateNotifier<List<RecentItem>> {
 }
 
 final recentProvider =
-    StateNotifierProvider<RecentNotifier, List<RecentItem>>(
-  (ref) => RecentNotifier(ref.watch(libraryStoreProvider)),
+    NotifierProvider<RecentNotifier, List<RecentItem>>(
+  RecentNotifier.new,
 );
 
 const List<Color> kHighlightColors = [

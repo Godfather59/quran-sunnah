@@ -185,7 +185,7 @@ class ScriptSelectorScreen extends ConsumerWidget {
                               .install('quran:tajweed-hafs');
                           ref
                               .read(contentRevisionProvider.notifier)
-                              .state++;
+                              .bump();
                         } catch (_) {
                           return;
                         }

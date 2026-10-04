@@ -478,7 +478,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           _selectedPackageIds().where(known.contains).toSet();
 
       await ref.read(downloadProvider.notifier).installMany(selected);
-      ref.read(contentRevisionProvider.notifier).state++;
+      ref.read(contentRevisionProvider.notifier).bump();
 
       await ref.read(appPrefsProvider.notifier).update(
             ref.read(appPrefsProvider).copyWith(
@@ -499,11 +499,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             ),
           );
 
-      ref.read(hadithFilterProvider.notifier).state = HadithFilter(
+      ref.read(hadithFilterProvider.notifier).set(HadithFilter(
         collectionIds: _collections
             .where(kVerifiedHadithCollectionIds.contains)
             .toSet(),
-      );
+      ));
 
       if (mounted) {
         Navigator.of(context).pushReplacement(

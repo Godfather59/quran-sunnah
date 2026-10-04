@@ -163,7 +163,7 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
               padding: EdgeInsets.fromLTRB(
                   q.margins + 8, 12, q.margins + 8, 48),
               itemCount: ayahs.length,
-              separatorBuilder: (_, __) =>
+              separatorBuilder: (_, _) =>
                   SizedBox(height: q.ayahSpacing),
               itemBuilder: (context, i) {
                 final a = ayahs[i];
@@ -294,7 +294,7 @@ class _AyahTranslations extends ConsumerWidget {
         final texts = ref.watch(translationTextsProvider(id));
         return texts.when(
           loading: () => const SizedBox.shrink(),
-          error: (_, __) => const SizedBox.shrink(),
+          error: (_, _) => const SizedBox.shrink(),
           data: (map) {
             final text = map[ayahKey];
             if (text == null) {

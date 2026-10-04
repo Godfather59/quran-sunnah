@@ -47,7 +47,7 @@ class TajweedText extends ConsumerWidget {
         textAlign: textAlign,
         style: style(),
       ),
-      error: (_, __) => Text(
+      error: (_, _) => Text(
         ayah.text,
         textDirection: TextDirection.rtl,
         textAlign: textAlign,
