@@ -118,14 +118,17 @@ class ContentPackageStore {
 
   ContentPackageManifest? _manifest;
   Directory? _root;
+  final Set<String> _verifiedThisProcess = {};
 
   void setRootDirectoryForTesting(Directory directory) {
     _root = directory;
+    _verifiedThisProcess.clear();
   }
 
   void resetForTesting() {
     _manifest = null;
     _root = null;
+    _verifiedThisProcess.clear();
   }
 
   Future<ContentPackageManifest> manifest({AssetBundle? bundle}) async {
@@ -211,9 +214,25 @@ class ContentPackageStore {
     if (!await marker.exists()) return false;
     try {
       final json = jsonDecode(await marker.readAsString());
-      return json is Map &&
+      final markerMatches = json is Map &&
           json['version'] == pkg.version &&
           json['sha256'] == pkg.sha256;
+      if (!markerMatches) return false;
+      if (_verifiedThisProcess.contains(packageId)) return true;
+
+      for (final spec in pkg.files) {
+        final file = await installedFile(packageId, spec.path);
+        if (!await file.exists() ||
+            await file.length() != spec.sizeBytes) {
+          return false;
+        }
+        final digest = await sha256.bind(file.openRead()).first;
+        if (digest.toString() != spec.sha256) {
+          return false;
+        }
+      }
+      _verifiedThisProcess.add(packageId);
+      return true;
     } catch (_) {
       return false;
     }
@@ -272,6 +291,7 @@ class ContentPackageStore {
 
   Future<void> remove(String packageId) async {
     if (kCoreDatasetIds.contains(packageId)) return;
+    _verifiedThisProcess.remove(packageId);
     final dir = await packageDirectory(packageId);
     if (await dir.exists()) await dir.delete(recursive: true);
     final staging = await stagingDirectory(packageId);
