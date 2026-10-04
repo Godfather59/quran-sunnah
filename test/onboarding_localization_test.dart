@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quran_sunnah_app/core/l10n/app_strings.dart';
+import 'package:quran_sunnah_app/data/content/content_packages.dart';
 import 'package:quran_sunnah_app/features/onboarding/onboarding_screen.dart';
 
 Widget _app() => const ProviderScope(
@@ -20,6 +23,22 @@ Widget _app() => const ProviderScope(
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  late Directory packageRoot;
+
+  setUp(() async {
+    packageRoot =
+        await Directory.systemTemp.createTemp('content-packages-onboarding-');
+    ContentPackageStore.instance.resetForTesting();
+    ContentPackageStore.instance.setRootDirectoryForTesting(packageRoot);
+  });
+
+  tearDown(() async {
+    ContentPackageStore.instance.resetForTesting();
+    if (await packageRoot.exists()) {
+      await packageRoot.delete(recursive: true);
+    }
+  });
 
   testWidgets('onboarding applies the selected language immediately',
       (tester) async {
@@ -62,6 +81,7 @@ void main() {
     );
     expect(find.text('تفسير الجلالين'), findsOneWidget);
     expect(find.text('ألوان التجويد'), findsOneWidget);
+    expect(find.text('حجم التنزيل المحدد'), findsOneWidget);
     expect(find.text('ابدأ'), findsOneWidget);
   });
 }
