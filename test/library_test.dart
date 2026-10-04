@@ -79,8 +79,7 @@ void main() {
 
   test('bookmarks survive provider recreation', () async {
     final first = ProviderContainer();
-    first.read(libraryProvider.notifier).toggleAyah(2, 255);
-    await Future<void>.delayed(const Duration(milliseconds: 20));
+    await first.read(libraryProvider.notifier).toggleAyah(2, 255);
     first.dispose();
 
     final second = ProviderContainer();
