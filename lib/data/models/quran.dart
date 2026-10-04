@@ -213,12 +213,16 @@ class QuranTranslation {
     required this.language,
     required this.translator,
     required this.source,
+    this.version,
+    this.bundled = true,
   });
 
   final String id;
   final String language;
   final String translator;
   final String source;
+  final String? version;
+  final bool bundled;
 }
 
 class TafsirEntry {
