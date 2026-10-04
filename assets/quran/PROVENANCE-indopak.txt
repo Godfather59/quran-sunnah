@@ -7,7 +7,9 @@ Fetched  : 2026-10-04 via jsDelivr CDN, converted losslessly from
            JSON [{chapter, verse, text}] to `surah|ayah|text`.
 Entries  : 6236, zero gaps, verbatim (incl. Quranic Extended-B marks
            U+08D4–U+08E2 and RLM U+200F).
-Font     : requires a font covering Arabic Extended-B — the app uses
-           "Amiri Quran" (Google Fonts, fetched once then cached
-           offline) whenever the IndoPak script is active.
-License  : verify upstream terms before redistribution.
+Font     : requires Arabic Extended-B coverage. Amiri Quran is bundled
+           locally under the SIL Open Font License; no runtime font
+           download is required.
+License  : quran-api itself is Unlicensed, but direct redistribution
+           terms for the underlying QuranComplex-derived edition have
+           not been established. Treat redistribution as unresolved.
