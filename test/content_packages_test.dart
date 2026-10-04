@@ -114,4 +114,32 @@ void main() {
     await store.remove(pkg.id);
     expect(await store.isInstalled(pkg.id), isFalse);
   });
+
+  test('installed marker never trusts corrupted package bytes', () async {
+    final temp = await Directory.systemTemp.createTemp('package-corrupt-');
+    addTearDown(() async {
+      ContentPackageStore.instance.resetForTesting();
+      if (await temp.exists()) await temp.delete(recursive: true);
+    });
+    ContentPackageStore.instance.resetForTesting();
+    ContentPackageStore.instance.setRootDirectoryForTesting(temp);
+
+    final store = ContentPackageStore.instance;
+    final manifest = await store.manifest();
+    final pkg = manifest.byId('quran:en-sahih')!;
+    final spec = pkg.files.single;
+    final target = await store.installedFile(pkg.id, spec.path);
+    await target.parent.create(recursive: true);
+    await target.writeAsString('corrupted');
+
+    final marker = await store.markerFile(pkg.id);
+    await marker.writeAsString(jsonEncode({
+      'id': pkg.id,
+      'version': pkg.version,
+      'sha256': pkg.sha256,
+      'sourceRevision': manifest.sourceRevision,
+    }));
+
+    expect(await store.isInstalled(pkg.id), isFalse);
+  });
 }
