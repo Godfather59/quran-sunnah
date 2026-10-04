@@ -161,8 +161,14 @@ class Ayah {
     this.hizb,
     this.rub,
     this.page,
+    this.canonicalSurah,
+    this.canonicalAyah,
+    this.displayAyah,
     this.isPlaceholder = false,
-  });
+  }) : assert(
+          (canonicalSurah == null) == (canonicalAyah == null),
+          'canonicalSurah and canonicalAyah must be set together',
+        );
 
   final int surah;
   final int ayah;
@@ -172,6 +178,97 @@ class Ayah {
   final int? hizb;
   final int? rub;
   final int? page;
+
+  /// Optional mapping to the app-wide canonical verse identity.
+  ///
+  /// The bundled datasets are currently normalized to the same 6236-row
+  /// coordinate system, so these are null today and [surah]/[ayah] are used.
+  /// Future mushaf traditions may display a different ayah number while still
+  /// pointing to the same canonical verse identity.
+  final int? canonicalSurah;
+  final int? canonicalAyah;
+
+  /// Edition/mushaf-facing ayah number. Defaults to [ayah].
+  final int? displayAyah;
+
+  int get canonicalSurahNumber => canonicalSurah ?? surah;
+  int get canonicalAyahNumber => canonicalAyah ?? ayah;
+  int get displayAyahNumber => displayAyah ?? ayah;
+
+  String get canonicalVerseId =>
+      ' UI must show
+  /// "Content unavailable for this source." and never invent text.
+  final bool isPlaceholder;
+
+  String get key => canonicalVerseId;
+}
+
+class QuranTranslation {
+  const QuranTranslation({
+    required this.id,
+    required this.language,
+    required this.translator,
+    required this.source,
+  });
+
+  final String id;
+  final String language;
+  final String translator;
+  final String source;
+}
+
+class TafsirEntry {
+  const TafsirEntry({
+    required this.surah,
+    required this.ayah,
+    required this.tafsirId,
+    required this.source,
+    required this.text,
+  });
+
+  final int surah;
+  final int ayah;
+  final String tafsirId;
+  final String source;
+  final String text;
+}
+ + "{canonicalSurahNumber}:" + ' UI must show
+  /// "Content unavailable for this source." and never invent text.
+  final bool isPlaceholder;
+
+  String get key => '$surah:$ayah';
+}
+
+class QuranTranslation {
+  const QuranTranslation({
+    required this.id,
+    required this.language,
+    required this.translator,
+    required this.source,
+  });
+
+  final String id;
+  final String language;
+  final String translator;
+  final String source;
+}
+
+class TafsirEntry {
+  const TafsirEntry({
+    required this.surah,
+    required this.ayah,
+    required this.tafsirId,
+    required this.source,
+    required this.text,
+  });
+
+  final int surah;
+  final int ayah;
+  final String tafsirId;
+  final String source;
+  final String text;
+}
+ + "{canonicalAyahNumber}";
 
   /// True when no verified dataset row exists yet. UI must show
   /// "Content unavailable for this source." and never invent text.
