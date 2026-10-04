@@ -331,9 +331,11 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
       flush: true,
     );
     if (!context.mounted) return;
-    await Share.shareXFiles(
-      [XFile(file.path)],
-      text: AppStrings.of(context).t('exportBackup'),
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(file.path)],
+        text: AppStrings.of(context).t('exportBackup'),
+      ),
     );
   }
 
