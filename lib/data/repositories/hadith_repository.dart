@@ -47,6 +47,11 @@ abstract class HadithRepository {
   Future<List<HadithCollection>> collections();
   Future<List<Hadith>> query(HadithFilter filter,
       {int limit = 30, int offset = 0});
+
+  /// Linear full-collection read for one-time local indexing.
+  /// Implementations must return only source-backed rows.
+  Future<List<Hadith>> allForIndex(String collectionId);
+
   Future<List<Hadith>> related(String hadithId);
 }
 
@@ -65,6 +70,9 @@ class StubHadithRepository implements HadithRepository {
     if (offset > 0) return [];
     return [placeholderHadith];
   }
+
+  @override
+  Future<List<Hadith>> allForIndex(String collectionId) async => [];
 
   @override
   Future<List<Hadith>> related(String hadithId) async => [];
