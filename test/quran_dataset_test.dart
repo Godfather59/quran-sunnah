@@ -4,6 +4,7 @@
 // here beyond existence — the bytes ship verbatim from Tanzil.)
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:quran_sunnah_app/data/models/quran.dart';
 import 'package:quran_sunnah_app/data/repositories/quran_metadata.dart';
 import 'package:quran_sunnah_app/data/repositories/verified_asset_quran_repository.dart';
 import 'package:quran_sunnah_app/data/seed/surah_metadata.dart';
@@ -37,6 +38,32 @@ void main() {
         await repo.ayahsOfSurah(112, 'shubah-an-asim__uthmani');
     expect(ayahs.length, 4);
     expect(ayahs.every((a) => a.isPlaceholder), isTrue);
+  });
+
+  test('bundled editions expose stable canonical verse identities', () async {
+    final repo = VerifiedAssetQuranRepository();
+    for (final editionId in kVerifiedQuranAssets.keys) {
+      final all = await repo.allAyahs(editionId);
+      expect(all.map((a) => a.canonicalVerseId).toSet(), hasLength(6236));
+      expect(all.first.canonicalVerseId, '1:1');
+      expect(all.last.canonicalVerseId, '114:6');
+      expect(all.every((a) => a.displayAyahNumber == a.ayah), isTrue);
+    }
+  });
+
+  test('canonical identity can differ from edition display numbering', () {
+    const mapped = Ayah(
+      surah: 2,
+      ayah: 254,
+      canonicalSurah: 2,
+      canonicalAyah: 254,
+      displayAyah: 255,
+      text: 'verified-source-text',
+      editionId: 'future-edition',
+    );
+    expect(mapped.canonicalVerseId, '2:254');
+    expect(mapped.key, '2:254');
+    expect(mapped.displayAyahNumber, 255);
   });
 
   group('verified metadata (Tanzil quran-data.xml)', () {
