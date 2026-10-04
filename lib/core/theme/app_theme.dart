@@ -1,6 +1,5 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../data/models/quran.dart';
 
 /// Own calm identity — no default Material purple anywhere.
@@ -102,9 +101,9 @@ class AppTheme {
       colorScheme: scheme,
       scaffoldBackgroundColor: scheme.surface,
       visualDensity: VisualDensity.standard,
+      fontFamily: 'Noto Naskh Arabic',
     );
     return theme.copyWith(
-      textTheme: GoogleFonts.notoNaskhArabicTextTheme(theme.textTheme),
       appBarTheme: theme.appBarTheme.copyWith(
         centerTitle: false,
         backgroundColor: scheme.surface,
@@ -152,20 +151,12 @@ class AppTheme {
     final family = indopak
         ? 'Amiri Quran'
         : switch (font) {
-            null || QuranFont.uthmani => null,
-            QuranFont.naskh || QuranFont.notoNaskh =>
-              'Noto Naskh Arabic',
+            null || QuranFont.uthmani => 'Amiri Quran',
+            QuranFont.naskh || QuranFont.notoNaskh => 'Noto Naskh Arabic',
             QuranFont.indopak => 'Amiri Quran',
           };
-    if (family == null) {
-      return GoogleFonts.amiri(
-        fontSize: size,
-        height: height,
-        color: base.color,
-      );
-    }
-    return GoogleFonts.getFont(
-      family,
+    return TextStyle(
+      fontFamily: family,
       fontSize: size,
       height: height,
       color: base.color,
