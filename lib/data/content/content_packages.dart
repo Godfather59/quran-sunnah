@@ -119,6 +119,15 @@ class ContentPackageStore {
   ContentPackageManifest? _manifest;
   Directory? _root;
 
+  void setRootDirectoryForTesting(Directory directory) {
+    _root = directory;
+  }
+
+  void resetForTesting() {
+    _manifest = null;
+    _root = null;
+  }
+
   Future<ContentPackageManifest> manifest({AssetBundle? bundle}) async {
     final cached = _manifest;
     if (cached != null) return cached;
