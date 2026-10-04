@@ -33,6 +33,7 @@ class WordInfo {
 final wordSurahProvider =
     FutureProvider.family<Map<int, List<WordInfo>>, int>(
         (ref, surah) async {
+  ref.watch(contentRevisionProvider);
   try {
     if (!await ContentPackageStore.instance
         .isInstalled('quran:words-hafs')) {
