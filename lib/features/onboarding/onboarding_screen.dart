@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/l10n/app_strings.dart';
-import '../../data/models/quran.dart';
-import '../../data/seed/hadith_collections.dart';
-import '../../data/repositories/verified_asset_quran_repository.dart';
-import '../../state/providers.dart';
-import '../../core/navigation/adaptive_scaffold.dart';
 
-/// 5-page onboarding per spec §26. No account required.
+import '../../core/l10n/app_strings.dart';
+import '../../core/navigation/adaptive_scaffold.dart';
+import '../../data/models/quran.dart';
+import '../../data/repositories/hadith_repository.dart';
+import '../../data/repositories/tafsir_repository.dart';
+import '../../data/repositories/translation_repository.dart';
+import '../../data/repositories/verified_asset_quran_repository.dart';
+import '../../data/seed/hadith_collections.dart';
+import '../../state/providers.dart';
+
+/// Five-step onboarding. No account required.
+///
+/// The selected locale is applied immediately inside onboarding so the user
+/// never has to finish setup before seeing the requested language.
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -17,140 +24,290 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final _ctrl = PageController();
+
   int _page = 0;
   String _locale = 'ar';
   RiwayaId _riwaya = RiwayaId.hafsAsim;
   QuranScript _script = QuranScript.uthmani;
   Set<String> _collections = {'bukhari', 'muslim'};
+  Set<String> _translations = {};
+  String _tafsirId = 'jalalayn';
+  bool _showTajweed = false;
+
+  AppStrings get _strings => AppStrings(Locale(_locale));
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final s = AppStrings.of(context);
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: PageView(
-                controller: _ctrl,
-                onPageChanged: (i) => setState(() => _page = i),
-                children: [
-                  _languagePage(),
-                  _riwayaPage(),
-                  _scriptPage(),
-                  _collectionsPage(),
-                  _downloadsPage(),
-                ],
+    final s = _strings;
+    final direction =
+        _locale == 'ar' ? TextDirection.rtl : TextDirection.ltr;
+
+    return Directionality(
+      textDirection: direction,
+      child: Scaffold(
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: PageView(
+                  controller: _ctrl,
+                  onPageChanged: (i) => setState(() => _page = i),
+                  children: [
+                    _languagePage(),
+                    _riwayaPage(),
+                    _scriptPage(),
+                    _collectionsPage(),
+                    _additionalContentPage(),
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                children: [
-                  Text('${_page + 1} / 5'),
-                  const Spacer(),
-                  if (_page > 0)
-                    TextButton(
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    Text('${_page + 1} / 5'),
+                    const Spacer(),
+                    if (_page > 0)
+                      TextButton(
                         onPressed: () => _ctrl.previousPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeOut),
-                        child: const Text('‹')),
-                  const SizedBox(width: 8),
-                  FilledButton(
-                    onPressed: _page == 4 ? _finish : () => _ctrl.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeOut),
-                    child: Text(
-                        _page == 4 ? s.t('obDone') : s.t('obNext')),
-                  ),
-                ],
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeOut,
+                        ),
+                        child: const Text('‹'),
+                      ),
+                    const SizedBox(width: 8),
+                    FilledButton(
+                      onPressed: _page == 4
+                          ? _finish
+                          : () => _ctrl.nextPage(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeOut,
+                              ),
+                      child: Text(
+                        _page == 4 ? s.t('obDone') : s.t('obNext'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _languagePage() {
-    final s = AppStrings.of(context);
+    final s = _strings;
     return _wrap(s.t('obLanguage'), [
-        _option('العربية', _locale == 'ar', () => setState(() => _locale = 'ar')),
-        _option('English', _locale == 'en', () => setState(() => _locale = 'en')),
-        _option('Français', _locale == 'fr', () => setState(() => _locale = 'fr')),
-      ]);
+      _option(
+        'العربية',
+        _locale == 'ar',
+        () => _setLocale('ar'),
+      ),
+      _option(
+        'English',
+        _locale == 'en',
+        () => _setLocale('en'),
+      ),
+      _option(
+        'Français',
+        _locale == 'fr',
+        () => _setLocale('fr'),
+      ),
+    ]);
+  }
+
+  void _setLocale(String locale) {
+    setState(() {
+      _locale = locale;
+      _translations = switch (locale) {
+        'en' => {'en-sahih'},
+        'fr' => {'fr-hamidullah'},
+        _ => <String>{},
+      };
+    });
   }
 
   Widget _riwayaPage() {
-    final s = AppStrings.of(context);
+    final s = _strings;
     final ar = _locale == 'ar';
     return _wrap(s.t('obRiwaya'), [
-      _option(ar ? 'حفص عن عاصم' : 'حفص عن عاصم — Ḥafṣ ʿan ʿĀṣim',
-          _riwaya == RiwayaId.hafsAsim,
-          () => setState(() => _riwaya = RiwayaId.hafsAsim)),
-      _option(ar ? 'ورش عن نافع' : 'ورش عن نافع — Warsh ʿan Nāfiʿ',
-          _riwaya == RiwayaId.warshNafi,
-          () => setState(() {
-            _riwaya = RiwayaId.warshNafi;
-            _script = QuranScript.uthmani;
-          })),
-      _option(ar ? 'قالون عن نافع' : 'قالون عن نافع — Qālūn ʿan Nāfiʿ',
-          _riwaya == RiwayaId.qalunNafi,
-          () => setState(() {
-            _riwaya = RiwayaId.qalunNafi;
-            _script = QuranScript.uthmani;
-          })),
+      _option(
+        ar ? 'حفص عن عاصم' : 'حفص عن عاصم — Ḥafṣ ʿan ʿĀṣim',
+        _riwaya == RiwayaId.hafsAsim,
+        () => setState(() => _riwaya = RiwayaId.hafsAsim),
+      ),
+      _option(
+        ar ? 'ورش عن نافع' : 'ورش عن نافع — Warsh ʿan Nāfiʿ',
+        _riwaya == RiwayaId.warshNafi,
+        () => setState(() {
+          _riwaya = RiwayaId.warshNafi;
+          _script = QuranScript.uthmani;
+          _showTajweed = false;
+        }),
+      ),
+      _option(
+        ar ? 'قالون عن نافع' : 'قالون عن نافع — Qālūn ʿan Nāfiʿ',
+        _riwaya == RiwayaId.qalunNafi,
+        () => setState(() {
+          _riwaya = RiwayaId.qalunNafi;
+          _script = QuranScript.uthmani;
+          _showTajweed = false;
+        }),
+      ),
     ]);
   }
 
   Widget _scriptPage() {
-    final s = AppStrings.of(context);
+    final s = _strings;
     final ar = _locale == 'ar';
     return _wrap(s.t('obScript'), [
-      _option(ar ? 'عثماني' : 'Uthmani — عثماني',
-          _script == QuranScript.uthmani,
-          () => setState(() => _script = QuranScript.uthmani)),
+      _option(
+        ar ? s.t('uthmani') : '${s.t('uthmani')} — عثماني',
+        _script == QuranScript.uthmani,
+        () => setState(() => _script = QuranScript.uthmani),
+      ),
       if (kVerifiedQuranAssets.containsKey(
-          '${_riwaya.storageKey}__imlai'))
-        _option(ar ? 'إملائي' : 'Simple / Imla’i — إملائي',
-            _script == QuranScript.imlai,
-            () => setState(() => _script = QuranScript.imlai)),
+        '${_riwaya.storageKey}__imlai',
+      ))
+        _option(
+          ar ? s.t('imlai') : '${s.t('imlai')} — إملائي',
+          _script == QuranScript.imlai,
+          () => setState(() {
+            _script = QuranScript.imlai;
+            _showTajweed = false;
+          }),
+        ),
       if (kVerifiedQuranAssets.containsKey(
-          '${_riwaya.storageKey}__indopak'))
-        _option(ar ? 'هندي باكستاني' : 'IndoPak',
-            _script == QuranScript.indopak,
-            () => setState(() => _script = QuranScript.indopak)),
+        '${_riwaya.storageKey}__indopak',
+      ))
+        _option(
+          s.t('indopak'),
+          _script == QuranScript.indopak,
+          () => setState(() {
+            _script = QuranScript.indopak;
+            _showTajweed = false;
+          }),
+        ),
     ]);
   }
 
   Widget _collectionsPage() {
-    final s = AppStrings.of(context);
+    final s = _strings;
     final ar = _locale == 'ar';
     return _wrap(s.t('obSources'), [
       _preset(
-          ar ? 'الصحيحان' : 'Sahihayn (Bukhari + Muslim)',
-          {'bukhari', 'muslim'}),
-      _preset(ar ? 'الكتب الستة' : 'Kutub al-Sittah',
-          kKutubSittah),
-      _preset(ar ? 'كل المجموعات' : 'All collections',
-          kHadithCollections.map((c) => c.id).toSet()),
+        ar ? 'الصحيحان' : 'Sahihayn (Bukhari + Muslim)',
+        {'bukhari', 'muslim'},
+      ),
+      _preset(s.t('kutubSittah'), kKutubSittah),
+      _preset(
+        s.t('allCollections'),
+        kHadithCollections.map((c) => c.id).toSet(),
+      ),
       const Divider(),
-      ...kHadithCollections.take(6).map((c) => CheckboxListTile(
-            value: _collections.contains(c.id),
-            onChanged: (_) => setState(() {
-              _collections.contains(c.id)
-                  ? _collections.remove(c.id)
-                  : _collections.add(c.id);
-            }),
-            title: Text(ar ? c.nameAr : '${c.nameAr} · ${c.nameEn}'),
-          )),
+      ...kHadithCollections.take(6).map(
+            (c) => CheckboxListTile(
+              value: _collections.contains(c.id),
+              onChanged: (_) => setState(() {
+                _collections.contains(c.id)
+                    ? _collections.remove(c.id)
+                    : _collections.add(c.id);
+              }),
+              title: Text(ar ? c.nameAr : '${c.nameAr} · ${c.nameEn}'),
+            ),
+          ),
     ]);
   }
 
-  Widget _downloadsPage() {
-    final s = AppStrings.of(context);
+  Widget _additionalContentPage() {
+    final s = _strings;
+    final tajweedAvailable = _riwaya == RiwayaId.hafsAsim &&
+        _script == QuranScript.uthmani;
+
+    final bundledTranslations =
+        kTranslationCatalog.where((item) => item.bundled).toList();
+    final bundledTafsir =
+        kTafsirCatalog.where((item) => item.bundled).toList();
+
     return _wrap(s.t('obDownloads'), [
-      Text(s.t('obDownloadsHint')),
+      Text(
+        s.t('obDownloadsHint'),
+        style: Theme.of(context).textTheme.bodyMedium,
+      ),
+      const SizedBox(height: 16),
+      Text(
+        s.t('translations'),
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
+      const SizedBox(height: 4),
+      for (final item in bundledTranslations)
+        CheckboxListTile(
+          value: _translations.contains(item.id),
+          title: Text(
+            item.id == 'en-sahih'
+                ? s.t('saheehInternational')
+                : item.id == 'fr-hamidullah'
+                    ? s.t('hamidullahFrench')
+                    : item.translator,
+          ),
+          onChanged: (enabled) => setState(() {
+            if (enabled == true) {
+              _translations.add(item.id);
+            } else {
+              _translations.remove(item.id);
+            }
+          }),
+        ),
+      const Divider(),
+      Text(
+        s.t('chooseTafsir'),
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
+      const SizedBox(height: 4),
+      RadioGroup<String>(
+        groupValue: _tafsirId,
+        onChanged: (value) {
+          if (value != null) setState(() => _tafsirId = value);
+        },
+        child: Column(
+          children: [
+            for (final item in bundledTafsir)
+              RadioListTile<String>(
+                value: item.id,
+                title: Text(
+                  _locale == 'ar'
+                      ? item.titleAr
+                      : item.id == 'jalalayn'
+                          ? s.t('jalalayn')
+                          : item.id == 'siraj'
+                              ? s.t('siraj')
+                              : item.titleEn,
+                ),
+              ),
+          ],
+        ),
+      ),
+      const Divider(),
+      SwitchListTile(
+        value: tajweedAvailable && _showTajweed,
+        onChanged: tajweedAvailable
+            ? (value) => setState(() => _showTajweed = value)
+            : null,
+        title: Text(s.t('tajweedColors')),
+        subtitle: Text(
+          tajweedAvailable
+              ? s.t('tajweedVerifiedHint')
+              : s.t('tajweedHafsOnly'),
+        ),
+      ),
     ]);
   }
 
@@ -158,13 +315,24 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         padding: const EdgeInsets.all(24),
         children: [
           const SizedBox(height: 24),
-          Text(title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
           const SizedBox(height: 16),
           ...children,
         ],
       );
 
-  Widget _option(String label, bool selected, VoidCallback onTap) => Card(
+  Widget _option(
+    String label,
+    bool selected,
+    VoidCallback onTap,
+  ) =>
+      Card(
         child: ListTile(
           title: Text(label),
           trailing: selected ? const Icon(Icons.check_circle) : null,
@@ -177,20 +345,37 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         trailing: _collections.containsAll(ids)
             ? const Icon(Icons.check_circle)
             : const Icon(Icons.circle_outlined),
-        onTap: () => setState(() => _collections = ids),
+        onTap: () => setState(() => _collections = {...ids}),
       );
 
   Future<void> _finish() async {
-    final app = ref.read(appPrefsProvider.notifier);
-    await app.update(ref.read(appPrefsProvider).copyWith(
-        locale: _locale, onboarded: true));
-    final q = ref.read(quranPrefsProvider.notifier);
-    await q.update(ref
-        .read(quranPrefsProvider)
-        .copyWith(riwaya: _riwaya, script: _script));
+    await ref.read(appPrefsProvider.notifier).update(
+          ref.read(appPrefsProvider).copyWith(
+                locale: _locale,
+                onboarded: true,
+              ),
+        );
+
+    final current = ref.read(quranPrefsProvider);
+    await ref.read(quranPrefsProvider.notifier).update(
+          current.copyWith(
+            riwaya: _riwaya,
+            script: _script,
+            translations: _translations.toList(growable: false),
+            tafsirId: _tafsirId,
+            showTranslation: _translations.isNotEmpty,
+            showTajweed: _showTajweed,
+          ),
+        );
+
+    ref.read(hadithFilterProvider.notifier).state = HadithFilter(
+      collectionIds: {..._collections},
+    );
+
     if (mounted) {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const AdaptiveScaffold()));
+        MaterialPageRoute(builder: (_) => const AdaptiveScaffold()),
+      );
     }
   }
 }
