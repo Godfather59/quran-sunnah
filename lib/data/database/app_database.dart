@@ -155,8 +155,8 @@ class AppDatabase extends _$AppDatabase {
       'ON search_documents(kind, collection_id)',
     );
     await customStatement(
-      "CREATE VIRTUAL TABLE IF NOT EXISTS search_fts USING fts5("
-      "normalized_body, normalized_title, "
+      'CREATE VIRTUAL TABLE IF NOT EXISTS search_fts USING fts5('
+      'normalized_body, normalized_title, '
       "content='search_documents', content_rowid='rowid', "
       "tokenize='unicode61')",
     );
@@ -170,7 +170,7 @@ class AppDatabase extends _$AppDatabase {
     await customStatement(
       'CREATE TRIGGER IF NOT EXISTS search_documents_ad '
       'AFTER DELETE ON search_documents BEGIN '
-      "INSERT INTO search_fts(search_fts, rowid, normalized_body, normalized_title) "
+      'INSERT INTO search_fts(search_fts, rowid, normalized_body, normalized_title) '
       "VALUES ('delete', old.rowid, old.normalized_body, old.normalized_title); "
       'END',
     );
