@@ -7,11 +7,28 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quran_sunnah_app/core/utils/text_utils.dart';
+import 'package:quran_sunnah_app/data/content/content_packages.dart';
 import 'package:quran_sunnah_app/data/repositories/hadith_repository.dart';
 import 'package:quran_sunnah_app/data/repositories/verified_asset_hadith_repository.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  late Directory packageRoot;
+
+  setUpAll(() async {
+    packageRoot =
+        await Directory.systemTemp.createTemp('content-packages-hadith-');
+    ContentPackageStore.instance.resetForTesting();
+    ContentPackageStore.instance.setRootDirectoryForTesting(packageRoot);
+  });
+
+  tearDownAll(() async {
+    ContentPackageStore.instance.resetForTesting();
+    if (await packageRoot.exists()) {
+      await packageRoot.delete(recursive: true);
+    }
+  });
 
   test('bukhari index: 98 sections, 7589 entries preserved', () async {
     final repo = VerifiedAssetHadithRepository();
