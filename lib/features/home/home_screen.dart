@@ -55,7 +55,7 @@ class HomeScreen extends ConsumerWidget {
           ),
           IconButton(
             icon: const Icon(Icons.dashboard_customize_outlined),
-            tooltip: 'Customize',
+            tooltip: s.t('customizeHome'),
             onPressed: () => _customize(context, ref, locale),
           ),
         ],
@@ -147,7 +147,11 @@ class _ContinueReadingHero extends ConsumerWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                '${meta.nameAr} · ${meta.nameEn}',
+                s.isArabic
+                    ? meta.nameAr
+                    : s.locale.languageCode == 'fr'
+                        ? '${meta.nameAr} · ${meta.nameFr}'
+                        : '${meta.nameAr} · ${meta.nameEn}',
                 textDirection: TextDirection.rtl,
                 style: Theme.of(context)
                     .textTheme
@@ -157,7 +161,7 @@ class _ContinueReadingHero extends ConsumerWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'Ayah ${q.lastAyah} of ${meta.ayahCount} · ${(progress * 100).toStringAsFixed(0)}%',
+                '${s.t('ayahLabel')} ${q.lastAyah} ${s.t('of')} ${meta.ayahCount} · ${(progress * 100).toStringAsFixed(0)}%',
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall
@@ -176,7 +180,8 @@ class _ContinueReadingHero extends ConsumerWidget {
               const SizedBox(height: 10),
               Chip(
                 label: Text(
-                    '${s.t('riwaya')}: ${riwaya.riwayaEn}'),
+                  '${s.t('riwaya')}: ${s.isArabic ? riwaya.riwayaAr : riwaya.riwayaEn}',
+                ),
                 visualDensity: VisualDensity.compact,
               ),
             ],
@@ -311,10 +316,10 @@ class _DailyAyah extends ConsumerWidget {
                               context,
                               size: 22)),
                       const SizedBox(height: 8),
-                      Text('Surah $surah · Ayah $ayah',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelSmall),
+                      Text(
+                        '${s.t('surah')} $surah · ${s.t('ayahLabel')} $ayah',
+                        style: Theme.of(context).textTheme.labelSmall,
+                      ),
                     ],
                   );
                 },
@@ -384,10 +389,11 @@ class _DailyHadith extends ConsumerWidget {
                                   height: 1.9)),
                           const SizedBox(height: 8),
                           Text(
-                              'Sahih al-Bukhari · Hadith ${h.hadithNumber}',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall),
+                            s.isArabic
+                                ? 'صحيح البخاري · ${s.t('hadith')} ${h.hadithNumber}'
+                                : 'Sahih al-Bukhari · ${s.t('hadith')} ${h.hadithNumber}',
+                            style: Theme.of(context).textTheme.labelSmall,
+                          ),
                         ],
                       );
                     },
