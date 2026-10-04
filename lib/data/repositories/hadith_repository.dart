@@ -4,6 +4,29 @@ import '../seed/hadith_collections.dart';
 import '../seed/placeholders.dart';
 import 'verified_asset_hadith_repository.dart';
 
+class HadithCapabilities {
+  const HadithCapabilities({
+    this.narrator = false,
+    this.sanad = false,
+    this.grade = false,
+    this.topics = false,
+  });
+
+  final bool narrator;
+  final bool sanad;
+  final bool grade;
+  final bool topics;
+
+  bool get anyStructured => narrator || sanad || grade || topics;
+
+  HadithCapabilities merge(HadithCapabilities other) => HadithCapabilities(
+        narrator: narrator || other.narrator,
+        sanad: sanad || other.sanad,
+        grade: grade || other.grade,
+        topics: topics || other.topics,
+      );
+}
+
 class HadithFilter {
   const HadithFilter({
     this.collectionIds = const {},
@@ -52,6 +75,8 @@ abstract class HadithRepository {
   /// Implementations must return only source-backed rows.
   Future<List<Hadith>> allForIndex(String collectionId);
 
+  Future<HadithCapabilities> capabilities(Set<String> collectionIds);
+
   Future<List<Hadith>> related(String hadithId);
 }
 
@@ -73,6 +98,10 @@ class StubHadithRepository implements HadithRepository {
 
   @override
   Future<List<Hadith>> allForIndex(String collectionId) async => [];
+
+  @override
+  Future<HadithCapabilities> capabilities(Set<String> collectionIds) async =>
+      const HadithCapabilities();
 
   @override
   Future<List<Hadith>> related(String hadithId) async => [];
