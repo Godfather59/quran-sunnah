@@ -5,10 +5,12 @@ import 'package:share_plus/share_plus.dart';
 import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../data/models/quran.dart';
+import '../../../data/content/content_packages.dart';
 import '../../../data/repositories/translation_repository.dart';
 import '../../../data/repositories/word_repository.dart';
 import '../../../data/services/audio_service.dart';
 import '../../../state/library_state.dart';
+import '../../../state/download_state.dart';
 import '../compare_riwayat_screen.dart';
 import '../tafsir_screen.dart';
 
@@ -206,32 +208,60 @@ class _TranslationSheet extends ConsumerWidget {
             Flexible(
               child: ListView(
                 shrinkWrap: true,
-                children: kTranslationCatalog.map((t) {
+                children: kTranslationCatalog
+                    .where((t) => kTranslationAssets.containsKey(t.id))
+                    .map((t) {
+                  final packageId = 'quran:${t.id}';
+                  final installed =
+                      ref.watch(downloadProvider).installed.contains(packageId);
+                  if (!installed) {
+                    return Card(
+                      child: ListTile(
+                        title: Text(t.translator),
+                        subtitle: Text(s.t('downloadBeforeUse')),
+                        trailing: IconButton(
+                          tooltip: s.t('download'),
+                          icon: const Icon(Icons.download),
+                          onPressed: () async {
+                            try {
+                              await ref
+                                  .read(downloadProvider.notifier)
+                                  .install(packageId);
+                              ref
+                                  .read(contentRevisionProvider.notifier)
+                                  .state++;
+                            } catch (_) {}
+                          },
+                        ),
+                      ),
+                    );
+                  }
                   final texts =
                       ref.watch(translationTextsProvider(t.id));
                   return texts.when(
-                    loading: () => const SizedBox.shrink(),
-                    error: (_, __) =>
-                        const SizedBox.shrink(),
+                    loading: () => const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Center(child: CircularProgressIndicator()),
+                    ),
+                    error: (_, __) => Text(s.t('contentUnavailable')),
                     data: (map) {
                       final text = map[ayah.key];
                       if (text == null) {
-                        return const SizedBox.shrink();
+                        return Text(s.t('contentUnavailable'));
                       }
                       return Padding(
-                        padding:
-                            const EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.only(bottom: 12),
                         child: Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(t.translator,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelSmall),
-                            Text(text,
-                                style: AppTheme.translation(
-                                    context)),
+                            Text(
+                              t.translator,
+                              style: Theme.of(context).textTheme.labelSmall,
+                            ),
+                            Text(
+                              text,
+                              style: AppTheme.translation(context),
+                            ),
                           ],
                         ),
                       );
@@ -500,8 +530,12 @@ class _WordMeaningsSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = AppStrings.of(context);
-    final wordsAsync =
-        ref.watch(wordSurahProvider(ayah.surah));
+    final isHafs = ayah.editionId.startsWith('hafs-an-asim__');
+    final wordsInstalled =
+        ref.watch(downloadProvider).installed.contains('quran:words-hafs');
+    final wordsAsync = isHafs && wordsInstalled
+        ? ref.watch(wordSurahProvider(ayah.surah))
+        : null;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
@@ -513,54 +547,77 @@ class _WordMeaningsSheet extends ConsumerWidget {
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
             Flexible(
-              child: wordsAsync.when(
-                loading: () => const Center(
-                    child: CircularProgressIndicator()),
-                error: (_, __) => Text(s.t('contentUnavailable')),
-                data: (map) {
-                  final words = map[ayah.canonicalAyahNumber];
-                  if (words == null || words.isEmpty) {
-                    return Text(s.t('contentUnavailable'));
-                  }
-                  return ListView.separated(
-                    shrinkWrap: true,
-                    itemCount: words.length,
-                    separatorBuilder: (_, __) =>
-                        const Divider(height: 1),
-                    itemBuilder: (context, i) {
-                      final w = words[i];
-                      if (w.isMark) {
-                        return ListTile(
-                          dense: true,
-                          title: Text(w.word,
-                              textDirection:
-                                  TextDirection.rtl,
-                              textAlign: TextAlign.right,
-                              style: const TextStyle(
-                                  fontSize: 18)),
-                          subtitle: const Text('۝'),
-                        );
-                      }
-                      return ListTile(
-                        dense: true,
-                        title: Text(w.word,
-                            textDirection:
-                                TextDirection.rtl,
-                            textAlign: TextAlign.right,
-                            style: const TextStyle(
-                                fontSize: 20)),
-                        subtitle: w.hasGloss
-                            ? Text(
-                                '${w.lemma}${w.root.isNotEmpty ? ' · √${w.root}' : ''}${w.pos.isNotEmpty ? ' · ${w.pos}' : ''}',
-                                textDirection:
-                                    TextDirection.rtl,
-                              )
-                            : null,
-                      );
-                    },
-                  );
-                },
-              ),
+              child: !isHafs
+                  ? Text(s.t('contentUnavailable'))
+                  : !wordsInstalled
+                      ? Center(
+                          child: FilledButton.icon(
+                            onPressed: () async {
+                              try {
+                                await ref
+                                    .read(downloadProvider.notifier)
+                                    .install('quran:words-hafs');
+                                ref
+                                    .read(contentRevisionProvider.notifier)
+                                    .state++;
+                              } catch (_) {}
+                            },
+                            icon: const Icon(Icons.download),
+                            label: Text(s.t('download')),
+                          ),
+                        )
+                      : wordsAsync!.when(
+                          loading: () => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          error: (_, __) =>
+                              Text(s.t('contentUnavailable')),
+                          data: (map) {
+                            final words =
+                                map[ayah.canonicalAyahNumber];
+                            if (words == null || words.isEmpty) {
+                              return Text(s.t('contentUnavailable'));
+                            }
+                            return ListView.separated(
+                              shrinkWrap: true,
+                              itemCount: words.length,
+                              separatorBuilder: (_, __) =>
+                                  const Divider(height: 1),
+                              itemBuilder: (context, i) {
+                                final w = words[i];
+                                if (w.isMark) {
+                                  return ListTile(
+                                    dense: true,
+                                    title: Text(
+                                      w.word,
+                                      textDirection: TextDirection.rtl,
+                                      textAlign: TextAlign.right,
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
+                                    subtitle: const Text('۝'),
+                                  );
+                                }
+                                return ListTile(
+                                  dense: true,
+                                  title: Text(
+                                    w.word,
+                                    textDirection: TextDirection.rtl,
+                                    textAlign: TextAlign.right,
+                                    style: const TextStyle(fontSize: 20),
+                                  ),
+                                  subtitle: w.hasGloss
+                                      ? Text(
+                                          '${w.lemma}'
+                                          '${w.root.isNotEmpty ? ' · √${w.root}' : ''}'
+                                          '${w.pos.isNotEmpty ? ' · ${w.pos}' : ''}',
+                                          textDirection: TextDirection.rtl,
+                                        )
+                                      : null,
+                                );
+                              },
+                            );
+                          },
+                        ),
             ),
             const SizedBox(height: 8),
             Text(kWordSource,

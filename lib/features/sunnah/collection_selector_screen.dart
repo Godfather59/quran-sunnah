@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/l10n/app_strings.dart';
 import '../../data/models/hadith.dart';
+import '../../data/content/content_packages.dart';
 import '../../data/repositories/hadith_repository.dart';
 import '../../data/seed/hadith_collections.dart';
 import '../../state/download_state.dart';
@@ -60,11 +61,31 @@ class CollectionSelectorScreen extends ConsumerWidget {
                       (collection) => Card(
                         child: CheckboxListTile(
                           value: filter.collectionIds.contains(collection.id),
-                          onChanged: (enabled) {
+                          onChanged: (enabled) async {
                             final next = {...filter.collectionIds};
-                            enabled == true
-                                ? next.add(collection.id)
-                                : next.remove(collection.id);
+                            if (enabled == true) {
+                              final packageId =
+                                  'hadith:${collection.id}';
+                              final installed = ref
+                                  .read(downloadProvider)
+                                  .installed
+                                  .contains(packageId);
+                              if (!installed) {
+                                try {
+                                  await ref
+                                      .read(downloadProvider.notifier)
+                                      .install(packageId);
+                                  ref
+                                      .read(contentRevisionProvider.notifier)
+                                      .state++;
+                                } catch (_) {
+                                  return;
+                                }
+                              }
+                              next.add(collection.id);
+                            } else {
+                              next.remove(collection.id);
+                            }
                             set(next);
                           },
                           title: Text(
