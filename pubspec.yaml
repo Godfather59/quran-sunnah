@@ -37,6 +37,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/integrity_manifest.json
+    - assets/licenses/DATA_NOTICES.txt
     - assets/quran/PROVENANCE-indopak.txt
     - assets/quran/PROVENANCE-riwayat.txt
     - assets/quran/tafsir/PROVENANCE.txt
