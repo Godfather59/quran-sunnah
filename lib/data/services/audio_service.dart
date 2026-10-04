@@ -142,7 +142,9 @@ class AudioService extends StateNotifier<AudioState> {
   AudioService(this._ref, {AudioCache? cache})
       : _cache = cache ?? AudioCache(),
         super(AudioState(
-            reciterId: _initialReciter(_ref))) {
+          reciterId: _initialReciter(_ref),
+          speed: _ref.read(appPrefsProvider).playbackSpeed,
+        )) {
     _player.playbackEventStream.listen((_) {
       final playing = _player.playing;
       if (playing != state.playing) {
@@ -261,6 +263,10 @@ class AudioService extends StateNotifier<AudioState> {
 
   Future<void> setSpeed(double speed) async {
     state = state.copyWith(speed: speed);
+    final prefs = _ref.read(appPrefsProvider);
+    await _ref
+        .read(appPrefsProvider.notifier)
+        .update(prefs.copyWith(playbackSpeed: speed));
     await _player.setSpeed(speed);
   }
 
@@ -388,8 +394,31 @@ class AudioCache {
       throw HttpException(
           'audio ${res.statusCode} for $surah:$ayah');
     }
-    final sink = file.openWrite();
-    await res.pipe(sink);
+    final part = File('${file.path}.part');
+    if (await part.exists()) {
+      await part.delete();
+    }
+    try {
+      final sink = part.openWrite();
+      await res.pipe(sink);
+      final actual = await part.length();
+      final expected = res.contentLength;
+      if (actual <= 0 || (expected > 0 && actual != expected)) {
+        throw HttpException(
+          'incomplete audio download for $surah:$ayah '
+          '(expected $expected bytes, got $actual)',
+        );
+      }
+      if (await file.exists()) {
+        await file.delete();
+      }
+      await part.rename(file.path);
+    } catch (_) {
+      if (await part.exists()) {
+        await part.delete();
+      }
+      rethrow;
+    }
   }
 
   Future<Set<int>> downloadedSurahs(String reciterId) async {
