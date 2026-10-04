@@ -128,6 +128,22 @@ const _bundled = [
   ),
 ];
 
+/// Verified collection ids backed by bundled per-section JSON.
+/// ahmad/riyad/adab/bulugh have no verified open Arabic edition yet
+/// and must stay honestly unavailable (never silently empty).
+const kVerifiedHadithCollectionIds = {
+  'bukhari',
+  'muslim',
+  'abudawud',
+  'tirmidhi',
+  'nasai',
+  'ibnmajah',
+  'malik',
+  'nawawi',
+  'qudsi',
+  'dehlawi',
+};
+
 /// Collection list with bundled state; the rest load on future
 /// download integration.
 List<HadithCollection> get kBundledHadithCollections {

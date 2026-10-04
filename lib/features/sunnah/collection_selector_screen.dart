@@ -5,6 +5,7 @@ import '../../core/l10n/app_strings.dart';
 import '../../data/models/hadith.dart';
 import '../../data/content/content_packages.dart';
 import '../../data/repositories/hadith_repository.dart';
+import '../../data/repositories/verified_asset_hadith_repository.dart';
 import '../../data/seed/hadith_collections.dart';
 import '../../state/download_state.dart';
 
@@ -33,8 +34,12 @@ class CollectionSelectorScreen extends ConsumerWidget {
             children: [
               ActionChip(
                 label: Text(s.t('selectAll')),
-                onPressed: () =>
-                    set(kHadithCollections.map((c) => c.id).toSet()),
+                onPressed: () => set(
+                  kHadithCollections
+                      .map((c) => c.id)
+                      .where(kVerifiedHadithCollectionIds.contains)
+                      .toSet(),
+                ),
               ),
               ActionChip(
                 label: Text(s.t('deselectAll')),
@@ -58,10 +63,30 @@ class CollectionSelectorScreen extends ConsumerWidget {
               return Column(
                 children: items
                     .map(
-                      (collection) => Card(
-                        child: CheckboxListTile(
-                          value: filter.collectionIds.contains(collection.id),
-                          onChanged: (enabled) async {
+                      (collection) {
+                        final verified = kVerifiedHadithCollectionIds
+                            .contains(collection.id);
+                        if (!verified) {
+                          return Card(
+                            child: CheckboxListTile(
+                              value: false,
+                              onChanged: null,
+                              title: Text(
+                                s.isArabic
+                                    ? collection.nameAr
+                                    : '${collection.nameAr} · ${collection.nameEn}',
+                              ),
+                              subtitle: Text(
+                                s.t('verifiedDatasetRequired'),
+                              ),
+                            ),
+                          );
+                        }
+                        return Card(
+                          child: CheckboxListTile(
+                            value:
+                                filter.collectionIds.contains(collection.id),
+                            onChanged: (enabled) async {
                             final next = {...filter.collectionIds};
                             if (enabled == true) {
                               final packageId =
@@ -104,7 +129,8 @@ class CollectionSelectorScreen extends ConsumerWidget {
                             ),
                           ),
                         ),
-                      ),
+                        );
+                      },
                     )
                     .toList(),
               );

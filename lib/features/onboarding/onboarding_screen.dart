@@ -6,6 +6,7 @@ import '../../core/navigation/adaptive_scaffold.dart';
 import '../../data/content/content_packages.dart';
 import '../../data/models/quran.dart';
 import '../../data/repositories/hadith_repository.dart';
+import '../../data/repositories/verified_asset_hadith_repository.dart';
 import '../../data/repositories/tafsir_repository.dart';
 import '../../data/repositories/translation_repository.dart';
 import '../../data/repositories/verified_asset_quran_repository.dart';
@@ -208,24 +209,39 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       _preset(s.t('kutubSittah'), kKutubSittah),
       _preset(
         s.t('allCollections'),
-        kHadithCollections.map((c) => c.id).toSet(),
+        kHadithCollections
+            .map((c) => c.id)
+            .where(kVerifiedHadithCollectionIds.contains)
+            .toSet(),
       ),
       const Divider(),
       ...kHadithCollections.map(
-        (c) => CheckboxListTile(
-          value: _collections.contains(c.id),
-          onChanged: (_) => setState(() {
-            _collections.contains(c.id)
-                ? _collections.remove(c.id)
-                : _collections.add(c.id);
-          }),
-          title: Text(ar ? c.nameAr : '${c.nameAr} · ${c.nameEn}'),
-          subtitle: Text(
-            kCoreDatasetIds.contains('hadith:${c.id}')
-                ? s.t('shipsWithApp')
-                : s.t('downloadBeforeUse'),
-          ),
-        ),
+        (c) {
+          final verified =
+              kVerifiedHadithCollectionIds.contains(c.id);
+          if (!verified) {
+            return CheckboxListTile(
+              value: false,
+              onChanged: null,
+              title: Text(ar ? c.nameAr : '${c.nameAr} · ${c.nameEn}'),
+              subtitle: Text(s.t('verifiedDatasetRequired')),
+            );
+          }
+          return CheckboxListTile(
+            value: _collections.contains(c.id),
+            onChanged: (_) => setState(() {
+              _collections.contains(c.id)
+                  ? _collections.remove(c.id)
+                  : _collections.add(c.id);
+            }),
+            title: Text(ar ? c.nameAr : '${c.nameAr} · ${c.nameEn}'),
+            subtitle: Text(
+              kCoreDatasetIds.contains('hadith:${c.id}')
+                  ? s.t('shipsWithApp')
+                  : s.t('downloadBeforeUse'),
+            ),
+          );
+        },
       ),
     ]);
   }
@@ -484,7 +500,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           );
 
       ref.read(hadithFilterProvider.notifier).state = HadithFilter(
-        collectionIds: {..._collections},
+        collectionIds: _collections
+            .where(kVerifiedHadithCollectionIds.contains)
+            .toSet(),
       );
 
       if (mounted) {
