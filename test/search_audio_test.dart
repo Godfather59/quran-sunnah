@@ -2,9 +2,12 @@
 // Verifies: verse shortcut, diacritic-insensitive Quran/Hadith/Tafsir
 // hits, surah lookup, honest narrator/topic emptiness, CDN numbering.
 
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quran_sunnah_app/data/database/app_database.dart';
+import 'package:quran_sunnah_app/data/content/content_packages.dart';
 import 'package:quran_sunnah_app/data/repositories/hadith_repository.dart';
 import 'package:quran_sunnah_app/data/repositories/verified_asset_hadith_repository.dart';
 import 'package:quran_sunnah_app/data/repositories/verified_asset_quran_repository.dart';
@@ -17,8 +20,12 @@ void main() {
 
   late AppDatabase database;
   late SearchService search;
+  late Directory packageRoot;
 
-  setUpAll(() {
+  setUpAll(() async {
+    packageRoot =
+        await Directory.systemTemp.createTemp('content-packages-search-');
+    ContentPackageStore.instance.setRootDirectoryForTesting(packageRoot);
     database = AppDatabase.memory();
     search = SearchService(
       quran: VerifiedAssetQuranRepository(),
@@ -27,7 +34,13 @@ void main() {
     );
   });
 
-  tearDownAll(() => database.close());
+  tearDownAll(() async {
+    await database.close();
+    ContentPackageStore.instance.resetForTesting();
+    if (await packageRoot.exists()) {
+      await packageRoot.delete(recursive: true);
+    }
+  });
 
   test('verse shortcut 2:255 resolves', () async {
     final r = await search.search(
@@ -67,13 +80,12 @@ void main() {
     expect(r.hadith.first.hadith, isNotNull);
   });
 
-  test('tafsir + surah search hit bundled content', () async {
+  test('clean install omits optional tafsir but keeps surah search', () async {
     final svc = search;
     const ed = 'hafs-an-asim__uthmani';
     final t = await svc.search(
         query: 'الصراط', editionId: ed, tafsirId: 'jalalayn');
-    expect(t.tafsir.isNotEmpty, isTrue);
-    expect(t.tafsir.first.surah, isNotNull);
+    expect(t.tafsir, isEmpty);
 
     final sq = svc.searchSurahs('بقرة');
     expect(sq.any((h) => h.surah == 2), isTrue);
@@ -97,7 +109,7 @@ void main() {
       tafsirId: 'jalalayn',
     );
     final before = await database.countSearchDocuments();
-    expect(before, greaterThan(45000));
+    expect(before, greaterThan(20000));
 
     await search.search(
       query: 'الرحمن',
