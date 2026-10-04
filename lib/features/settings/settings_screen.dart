@@ -280,27 +280,27 @@ class SettingsScreen extends ConsumerWidget {
                       fontSize: 18,
                       fontWeight: FontWeight.w700)),
               ...kTranslationCatalog.map((t) => CheckboxListTile(
-                    value:
-                        q.translations.contains(t.id),
-                    onChanged: (v) {
-                      final next = [...q.translations];
-                      v == true
-                          ? next.add(t.id)
-                          : next.remove(t.id);
-                      ref
-                          .read(quranPrefsProvider.notifier)
-                          .update(
-                              q.copyWith(translations: next));
-                    },
+                    value: q.translations.contains(t.id),
+                    onChanged: !t.bundled
+                        ? null
+                        : (v) {
+                            final next = [...q.translations];
+                            v == true
+                                ? next.add(t.id)
+                                : next.remove(t.id);
+                            ref
+                                .read(quranPrefsProvider.notifier)
+                                .update(q.copyWith(translations: next));
+                          },
                     title: Text(s.isArabic
                         ? t.language == 'ar'
                             ? t.translator
                             : '${t.translator} (${t.language})'
                         : '${t.translator} · ${t.language}'),
-                    subtitle: Text(t.source,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall),
+                    subtitle: Text(
+                      '${t.source}${t.version == null ? '' : ' · ${t.version}'}${t.bundled ? '' : ' · ${s.t('notDownloaded')}'}',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   )),
             ],
           ),
