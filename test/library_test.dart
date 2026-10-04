@@ -76,8 +76,6 @@ void main() {
             .any((c) => c.id == added.id),
         isFalse);
   });
-}
-
 
   test('bookmarks survive provider recreation', () async {
     final first = ProviderContainer();
@@ -93,3 +91,4 @@ void main() {
     );
     second.dispose();
   });
+}
