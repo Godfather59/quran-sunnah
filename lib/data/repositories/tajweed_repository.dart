@@ -174,6 +174,7 @@ List<({int start, int end, String? rule})> buildTajweedSegments(
 final tajweedSurahProvider =
     FutureProvider.family<Map<int, List<TajweedSpan>>, int>(
         (ref, surah) async {
+  ref.watch(contentRevisionProvider);
   try {
     if (!await ContentPackageStore.instance
         .isInstalled('quran:tajweed-hafs')) {
