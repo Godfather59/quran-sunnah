@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../data/models/quran.dart';
+import '../../data/content/content_packages.dart';
 import '../../data/repositories/tafsir_repository.dart';
 import '../../data/repositories/translation_repository.dart';
 import '../downloads/downloads_screen.dart';
 import '../quran/audio_player_screen.dart';
 import '../quran/riwaya_selector_screen.dart';
 import '../../state/providers.dart';
+import '../../state/download_state.dart';
 import 'data_sources_screen.dart';
 
 /// Organized settings (§25): grouped cards with icons, fully
@@ -279,29 +281,54 @@ class SettingsScreen extends ConsumerWidget {
                   style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700)),
-              ...kTranslationCatalog.map((t) => CheckboxListTile(
-                    value: q.translations.contains(t.id),
-                    onChanged: !t.bundled
-                        ? null
-                        : (v) {
-                            final next = [...q.translations];
-                            v == true
-                                ? next.add(t.id)
-                                : next.remove(t.id);
-                            ref
-                                .read(quranPrefsProvider.notifier)
-                                .update(q.copyWith(translations: next));
-                          },
-                    title: Text(s.isArabic
-                        ? t.language == 'ar'
-                            ? t.translator
-                            : '${t.translator} (${t.language})'
-                        : '${t.translator} · ${t.language}'),
-                    subtitle: Text(
-                      '${t.source}${t.version == null ? '' : ' · ${t.version}'}${t.bundled ? '' : ' · ${s.t('notDownloaded')}'}',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  )),
+              ...kTranslationCatalog.map((t) {
+                final packageId = 'quran:${t.id}';
+                final installed =
+                    ref.read(downloadProvider).installed.contains(packageId);
+                return CheckboxListTile(
+                  value: q.translations.contains(t.id),
+                  onChanged: !t.bundled
+                      ? null
+                      : (v) async {
+                          if (v == true && !installed) {
+                            try {
+                              await ref
+                                  .read(downloadProvider.notifier)
+                                  .install(packageId);
+                              ref
+                                  .read(contentRevisionProvider.notifier)
+                                  .state++;
+                            } catch (_) {
+                              return;
+                            }
+                          }
+                          final current = ref.read(quranPrefsProvider);
+                          final next = [...current.translations];
+                          if (v == true) {
+                            if (!next.contains(t.id)) next.add(t.id);
+                          } else {
+                            next.remove(t.id);
+                          }
+                          await ref
+                              .read(quranPrefsProvider.notifier)
+                              .update(current.copyWith(
+                                translations: next,
+                                showTranslation: next.isNotEmpty,
+                              ));
+                        },
+                  title: Text(
+                    s.isArabic
+                        ? '${t.translator} (${t.language})'
+                        : '${t.translator} · ${t.language}',
+                  ),
+                  subtitle: Text(
+                    '${t.source}'
+                    '${t.version == null ? '' : ' · ${t.version}'}'
+                    '${!t.bundled ? ' · ${s.t('notDownloaded')}' : installed ? ' · ${s.t('installed')}' : ' · ${s.t('downloadBeforeUse')}'}',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                );
+              }),
             ],
           ),
         ),
@@ -319,15 +346,26 @@ class SettingsScreen extends ConsumerWidget {
         child: RadioGroup<String>(
           groupValue: q.tafsirId,
           onChanged: (v) async {
-            if (v == null) {
-              return;
+            if (v == null) return;
+            final info =
+                kTafsirCatalog.where((t) => t.id == v).firstOrNull;
+            if (info == null || !info.bundled) return;
+            final packageId = 'quran:tafsir-$v';
+            if (!ref.read(downloadProvider).installed.contains(packageId)) {
+              try {
+                await ref
+                    .read(downloadProvider.notifier)
+                    .install(packageId);
+                ref.read(contentRevisionProvider.notifier).state++;
+              } catch (_) {
+                return;
+              }
             }
+            final current = ref.read(quranPrefsProvider);
             await ref
                 .read(quranPrefsProvider.notifier)
-                .update(q.copyWith(tafsirId: v));
-            if (ctx.mounted) {
-              Navigator.pop(ctx);
-            }
+                .update(current.copyWith(tafsirId: v));
+            if (ctx.mounted) Navigator.pop(ctx);
           },
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -338,9 +376,14 @@ class SettingsScreen extends ConsumerWidget {
                       title: Text(s.isArabic
                           ? t.titleAr
                           : t.titleEn),
-                      subtitle: Text(t.bundled
-                          ? t.source
-                          : '${t.source} · ${s.t('notDownloaded')}'),
+                      subtitle: Text(
+                        !t.bundled
+                            ? '${t.source} · ${s.t('notDownloaded')}'
+                            : ref.read(downloadProvider).installed.contains(
+                                    'quran:tafsir-${t.id}')
+                                ? '${t.source} · ${s.t('installed')}'
+                                : '${t.source} · ${s.t('downloadBeforeUse')}',
+                      ),
                     ))
                 .toList(),
           ),
