@@ -3,18 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/l10n/app_strings.dart';
 import '../../core/navigation/adaptive_scaffold.dart';
+import '../../data/content/content_packages.dart';
 import '../../data/models/quran.dart';
 import '../../data/repositories/hadith_repository.dart';
 import '../../data/repositories/tafsir_repository.dart';
 import '../../data/repositories/translation_repository.dart';
 import '../../data/repositories/verified_asset_quran_repository.dart';
 import '../../data/seed/hadith_collections.dart';
+import '../../state/download_state.dart';
 import '../../state/providers.dart';
 
-/// Five-step onboarding. No account required.
-///
-/// The selected locale is applied immediately inside onboarding so the user
-/// never has to finish setup before seeing the requested language.
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -32,7 +30,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Set<String> _collections = {'bukhari', 'muslim'};
   Set<String> _translations = {};
   String _tafsirId = 'jalalayn';
+  bool _includeTafsir = true;
   bool _showTajweed = false;
+  bool _downloadWords = false;
+  bool _finishing = false;
+  String? _finishError;
 
   AppStrings get _strings => AppStrings(Locale(_locale));
 
@@ -57,6 +59,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               Expanded(
                 child: PageView(
                   controller: _ctrl,
+                  physics: _finishing
+                      ? const NeverScrollableScrollPhysics()
+                      : null,
                   onPageChanged: (i) => setState(() => _page = i),
                   children: [
                     _languagePage(),
@@ -73,7 +78,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   children: [
                     Text('${_page + 1} / 5'),
                     const Spacer(),
-                    if (_page > 0)
+                    if (_page > 0 && !_finishing)
                       TextButton(
                         onPressed: () => _ctrl.previousPage(
                           duration: const Duration(milliseconds: 300),
@@ -83,14 +88,21 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       ),
                     const SizedBox(width: 8),
                     FilledButton(
-                      onPressed: _page == 4
-                          ? _finish
-                          : () => _ctrl.nextPage(
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeOut,
-                              ),
+                      onPressed: _finishing
+                          ? null
+                          : _page == 4
+                              ? _finish
+                              : () => _ctrl.nextPage(
+                                    duration:
+                                        const Duration(milliseconds: 300),
+                                    curve: Curves.easeOut,
+                                  ),
                       child: Text(
-                        _page == 4 ? s.t('obDone') : s.t('obNext'),
+                        _finishing
+                            ? s.t('downloading')
+                            : _page == 4
+                                ? s.t('obDone')
+                                : s.t('obNext'),
                       ),
                     ),
                   ],
@@ -106,21 +118,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Widget _languagePage() {
     final s = _strings;
     return _wrap(s.t('obLanguage'), [
-      _option(
-        'العربية',
-        _locale == 'ar',
-        () => _setLocale('ar'),
-      ),
-      _option(
-        'English',
-        _locale == 'en',
-        () => _setLocale('en'),
-      ),
-      _option(
-        'Français',
-        _locale == 'fr',
-        () => _setLocale('fr'),
-      ),
+      _option('العربية', _locale == 'ar', () => _setLocale('ar')),
+      _option('English', _locale == 'en', () => _setLocale('en')),
+      _option('Français', _locale == 'fr', () => _setLocale('fr')),
     ]);
   }
 
@@ -213,102 +213,195 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         kHadithCollections.map((c) => c.id).toSet(),
       ),
       const Divider(),
-      ...kHadithCollections.take(6).map(
-            (c) => CheckboxListTile(
-              value: _collections.contains(c.id),
-              onChanged: (_) => setState(() {
-                _collections.contains(c.id)
-                    ? _collections.remove(c.id)
-                    : _collections.add(c.id);
-              }),
-              title: Text(ar ? c.nameAr : '${c.nameAr} · ${c.nameEn}'),
-            ),
+      ...kHadithCollections.map(
+        (c) => CheckboxListTile(
+          value: _collections.contains(c.id),
+          onChanged: (_) => setState(() {
+            _collections.contains(c.id)
+                ? _collections.remove(c.id)
+                : _collections.add(c.id);
+          }),
+          title: Text(ar ? c.nameAr : '${c.nameAr} · ${c.nameEn}'),
+          subtitle: Text(
+            kCoreDatasetIds.contains('hadith:${c.id}')
+                ? s.t('shipsWithApp')
+                : s.t('downloadBeforeUse'),
           ),
+        ),
+      ),
     ]);
   }
 
   Widget _additionalContentPage() {
     final s = _strings;
+    final manifestAsync = ref.watch(contentPackageManifestProvider);
+    final downloadState = ref.watch(downloadProvider);
     final tajweedAvailable = _riwaya == RiwayaId.hafsAsim &&
         _script == QuranScript.uthmani;
 
-    final bundledTranslations =
-        kTranslationCatalog.where((item) => item.bundled).toList();
-    final bundledTafsir =
-        kTafsirCatalog.where((item) => item.bundled).toList();
-
-    return _wrap(s.t('obDownloads'), [
-      Text(
-        s.t('obDownloadsHint'),
-        style: Theme.of(context).textTheme.bodyMedium,
-      ),
-      const SizedBox(height: 16),
-      Text(
-        s.t('translations'),
-        style: Theme.of(context).textTheme.titleMedium,
-      ),
-      const SizedBox(height: 4),
-      for (final item in bundledTranslations)
-        CheckboxListTile(
-          value: _translations.contains(item.id),
-          title: Text(
-            item.id == 'en-sahih'
-                ? s.t('saheehInternational')
-                : item.id == 'fr-hamidullah'
-                    ? s.t('hamidullahFrench')
-                    : item.translator,
-          ),
-          onChanged: (enabled) => setState(() {
-            if (enabled == true) {
-              _translations.add(item.id);
-            } else {
-              _translations.remove(item.id);
+    return manifestAsync.when(
+      loading: () => _wrap(s.t('obDownloads'), const [
+        Center(child: CircularProgressIndicator()),
+      ]),
+      error: (error, _) => _wrap(s.t('obDownloads'), [
+        Text('${s.t('contentUnavailable')}\n$error'),
+      ]),
+      data: (manifest) {
+        final ids = _selectedPackageIds();
+        final selected = manifest.packages
+            .where((p) => ids.contains(p.id))
+            .toList(growable: false);
+        final total = selected.fold<int>(
+          0,
+          (sum, p) => sum + p.sizeBytes,
+        );
+        final downloaded = selected.fold<double>(
+          0,
+          (sum, p) {
+            if (downloadState.installed.contains(p.id)) {
+              return sum + p.sizeBytes;
             }
-          }),
-        ),
-      const Divider(),
-      Text(
-        s.t('chooseTafsir'),
-        style: Theme.of(context).textTheme.titleMedium,
-      ),
-      const SizedBox(height: 4),
-      RadioGroup<String>(
-        groupValue: _tafsirId,
-        onChanged: (value) {
-          if (value != null) setState(() => _tafsirId = value);
-        },
-        child: Column(
-          children: [
-            for (final item in bundledTafsir)
-              RadioListTile<String>(
-                value: item.id,
-                title: Text(
-                  _locale == 'ar'
-                      ? item.titleAr
-                      : item.id == 'jalalayn'
-                          ? s.t('jalalayn')
-                          : item.id == 'siraj'
-                              ? s.t('siraj')
-                              : item.titleEn,
+            return sum +
+                p.sizeBytes * (downloadState.progress[p.id] ?? 0);
+          },
+        );
+
+        return _wrap(s.t('obDownloads'), [
+          Text(
+            s.t('obDownloadsHint'),
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 12),
+          if (_finishing) ...[
+            LinearProgressIndicator(
+              value: total == 0 ? 1 : downloaded / total,
+            ),
+            const SizedBox(height: 8),
+            Text(s.t('downloadingContent')),
+            const SizedBox(height: 12),
+          ],
+          if (_finishError != null) ...[
+            Text(
+              s.t('downloadFailed'),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.error,
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+          Text(
+            s.t('translations'),
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          ...kTranslationCatalog
+              .where((item) =>
+                  item.id == 'en-sahih' ||
+                  item.id == 'fr-hamidullah')
+              .map(
+                (item) => CheckboxListTile(
+                  value: _translations.contains(item.id),
+                  title: Text(
+                    item.id == 'en-sahih'
+                        ? s.t('saheehInternational')
+                        : s.t('hamidullahFrench'),
+                  ),
+                  onChanged: _finishing
+                      ? null
+                      : (enabled) => setState(() {
+                            enabled == true
+                                ? _translations.add(item.id)
+                                : _translations.remove(item.id);
+                          }),
                 ),
               ),
-          ],
-        ),
-      ),
-      const Divider(),
-      SwitchListTile(
-        value: tajweedAvailable && _showTajweed,
-        onChanged: tajweedAvailable
-            ? (value) => setState(() => _showTajweed = value)
-            : null,
-        title: Text(s.t('tajweedColors')),
-        subtitle: Text(
-          tajweedAvailable
-              ? s.t('tajweedVerifiedHint')
-              : s.t('tajweedHafsOnly'),
-        ),
-      ),
-    ]);
+          const Divider(),
+          SwitchListTile(
+            value: _includeTafsir,
+            onChanged: _finishing
+                ? null
+                : (value) => setState(() => _includeTafsir = value),
+            title: Text(s.t('includeTafsir')),
+          ),
+          RadioGroup<String>(
+            groupValue: _tafsirId,
+            onChanged: !_includeTafsir || _finishing
+                ? (_) {}
+                : (value) {
+                    if (value != null) {
+                      setState(() => _tafsirId = value);
+                    }
+                  },
+            child: Column(
+              children: [
+                for (final item
+                    in kTafsirCatalog.where((item) => item.bundled))
+                  RadioListTile<String>(
+                    value: item.id,
+                    enabled: _includeTafsir && !_finishing,
+                    title: Text(
+                      _locale == 'ar' ? item.titleAr : item.titleEn,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const Divider(),
+          SwitchListTile(
+            value: tajweedAvailable && _showTajweed,
+            onChanged: tajweedAvailable && !_finishing
+                ? (value) => setState(() => _showTajweed = value)
+                : null,
+            title: Text(s.t('tajweedColors')),
+            subtitle: Text(
+              tajweedAvailable
+                  ? s.t('tajweedVerifiedHint')
+                  : s.t('tajweedHafsOnly'),
+            ),
+          ),
+          SwitchListTile(
+            value: _downloadWords,
+            onChanged: _finishing
+                ? null
+                : (value) => setState(() => _downloadWords = value),
+            title: Text(s.t('wordMorphology')),
+            subtitle: Text(s.t('wordMorphologyHint')),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.download_outlined),
+            title: Text(s.t('selectedDownloadSize')),
+            subtitle: Text(
+              '${selected.length} ${s.t('packageCount')} · '
+              '${_formatBytes(total)}',
+            ),
+          ),
+          if (_collections
+              .where((id) => !kCoreDatasetIds.contains('hadith:$id'))
+              .isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                s.isArabic
+                    ? 'تتضمن اختياراتك كتب حديث إضافية وسيتم تنزيلها الآن.'
+                    : 'Your selection includes additional Hadith collections that will be downloaded now.',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ),
+        ]);
+      },
+    );
+  }
+
+  Set<String> _selectedPackageIds() {
+    final ids = <String>{
+      for (final id in _translations) 'quran:$id',
+      for (final id in _collections)
+        if (!kCoreDatasetIds.contains('hadith:$id')) 'hadith:$id',
+    };
+    if (_includeTafsir) ids.add('quran:tafsir-$_tafsirId');
+    if (_showTajweed) ids.add('quran:tajweed-hafs');
+    if (_downloadWords) ids.add('quran:words-hafs');
+    return ids;
   }
 
   Widget _wrap(String title, List<Widget> children) => ListView(
@@ -336,7 +429,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         child: ListTile(
           title: Text(label),
           trailing: selected ? const Icon(Icons.check_circle) : null,
-          onTap: onTap,
+          onTap: _finishing ? null : onTap,
         ),
       );
 
@@ -345,37 +438,69 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         trailing: _collections.containsAll(ids)
             ? const Icon(Icons.check_circle)
             : const Icon(Icons.circle_outlined),
-        onTap: () => setState(() => _collections = {...ids}),
+        onTap: _finishing
+            ? null
+            : () => setState(() => _collections = {...ids}),
       );
+
+  String _formatBytes(int bytes) {
+    if (bytes < 1024) return '$bytes B';
+    final kb = bytes / 1024;
+    if (kb < 1024) return '${kb.toStringAsFixed(1)} KB';
+    return '${(kb / 1024).toStringAsFixed(1)} MB';
+  }
 
   Future<void> _finish() async {
-    await ref.read(appPrefsProvider.notifier).update(
-          ref.read(appPrefsProvider).copyWith(
-                locale: _locale,
-                onboarded: true,
-              ),
-        );
+    setState(() {
+      _finishing = true;
+      _finishError = null;
+    });
 
-    final current = ref.read(quranPrefsProvider);
-    await ref.read(quranPrefsProvider.notifier).update(
-          current.copyWith(
-            riwaya: _riwaya,
-            script: _script,
-            translations: _translations.toList(growable: false),
-            tafsirId: _tafsirId,
-            showTranslation: _translations.isNotEmpty,
-            showTajweed: _showTajweed,
-          ),
-        );
+    try {
+      final manifest =
+          await ref.read(contentPackageManifestProvider.future);
+      final known = manifest.packages.map((p) => p.id).toSet();
+      final selected =
+          _selectedPackageIds().where(known.contains).toSet();
 
-    ref.read(hadithFilterProvider.notifier).state = HadithFilter(
-      collectionIds: {..._collections},
-    );
+      await ref.read(downloadProvider.notifier).installMany(selected);
+      ref.read(contentRevisionProvider.notifier).state++;
 
-    if (mounted) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const AdaptiveScaffold()),
+      await ref.read(appPrefsProvider.notifier).update(
+            ref.read(appPrefsProvider).copyWith(
+                  locale: _locale,
+                  onboarded: true,
+                ),
+          );
+
+      final current = ref.read(quranPrefsProvider);
+      await ref.read(quranPrefsProvider.notifier).update(
+            current.copyWith(
+              riwaya: _riwaya,
+              script: _script,
+              translations: _translations.toList(growable: false),
+              tafsirId: _tafsirId,
+              showTranslation: _translations.isNotEmpty,
+              showTajweed: _showTajweed,
+            ),
+          );
+
+      ref.read(hadithFilterProvider.notifier).state = HadithFilter(
+        collectionIds: {..._collections},
       );
+
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const AdaptiveScaffold()),
+        );
+      }
+    } catch (error) {
+      if (mounted) {
+        setState(() {
+          _finishing = false;
+          _finishError = '$error';
+        });
+      }
     }
   }
 }
