@@ -74,4 +74,44 @@ void main() {
     final optional = manifest.packages.map((p) => p.id).toSet();
     expect(optional.intersection(kCoreDatasetIds), isEmpty);
   });
+
+  test('installed marker exposes local verified package and remove clears it',
+      () async {
+    final temp = await Directory.systemTemp.createTemp('package-store-');
+    addTearDown(() async {
+      ContentPackageStore.instance.resetForTesting();
+      if (await temp.exists()) await temp.delete(recursive: true);
+    });
+    ContentPackageStore.instance.resetForTesting();
+    ContentPackageStore.instance.setRootDirectoryForTesting(temp);
+
+    final store = ContentPackageStore.instance;
+    final manifest = await store.manifest();
+    final pkg = manifest.byId('quran:en-sahih')!;
+    expect(pkg.files, hasLength(1));
+
+    final spec = pkg.files.single;
+    final source = File(spec.path);
+    final target = await store.installedFile(pkg.id, spec.path);
+    await target.parent.create(recursive: true);
+    await source.copy(target.path);
+
+    final marker = await store.markerFile(pkg.id);
+    await marker.writeAsString(jsonEncode({
+      'id': pkg.id,
+      'version': pkg.version,
+      'sha256': pkg.sha256,
+      'sourceRevision': manifest.sourceRevision,
+    }));
+
+    expect(await store.isInstalled(pkg.id), isTrue);
+    expect(
+      await store.loadString(spec.path),
+      await source.readAsString(),
+    );
+    expect((await store.installedIds()).contains(pkg.id), isTrue);
+
+    await store.remove(pkg.id);
+    expect(await store.isInstalled(pkg.id), isFalse);
+  });
 }
