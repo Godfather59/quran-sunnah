@@ -6,8 +6,8 @@
 
 import 'dart:convert';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../content/content_packages.dart';
 
 const String kWordSource =
     'Quranic Arabic Corpus v0.4 (corpus.quran.com)';
@@ -34,9 +34,13 @@ final wordSurahProvider =
     FutureProvider.family<Map<int, List<WordInfo>>, int>(
         (ref, surah) async {
   try {
-    final raw = await rootBundle.loadString(
-        'assets/quran/words/hafs/$surah.json',
-        cache: false);
+    if (!await ContentPackageStore.instance
+        .isInstalled('quran:words-hafs')) {
+      return const {};
+    }
+    final raw = await ContentPackageStore.instance.loadString(
+      'assets/quran/words/hafs/$surah.json',
+    );
     final json = jsonDecode(raw) as Map<String, dynamic>;
     final out = <int, List<WordInfo>>{};
     for (final e in ((json['entries'] as List?) ?? [])) {
