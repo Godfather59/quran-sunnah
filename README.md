@@ -1,6 +1,6 @@
 # Quran & Sunnah — Flutter (iOS + Android)
 
-Premium, calm, offline-first Quran + authentic Sunnah app. Material 3 on
+Premium, calm, offline-first Quran + authentic Sunnah app with bundled Arabic fonts. Material 3 on
 Android, native-feeling navigation/gestures/safe-areas on iOS.
 
 > **Data integrity (highest priority):** this repo ships **no verse wording
@@ -50,7 +50,7 @@ lib/
    and extend the dataset test to assert its verse counts.
    Scripts: Uthmani + Imla’i + **IndoPak** bundled for Hafs
    (`hafs-an-asim__indopak`, QuranComplex Unicode, rendered with the
-   Extended-B-capable Amiri Quran face).
+   Extended-B-capable bundled Amiri Quran face).
    Structural metadata ✅ bundled: 30 Juz / 240 quarters (60 Hizb) /
    604 Medina pages / 15 sajdas (Tanzil quran-data.xml v1.0,
    `assets/quran/metadata/`) — Hafs/Medina mapping only.
