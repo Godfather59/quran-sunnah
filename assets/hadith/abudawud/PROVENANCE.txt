@@ -5,4 +5,8 @@ Fetched  : 2026-10-04 via jsDelivr CDN
 Sections : per upstream "sections" metadata (English titles as provided)
 Grades   : UPSTREAM GRADES ARE EMPTY - shown as unavailable, never invented.
 Empty matn: upstream numbers without matn kept as placeholders, refs intact.
-License  : verify upstream terms before redistribution.
+License  : hadith-api repository code/material is Unlicensed, but that does
+           not establish the license of the underlying Arabic edition texts.
+           Upstream issue #129 ("What is the license of the texts?") remains
+           open. Treat redistribution of the bundled text as unresolved.
+
