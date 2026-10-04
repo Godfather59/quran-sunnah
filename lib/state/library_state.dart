@@ -69,7 +69,7 @@ class LibraryNotifier extends StateNotifier<List<Bookmark>> {
     );
   }
 
-  void toggleAyah(int surah, int ayah) {
+  Future<void> toggleAyah(int surah, int ayah) async {
     final key = '$surah:$ayah';
     if (state.any((b) => b.refKey == key)) {
       state = state.where((b) => b.refKey != key).toList();
@@ -86,10 +86,10 @@ class LibraryNotifier extends StateNotifier<List<Bookmark>> {
         ),
       ];
     }
-    unawaited(_save());
+    await _save();
   }
 
-  void setAyahCollection(int surah, int ayah, String? collectionId) {
+  Future<void> setAyahCollection(int surah, int ayah, String? collectionId) {
     final key = '$surah:$ayah';
     final existing = state.where((b) => b.refKey == key).firstOrNull;
     if (existing == null) {
@@ -120,10 +120,10 @@ class LibraryNotifier extends StateNotifier<List<Bookmark>> {
               : b)
           .toList();
     }
-    unawaited(_save());
+    await _save();
   }
 
-  void toggleHadith(String id, String title) {
+  Future<void> toggleHadith(String id, String title) {
     if (state.any((b) => b.refKey == id)) {
       state = state.where((b) => b.refKey != id).toList();
     } else {
@@ -139,14 +139,14 @@ class LibraryNotifier extends StateNotifier<List<Bookmark>> {
         ),
       ];
     }
-    unawaited(_save());
+    await _save();
   }
 
   bool isBookmarked(String key) => state.any((b) => b.refKey == key);
 
-  void remove(String id) {
+  Future<void> remove(String id) async {
     state = state.where((b) => b.id != id).toList();
-    unawaited(_save());
+    await _save();
   }
 }
 
