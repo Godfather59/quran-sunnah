@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/l10n/app_strings.dart';
 import '../../data/models/quran.dart';
+import '../../data/content/content_packages.dart';
 import '../../data/repositories/verified_asset_quran_repository.dart';
 import '../../data/seed/riwayat_catalog.dart';
 import '../../state/download_state.dart';
@@ -115,6 +116,8 @@ class ScriptSelectorScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = AppStrings.of(context);
     final q = ref.watch(quranPrefsProvider);
+    final dl = ref.watch(downloadProvider);
+    final tajweedInstalled = dl.installed.contains('quran:tajweed-hafs');
     final items = [
       (QuranScript.uthmani, s.t('uthmani'), s.t('uthmaniHint')),
       (QuranScript.imlai, s.t('imlai'), s.t('imlaiHint')),
@@ -164,15 +167,33 @@ class ScriptSelectorScreen extends ConsumerWidget {
               secondary: const Icon(Icons.palette_outlined),
               title: Text(s.t('tajweedColors')),
               subtitle: Text(
-                q.tajweedAvailable
-                    ? s.t('tajweedVerifiedHint')
-                    : s.t('tajweedHafsOnly'),
+                !q.tajweedAvailable
+                    ? s.t('tajweedHafsOnly')
+                    : tajweedInstalled
+                        ? s.t('tajweedVerifiedHint')
+                        : s.t('downloadBeforeUse'),
               ),
-              value: q.showTajweed && q.tajweedAvailable,
+              value: q.showTajweed &&
+                  q.tajweedAvailable &&
+                  tajweedInstalled,
               onChanged: q.tajweedAvailable
-                  ? (v) => ref
-                      .read(quranPrefsProvider.notifier)
-                      .update(q.copyWith(showTajweed: v))
+                  ? (v) async {
+                      if (v && !tajweedInstalled) {
+                        try {
+                          await ref
+                              .read(downloadProvider.notifier)
+                              .install('quran:tajweed-hafs');
+                          ref
+                              .read(contentRevisionProvider.notifier)
+                              .state++;
+                        } catch (_) {
+                          return;
+                        }
+                      }
+                      await ref
+                          .read(quranPrefsProvider.notifier)
+                          .update(q.copyWith(showTajweed: v));
+                    }
                   : null,
             ),
           ),
