@@ -33,6 +33,22 @@ flutter:
   uses-material-design: true
   assets:
     - assets/integrity_manifest.json
+    - assets/quran/PROVENANCE-indopak.txt
+    - assets/quran/PROVENANCE-riwayat.txt
+    - assets/quran/tafsir/PROVENANCE.txt
+    - assets/quran/tajweed/PROVENANCE.txt
+    - assets/quran/translations/PROVENANCE.txt
+    - assets/quran/words/PROVENANCE.txt
+    - assets/hadith/abudawud/PROVENANCE.txt
+    - assets/hadith/bukhari/PROVENANCE.txt
+    - assets/hadith/dehlawi/PROVENANCE.txt
+    - assets/hadith/ibnmajah/PROVENANCE.txt
+    - assets/hadith/malik/PROVENANCE.txt
+    - assets/hadith/muslim/PROVENANCE.txt
+    - assets/hadith/nasai/PROVENANCE.txt
+    - assets/hadith/nawawi/PROVENANCE.txt
+    - assets/hadith/qudsi/PROVENANCE.txt
+    - assets/hadith/tirmidhi/PROVENANCE.txt
     - assets/quran/hafs-an-asim/uthmani.txt
     - assets/quran/hafs-an-asim/imlai.txt
     - assets/quran/hafs-an-asim/indopak.txt
