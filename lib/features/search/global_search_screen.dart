@@ -9,9 +9,19 @@ import '../../data/repositories/quran_repository.dart';
 import '../../data/seed/surah_metadata.dart';
 import '../../data/services/search_service.dart';
 import '../../state/providers.dart';
+import '../../state/database_provider.dart';
 import '../quran/quran_reader_screen.dart';
 import '../quran/tafsir_screen.dart';
 import '../sunnah/hadith_reader_screen.dart';
+
+final searchServiceProvider = FutureProvider<SearchService>((ref) async {
+  final database = await ref.watch(appDatabaseProvider);
+  return SearchService(
+    quran: ref.watch(quranRepositoryProvider),
+    hadith: ref.watch(hadithRepositoryProvider),
+    database: database,
+  );
+});
 
 /// Global search (§21): Quran / Hadith / Tafsir / Surah over bundled
 /// datasets. Arabic diacritic-insensitive (index only — display text
@@ -54,12 +64,10 @@ class _GlobalSearchScreenState
       setState(() => _future = null);
       return;
     }
-    _debounce = Timer(const Duration(milliseconds: 400), () {
+    _debounce = Timer(const Duration(milliseconds: 400), () async {
       final q = ref.read(quranPrefsProvider);
-      final svc = SearchService(
-        quran: ref.read(quranRepositoryProvider),
-        hadith: ref.read(hadithRepositoryProvider),
-      );
+      final svc = await ref.read(searchServiceProvider.future);
+      if (!mounted) return;
       setState(() => _future = svc.search(
             query: v,
             editionId: q.editionId,
