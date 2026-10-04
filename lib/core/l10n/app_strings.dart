@@ -332,6 +332,8 @@ class AppStrings {
     },
     'storageUsed': {'ar': 'المساحة المستخدمة', 'en': 'Storage used', 'fr': 'Espace utilisé'},
     'downloadQueue': {'ar': 'قائمة التنزيل', 'en': 'Download queue', 'fr': 'File de téléchargement'},
+    'reciterStorage': {'ar': 'مساحة القارئ', 'en': 'Reciter storage', 'fr': 'Espace du réciteur'},
+    'surahStorage': {'ar': 'مساحة السورة', 'en': 'Surah storage', 'fr': 'Espace de la sourate'},
     'queued': {'ar': 'في الانتظار', 'en': 'Queued', 'fr': 'En attente'},
     'downloading': {'ar': 'جارٍ التنزيل', 'en': 'Downloading', 'fr': 'Téléchargement'},
     'retry': {'ar': 'إعادة المحاولة', 'en': 'Retry', 'fr': 'Réessayer'},
