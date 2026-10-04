@@ -225,12 +225,23 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
                                     TextDirection.rtl),
                           ),
                           const Spacer(),
+                          if (a.isSajda)
+                            Semantics(
+                              label: s.t('sajda'),
+                              child: Text(
+                                '۩',
+                                style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .tertiary,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
                           if (hasNote)
-                            const Icon(Icons.edit_note,
-                                size: 18),
+                            const Icon(Icons.edit_note, size: 18),
                           if (bookmarked)
-                            const Icon(Icons.bookmark,
-                                size: 18),
+                            const Icon(Icons.bookmark, size: 18),
                         ],
                       ),
                       if (q.showTranslation &&
