@@ -27,10 +27,12 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  crypto: ^3.0.7
 
 flutter:
   uses-material-design: true
   assets:
+    - assets/integrity_manifest.json
     - assets/quran/hafs-an-asim/uthmani.txt
     - assets/quran/hafs-an-asim/imlai.txt
     - assets/quran/hafs-an-asim/indopak.txt
