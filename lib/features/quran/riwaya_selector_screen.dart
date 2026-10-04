@@ -118,9 +118,9 @@ class ScriptSelectorScreen extends ConsumerWidget {
                 groupValue: q.datasetScript,
                 onChanged: !available
                     ? null
-                    : (v) async {
+                    : (v) {
                         if (v == null) return;
-                        await ref
+                        ref
                             .read(quranPrefsProvider.notifier)
                             .update(q.copyWith(
                               script: v,
