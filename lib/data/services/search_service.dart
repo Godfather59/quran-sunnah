@@ -130,8 +130,8 @@ class SearchService {
             subtitle: 'Direct verse reference',
             snippet: match.text,
             refKey: match.canonicalVerseId,
-            surah: match.surah,
-            ayah: match.displayAyahNumber,
+            surah: match.canonicalSurahNumber,
+            ayah: match.canonicalAyahNumber,
           );
         }
       }
