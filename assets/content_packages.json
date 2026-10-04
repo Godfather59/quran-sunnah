@@ -1,0 +1,3765 @@
+{
+  "schemaVersion": 1,
+  "sourceRevision": "5990a7a7da5eff7251f71d5d2bc9be328a0e529c",
+  "sourceBaseUrl": "https://raw.githubusercontent.com/Godfather59/quran-sunnah/5990a7a7da5eff7251f71d5d2bc9be328a0e529c/",
+  "packages": [
+    {
+      "id": "quran:en-sahih",
+      "titleAr": "الترجمة الإنجليزية — صحيح إنترناشونال",
+      "titleEn": "English — Saheeh International",
+      "version": "tanzil-2026-10-04",
+      "source": "Tanzil Project",
+      "licenseStatus": "restricted-noncommercial",
+      "sizeBytes": 898049,
+      "sha256": "b9c82cb169f7dcf46f0bd7c3b4918ad92c231b93ab9661c42917259827eb6baa",
+      "files": [
+        {
+          "path": "assets/quran/translations/en-sahih.txt",
+          "sizeBytes": 898049,
+          "sha256": "a1778a1a56695d9b59ae910809ec46d9f4a55f05961de51cd56e6ebcf9040883"
+        }
+      ]
+    },
+    {
+      "id": "quran:fr-hamidullah",
+      "titleAr": "الترجمة الفرنسية — محمد حميد الله",
+      "titleEn": "French — Muhammad Hamidullah",
+      "version": "tanzil-2026-10-04",
+      "source": "Tanzil Project",
+      "licenseStatus": "restricted-noncommercial",
+      "sizeBytes": 948096,
+      "sha256": "57c2daa61439ed47651efc211c201ada6392541c9893dedaa7ac6170c1c8a6ee",
+      "files": [
+        {
+          "path": "assets/quran/translations/fr-hamidullah.txt",
+          "sizeBytes": 948096,
+          "sha256": "9834cfcd14b506a6c0223d86ac259e896f2bfb44c0823d83d827c27ffea57f03"
+        }
+      ]
+    },
+    {
+      "id": "quran:tafsir-jalalayn",
+      "titleAr": "تفسير الجلالين",
+      "titleEn": "Tafsir al-Jalalayn",
+      "version": "quran-api-1",
+      "source": "quran-api@1 / Tanzil",
+      "licenseStatus": "restricted-verify-direct-rights",
+      "sizeBytes": 2036094,
+      "sha256": "32d39e5513aac6390b2024d0555cfc59d66058aca3777abb5d6b809776f0dd08",
+      "files": [
+        {
+          "path": "assets/quran/tafsir/jalalayn/1.json",
+          "sizeBytes": 2276,
+          "sha256": "6ec4d5722a31b4e0eef5aac2c2ff7489250ba9d6ff6e9bfed34a04c7ccccbf08"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/10.json",
+          "sizeBytes": 38772,
+          "sha256": "9367c558df57ea0765491ffe5d5b9a33fd54e1fc4e092a991d8fd99a7e726c02"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/100.json",
+          "sizeBytes": 1851,
+          "sha256": "aa2c4868e43a77a8e0379a7c55f258088cd0bef3bcba16eae09dbd1d0b315415"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/101.json",
+          "sizeBytes": 1586,
+          "sha256": "fa358a8816302f384912e4b8e5ae3a9c36bf450d4d57c030d5acac8e87f60aaf"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/102.json",
+          "sizeBytes": 1313,
+          "sha256": "b5742d023787c7eaa23de98fc9cc2f39c9635874e31987237a5b65c96cd07f47"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/103.json",
+          "sizeBytes": 514,
+          "sha256": "478baaa3cb8a595621fc7a3f39c46486e4fcfbfb94414f32c3fdce3a1ab04de0"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/104.json",
+          "sizeBytes": 1418,
+          "sha256": "d0ae305db718c76ee705ee9308b67b0f5dec28fb92bd7d90c120260f54196dda"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/105.json",
+          "sizeBytes": 1524,
+          "sha256": "6bcf1e8b2a580f6d214f957ba176f75ccf8d6a30c07900e3093fc15701d07cc4"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/106.json",
+          "sizeBytes": 777,
+          "sha256": "0ea98df80e2ba07d7183bae0db512bdf0360ef50c5433637ce22ac4bbde89719"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/107.json",
+          "sizeBytes": 875,
+          "sha256": "ff6cf99a985d6a5ddd878aeadbd160f71a604987a9683d38cdda18d4a7c929e1"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/108.json",
+          "sizeBytes": 659,
+          "sha256": "bec1b8704d0eb93c4c7193df4d46313598995b55658848e066d1358702fc5ea3"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/109.json",
+          "sizeBytes": 864,
+          "sha256": "d8749811f06b8825ce506ff3f4b8888fec579ee34a00fa058a528701ff9faff8"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/11.json",
+          "sizeBytes": 41414,
+          "sha256": "1464df39a88b5cd479e22e462dbd60d031c0cf009b97cf95555848c3dc759e8b"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/110.json",
+          "sizeBytes": 945,
+          "sha256": "59a4b7b065ea374d938c8f431e361ed42224a2a64fb086ec4c9c432062ec402b"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/111.json",
+          "sizeBytes": 1545,
+          "sha256": "4142f1c42e39fcf42298e890cefb6e98e3702e852c3e79cda62d2f99aab336cc"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/112.json",
+          "sizeBytes": 750,
+          "sha256": "1d4b430c946860f8d5536864511e532f4bd2a861401db59cd592e6df2b395515"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/113.json",
+          "sizeBytes": 896,
+          "sha256": "79f63eeee50005d79c62692314b8e37a2776ccd03e4da8f8bef7e801c27d223f"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/114.json",
+          "sizeBytes": 1471,
+          "sha256": "30de60b1840d4461b008d05a64a967e912165d0f4e68f4e9dbebd5591e8ba2ef"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/12.json",
+          "sizeBytes": 42023,
+          "sha256": "c9cae7467ea66ac255dae4db5454a0d07a31a25f8fa6a057f41b2910a068f610"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/13.json",
+          "sizeBytes": 20927,
+          "sha256": "d1ebded76b3c65d0dad8b6b90fa313710aaa375de9d5dfa70004a4cfe6868416"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/14.json",
+          "sizeBytes": 18661,
+          "sha256": "9e4e2508e85a8a02de7945b54101375fd81db7d8ceb0f80f11daca3541ff5c15"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/15.json",
+          "sizeBytes": 17276,
+          "sha256": "6fefa1871737624873f9e8f52f4480d21d37c7365f98e346b8f2760c4f6c3ec0"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/16.json",
+          "sizeBytes": 45120,
+          "sha256": "1c3ad4cf53c3643ac8d6d01bd0c859651009d35af1461bae1f0456f2b7be5b53"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/17.json",
+          "sizeBytes": 47208,
+          "sha256": "348ae566f7c64ba02d9267f9f3a067a16c9af1aed41347f9731b62c4cbcf0b91"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/18.json",
+          "sizeBytes": 43125,
+          "sha256": "4087f8d1312a6982cf09f7911e7a7b2a580497b04c91c64294393339dbae3a66"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/19.json",
+          "sizeBytes": 26609,
+          "sha256": "1b969b91a3629a1e536e0f0c5edab1ff868101923e4b52c0167a33ffd93cb3a8"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/2.json",
+          "sizeBytes": 180010,
+          "sha256": "aa25269222b253cfb51ae0db9ac3e835409c0db8e775e6f261577b7e09272ef6"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/20.json",
+          "sizeBytes": 35970,
+          "sha256": "4372a7dd7a2fee8d31cec74ebdaabaa435d50f19734752ba09f48af1181dd257"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/21.json",
+          "sizeBytes": 32964,
+          "sha256": "418b54789abf3eaba9b0ddb5941ebcd20aa058774b94af3c3121a3cf6fc1e4f5"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/22.json",
+          "sizeBytes": 31515,
+          "sha256": "98ca584597922e6b9e4748935bc49b057f89f8e0ab9989233b0cbacf390758c4"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/23.json",
+          "sizeBytes": 27671,
+          "sha256": "132aba6130472069db7ff38e15785a285f5f40b730174ff8d2738bfff6f406a8"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/24.json",
+          "sizeBytes": 33313,
+          "sha256": "051318c0f851e955cb46bc6dc569ec6c54e7d5028225e4cbf92928c519b3b53f"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/25.json",
+          "sizeBytes": 25454,
+          "sha256": "a90b4d913c9ba3c9591c5d08afcadb275bfc1b23d778f0c461a0ba3fc0cea0d8"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/26.json",
+          "sizeBytes": 33004,
+          "sha256": "8e70e31f32199915ee987686adf5e815c4397e36d5f306c39a65003ecd841368"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/27.json",
+          "sizeBytes": 33911,
+          "sha256": "ac8a55e3fd046aa0c0420ae62d0ca2ffacb1ae72809472a29781468255aea4ab"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/28.json",
+          "sizeBytes": 34542,
+          "sha256": "985d1e31b2405ea7a92084091518d9073c8662525a9a051d459b4bb6ee0f95a0"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/29.json",
+          "sizeBytes": 22856,
+          "sha256": "6e5f0bb2f719d70a8651ad2ccbb8703e98e96fdedd514ac4f79e5e0e29ba9326"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/3.json",
+          "sizeBytes": 95961,
+          "sha256": "c69c996bb1dca224b445e74664a8329fa578baac1ae0df6cd7274e2523a0e5e3"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/30.json",
+          "sizeBytes": 19617,
+          "sha256": "275cefae13f537447723c888730a878465dc89dcb7a58e4e2fbf8c1688f4487f"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/31.json",
+          "sizeBytes": 12608,
+          "sha256": "0c139695c5d4960c1faa6d75e3e57f9a1602909b7dd8be80cda315bc57a001d5"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/32.json",
+          "sizeBytes": 8530,
+          "sha256": "7fcf7987d8fb7567a8c50fab1b2a05cced880be2c100a288314809881fed5f6f"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/33.json",
+          "sizeBytes": 30383,
+          "sha256": "340af0fe2d57d6bd0033eb0d358dc47a874d21ebe48feadb10e5cf569b59709b"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/34.json",
+          "sizeBytes": 20953,
+          "sha256": "bd55e0da5e8b4c7c2bbaab6a5a601312417e12d6e93195cb12d5de7c935e5cad"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/35.json",
+          "sizeBytes": 16637,
+          "sha256": "6998f8c11f64625b3db22c87d599ad7f9999b73a8d528ca313d2eaea7a24fdee"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/36.json",
+          "sizeBytes": 21529,
+          "sha256": "96f1450a0220bacb8d0db577516ca6cb757a0511180100771cad7ed64075f914"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/37.json",
+          "sizeBytes": 30433,
+          "sha256": "850861aa4edcdf1f8ad7ac1fcbb126e85a0b9af06dcefd673db2c75bddee7167"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/38.json",
+          "sizeBytes": 22409,
+          "sha256": "a6f55ebc993e31dcd1a9b43d3192446a5af401d286f56f9c42f124bd8d961f72"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/39.json",
+          "sizeBytes": 23525,
+          "sha256": "2819066211c45234b42142e79997fdf4dfef5c5c78957bab147f4d6913e8ca8c"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/4.json",
+          "sizeBytes": 101213,
+          "sha256": "6f11f33166996fcc128414c84f1e9451c4f8ece2866fed7f885d1090a0e7983d"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/40.json",
+          "sizeBytes": 24921,
+          "sha256": "909b8ced0da75fc11143ab140237e2a9f19a4f1c40cf68e6e93232f652ffb080"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/41.json",
+          "sizeBytes": 17804,
+          "sha256": "37d247216f903fbc6f6c69ac610b77bc84d0b2b491fd2465a21df9af62b609ac"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/42.json",
+          "sizeBytes": 19141,
+          "sha256": "49a603de3987643006789f2e7856d6f4e17b7b6246ae90dcc7a5e8f39df60591"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/43.json",
+          "sizeBytes": 21377,
+          "sha256": "050fb18d67ef271a7ccd4318a7a291436f1bdb1a828f6c4e7d40571f8187185a"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/44.json",
+          "sizeBytes": 10354,
+          "sha256": "82b1fed153bb19779e9c298c5662ed87d43202d9eb0cd3e3780a3317dc279b13"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/45.json",
+          "sizeBytes": 11423,
+          "sha256": "b8dca9b2051fd20dc8548d4fc02cbd28558472a63905f8987408c3913f4ecb55"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/46.json",
+          "sizeBytes": 15828,
+          "sha256": "47113ccc3df146faec01be50c79926d36d9b3bb90a2079988b97de65b19a05ba"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/47.json",
+          "sizeBytes": 14708,
+          "sha256": "559aa09a15c241f4cf376088ffb9984739a589086b4fc52fefa0d1021bf97e0b"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/48.json",
+          "sizeBytes": 14763,
+          "sha256": "10a9d1a6cfe7ee71b4b72e654cb2f8901dd807ac8df81e613db011b8a28ce847"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/49.json",
+          "sizeBytes": 10429,
+          "sha256": "f6010fe5a911389e2358672adb43afa3d45a4f3e991428463631ddf00caa5540"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/5.json",
+          "sizeBytes": 72509,
+          "sha256": "0656c4480140171673b3fb56a9e09d8159dc2d73a52e7e205243384e5a007705"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/50.json",
+          "sizeBytes": 11710,
+          "sha256": "7910178ebff2ec03a1693591b97f22f43eea30dc2620e9610d19ff58892775d5"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/51.json",
+          "sizeBytes": 11661,
+          "sha256": "78d8f13acfb631b73c32f50491769e061ed2c1e1aa908df11d45decc34fe1baf"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/52.json",
+          "sizeBytes": 9838,
+          "sha256": "5d8e33361a76384ae742063193b19589a9d4ed4b2b5f1711285e94e3ae5dfab0"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/53.json",
+          "sizeBytes": 12584,
+          "sha256": "0c3d916a44d8b3487bb8e9b21c26b878ded8919fea04f84f39c33954bea80e2c"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/54.json",
+          "sizeBytes": 13975,
+          "sha256": "e66efbb486322bf85565bb42a5ace73b48837d38a725c8e6ddf45ff3a50d4f59"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/55.json",
+          "sizeBytes": 10421,
+          "sha256": "a78f30a480f0d6e3ff9d3b034017abec717929126760bf6aca96e508ccc23f14"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/56.json",
+          "sizeBytes": 12695,
+          "sha256": "41f45e355c9fb0b429351e2ea3514855cf869d813a975f13a4f8eb2cbbdd4312"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/57.json",
+          "sizeBytes": 13092,
+          "sha256": "57663d2907c27670a93bb42edd85275123ad3655cf5638b5249b525a00a13df4"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/58.json",
+          "sizeBytes": 8961,
+          "sha256": "101990249604d9d29856e1335511f17ad0836c55e345d4f96671c7bded025731"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/59.json",
+          "sizeBytes": 9575,
+          "sha256": "da6737a7c607675efcb338e0bccb49783ff3f1f318ced5aef93f67555a6b9042"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/6.json",
+          "sizeBytes": 72379,
+          "sha256": "0c56f27044d81fddfe36278eab081d6cd31ebf3c18d078afd20dc1b85f17ad3b"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/60.json",
+          "sizeBytes": 8950,
+          "sha256": "cac279bc802a0bb29fa25bbf8de28c1b7c857ddd56763487ac740c06dfc4cfef"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/61.json",
+          "sizeBytes": 4938,
+          "sha256": "d58edc0678ab4135f30e784c6adb163b82afe98951cfd71b65498855e3c6de4f"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/62.json",
+          "sizeBytes": 4427,
+          "sha256": "3ed87644b3199260fa7e9702063261b41c29c2a908a94bee1511b87a903465f6"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/63.json",
+          "sizeBytes": 3818,
+          "sha256": "92d0af5e8132eab1e965f8034dd789bc01926cf37e28195d6382f6adeadc17b7"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/64.json",
+          "sizeBytes": 4841,
+          "sha256": "30a1ccd42b8ef0dc86611da7ae1b84aa83674a3b7915707e181c7487f428a3a9"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/65.json",
+          "sizeBytes": 6496,
+          "sha256": "918f2805a3805084008754eead8c700847deed13649f79c21dbaca01f1c474cb"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/66.json",
+          "sizeBytes": 7099,
+          "sha256": "47bc12c028aad8e28645e09fd3e77b32e8dbb2a29e983d178ffc878e7d435b71"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/67.json",
+          "sizeBytes": 8924,
+          "sha256": "096b472eed564a129881e2dad4160ad382095fa2b9a1634f45706328ea5282f2"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/68.json",
+          "sizeBytes": 9152,
+          "sha256": "bfda77ee58ba19c8ff4c688e26204631bb594c4b6f2ea6848c5a2b29b604c414"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/69.json",
+          "sizeBytes": 8185,
+          "sha256": "36a2b13c887f529d13b62d98489ede94a46bcf575dfc6ffef104d91e17d2dc89"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/7.json",
+          "sizeBytes": 75082,
+          "sha256": "722e8def37873f822009bf6fafdb0512bd5a02643a2ae576264a21d4f550b12a"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/70.json",
+          "sizeBytes": 6316,
+          "sha256": "59e75431fa6eeb820bb810c16ae1f1bca1a983a2c0afda0d382e5771b27da2b0"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/71.json",
+          "sizeBytes": 5360,
+          "sha256": "8944f6a4725d3ce09678dd3158ca82903205a78f91b34ff871a46a44a5d77e14"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/72.json",
+          "sizeBytes": 7990,
+          "sha256": "0b477c422911e905cec513dbf968aca02dbc0412fe36c2da64a07b04a1d0d813"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/73.json",
+          "sizeBytes": 6608,
+          "sha256": "d380b4f1fa83a8ad7a7d91251453b7ab2b3a0660ea221b9bdef730c5d89920b0"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/74.json",
+          "sizeBytes": 8527,
+          "sha256": "ea10d89236e35b750a1ee6d0cd64dd9639601531cdee4a71ff9a6aa0ff89b9fa"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/75.json",
+          "sizeBytes": 5822,
+          "sha256": "7476ae7c82a30d1e66ff6ca2f1d6ce79461a316cb43fca6bfef97de8fe13c402"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/76.json",
+          "sizeBytes": 8097,
+          "sha256": "baa6e25230940612f5ee253192b7f2c3a72bbf4f12d268a3aaadf270528abc51"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/77.json",
+          "sizeBytes": 6368,
+          "sha256": "c97ace64a71e72e60214d1b82d938e52627aa3dbd920650f233404043794d3cf"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/78.json",
+          "sizeBytes": 7045,
+          "sha256": "5680dbce26482419091d0a5137c57a76cdcc4314cda0fe9e2b0adad48fa097e4"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/79.json",
+          "sizeBytes": 7327,
+          "sha256": "a6d63f90feb502b76d31665d607279f4ce3550000c0f78c442f58dde63f5b856"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/8.json",
+          "sizeBytes": 30932,
+          "sha256": "ce067491704e34938e92e513dd001e238301d836b5e667b807d93f9e197b93ba"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/80.json",
+          "sizeBytes": 4948,
+          "sha256": "ee729182c72d5c88e737dba41ef4b0c91ba5b56192cadca538379898679b07f8"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/81.json",
+          "sizeBytes": 4457,
+          "sha256": "fadec123f564858d3712ace0fcb167005729ec7f2e2de1c3cac187bd97e40cc8"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/82.json",
+          "sizeBytes": 2502,
+          "sha256": "26b25db6643c725420491a607dce6a8c57885d85f4b1c9885c0559f20277933a"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/83.json",
+          "sizeBytes": 5265,
+          "sha256": "9d3ad1a4cc59fc554787cf1c667de94abff6116c682be54095da0b4f776c6928"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/84.json",
+          "sizeBytes": 3903,
+          "sha256": "60741b7e5f67224bba2b5d075332cc0a98483827cc9272dcfd8f27323b60e722"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/85.json",
+          "sizeBytes": 3705,
+          "sha256": "2d0cff1192ee07bf9827e8bcc64863a7c54f1e8ad1912a2a9c0d2540fd54ce3a"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/86.json",
+          "sizeBytes": 2814,
+          "sha256": "22bf6ffa24be2fe9e1ae6f6e798f6bfd4864447f6673b2fe9433b8e942a248cb"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/87.json",
+          "sizeBytes": 2804,
+          "sha256": "ff837d40c1bf0670e4a43bf1528697aec0b67f5fae2635d505588b9b3d5ae8aa"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/88.json",
+          "sizeBytes": 3126,
+          "sha256": "1c0347b1bf686dcc47b4ce4d43d8f33378e837696a2ca3b9a676e5c5a1868fcd"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/89.json",
+          "sizeBytes": 4823,
+          "sha256": "5113a3dff26ec2d9c24a94ef99a4f59f4dc296f1e470ab1462b79187fd556a66"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/9.json",
+          "sizeBytes": 58955,
+          "sha256": "a651e4fc262e0069293614396273e4d7677f73b24902476f27d5d6c5edb3a96c"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/90.json",
+          "sizeBytes": 3015,
+          "sha256": "f24962fe921c48fc2dea8426587bb4268bc5929b3dbe2c2f5fa76790d1d88352"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/91.json",
+          "sizeBytes": 2154,
+          "sha256": "361b42437b9273d6642de91e85897252f6d468dc505b619cb3f02305c5070baf"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/92.json",
+          "sizeBytes": 3215,
+          "sha256": "2dcb5a348b37a8961ec36563a15f015e06fff34eafc84a4730824fabf22d4615"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/93.json",
+          "sizeBytes": 1813,
+          "sha256": "394b1d4afd58403e054bf16e34a496854ae5981b22d9b27ce9988a88c7dbbbff"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/94.json",
+          "sizeBytes": 983,
+          "sha256": "68816bf49ce57f0a3d81f9818fa304d72583b23c6a115bd77e6a36aa7a1b2d5b"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/95.json",
+          "sizeBytes": 1746,
+          "sha256": "b3538b059408e4daafeefc74a01275a4aacbc4e18b5bfb4cea1573a3c440cae1"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/96.json",
+          "sizeBytes": 3133,
+          "sha256": "3d3e86e1f464ec4457afafa2f5dfafdcc33945e9149a901309f090293d0eea42"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/97.json",
+          "sizeBytes": 1190,
+          "sha256": "7187c560748974cb3155e8d2ed602a94f62d4c72b692b168f75a25cad425d773"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/98.json",
+          "sizeBytes": 2383,
+          "sha256": "5077376ff9e95695e9217ae45af8fd833e1a103638f79a8f2e0ab2898c58458e"
+        },
+        {
+          "path": "assets/quran/tafsir/jalalayn/99.json",
+          "sizeBytes": 1301,
+          "sha256": "77798d2f2b8411af98000202e4cbb4ee1627baa7ad07db37e2868f581a31c849"
+        }
+      ]
+    },
+    {
+      "id": "quran:tafsir-siraj",
+      "titleAr": "السراج في تفسير القرآن",
+      "titleEn": "Al-Siraj Tafsir",
+      "version": "quran-api-1",
+      "source": "quran-api@1 / QuranEnc",
+      "licenseStatus": "conditional-version-incomplete",
+      "sizeBytes": 2013766,
+      "sha256": "86a28bcc0b7640e03126ac2c86706c914c1d10d1bc11a6c287002afacedee219",
+      "files": [
+        {
+          "path": "assets/quran/tafsir/siraj/1.json",
+          "sizeBytes": 1696,
+          "sha256": "c957b832e0674b4450091b3bb69aadc571f1cba408993c3be5a29cdd4d9ae725"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/10.json",
+          "sizeBytes": 39615,
+          "sha256": "1e702ace18932c96bd283051bcc746e245b6f529a7cafa748e271cd6dd77607f"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/100.json",
+          "sizeBytes": 1997,
+          "sha256": "baa2af9e4d704e5d82359ee27ae34979adfe0b1c747e0d2b09030440cc3cc298"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/101.json",
+          "sizeBytes": 1623,
+          "sha256": "682cb87ec53fb81ac91ab0abe66e357f479babf31109866f79da4dbcfdacd220"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/102.json",
+          "sizeBytes": 1373,
+          "sha256": "cc9aca1ec322c4a79bf57953ecc71835686eb4e5f2e56254bdfdb86c8999f861"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/103.json",
+          "sizeBytes": 835,
+          "sha256": "5d78bc8bee63c4e95ca240ef5d16081a9a2304528a6cb5b2c3d050a11594ec68"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/104.json",
+          "sizeBytes": 1893,
+          "sha256": "c24154934cd2b4c994e29e531eff826c5fc32d162b8010e1d617a66135ffb690"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/105.json",
+          "sizeBytes": 1339,
+          "sha256": "f8f9a8c2f3e5a1bfd66e086a3bd0a4e239c3b47619421e4325a90017109729c0"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/106.json",
+          "sizeBytes": 962,
+          "sha256": "a4c787e8ccd2f53e0f6f6a57085ac30a4a3c3b54d41d68e5b74d3e9ff0d81d9b"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/107.json",
+          "sizeBytes": 1466,
+          "sha256": "327ab978c4d63aea7748e132956cf08d6cfe35e6340f0d6f53aaa9b87349e269"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/108.json",
+          "sizeBytes": 663,
+          "sha256": "81452beeb5bf6332ac52a905d9f95e80dd7178fddd1fa41ba9685437bd1bb10d"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/109.json",
+          "sizeBytes": 975,
+          "sha256": "8ddf84357c2f8152420a5b657b4d6df4020139b7cadf993bb7a03280c5865071"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/11.json",
+          "sizeBytes": 46542,
+          "sha256": "10712eb4814372cd29eaaf72fba816b82db43e250a7626bf69021bf495834a74"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/110.json",
+          "sizeBytes": 983,
+          "sha256": "ae5de4d752ae40a27fb76e80c5fe0ec343994a870bb43f1697125db19005586e"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/111.json",
+          "sizeBytes": 1439,
+          "sha256": "6dbf804267daee742f6ecb4a26c9b49b23739043852ba7cc2d2ca70930a9c0b3"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/112.json",
+          "sizeBytes": 595,
+          "sha256": "4be43845c4be834a19f7b5550330765efc7d341f3a08c582734d9b2387c57cd0"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/113.json",
+          "sizeBytes": 1124,
+          "sha256": "44cfaa4279e5e9c730918f50a65017147dc7289c03e3ac8788f20e1430af79db"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/114.json",
+          "sizeBytes": 1285,
+          "sha256": "379fc6de82bdc79049f230cce55f168dab0a8d0d3d81c9dd76e2b547b2934bbf"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/12.json",
+          "sizeBytes": 41110,
+          "sha256": "4d37fad6d80ac91dfa188a08c38b7fc4e1b80df4615c6a9efa1b74efa3e9a4e4"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/13.json",
+          "sizeBytes": 18937,
+          "sha256": "3ea5d020c7c6b5d5a0204787957d5b23c10d5459beb188e6a2e958221b67d0a9"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/14.json",
+          "sizeBytes": 19279,
+          "sha256": "093309311b73de1a52375d32d543fec1636e078ea480f951fd9a4456c9228c81"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/15.json",
+          "sizeBytes": 18689,
+          "sha256": "6019a7ca589dbf97530ae8e455a5cd5722c07053103b05e9836b4794fd267e9d"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/16.json",
+          "sizeBytes": 43664,
+          "sha256": "e2ee5c45e52b3157a6b4d8e7645e50bd33647c3e5fa0166ab9826e4ff3da0de3"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/17.json",
+          "sizeBytes": 40759,
+          "sha256": "9cf94902fcc0374570eae3b452bb04418bc6553c72823783deef69a3bce102a8"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/18.json",
+          "sizeBytes": 40419,
+          "sha256": "5dd018a2a09d0b313c47f0b99875af98e282cc056a310186077ad39eb2cc2e5b"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/19.json",
+          "sizeBytes": 24039,
+          "sha256": "31c53c52f89535fa68a761eba919316f772a67e205fe16e9b058951f0373df8e"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/2.json",
+          "sizeBytes": 130713,
+          "sha256": "a9645ad3de5d73c43809953b35c2bb714f62e6bd8d8dce2d0719523b84db71e8"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/20.json",
+          "sizeBytes": 34948,
+          "sha256": "f0dbb7ed59da73980f0e4218252f7dce2d3390069cef83480e2c29f8e0fb01b1"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/21.json",
+          "sizeBytes": 32310,
+          "sha256": "ac6357527d50fc3503b49d07640cce0d013612d912e7c8aa190a0aef6be89175"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/22.json",
+          "sizeBytes": 33470,
+          "sha256": "506ab3414e07688b30b4e8ee6e1e1e10c9dcc814286be52e854ecd9d4518fdcd"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/23.json",
+          "sizeBytes": 27675,
+          "sha256": "d3edf5997d1de5bba981ce7d07a557141ed88cb7c77ce618489c26fe7cb32079"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/24.json",
+          "sizeBytes": 32813,
+          "sha256": "3a51da5f57cadd061542381c844eda0a817a54ed4ebbac53fb20e0380b9c65de"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/25.json",
+          "sizeBytes": 24097,
+          "sha256": "07c3ae9499c102bea432a5c75a373f8f5e21a2118fc524ae74ffbc9486fc6b3e"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/26.json",
+          "sizeBytes": 34598,
+          "sha256": "b14652830930ff8e04a8c4b98e4f0d31b3d28df65332ab1119d6c86429d4ad88"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/27.json",
+          "sizeBytes": 30483,
+          "sha256": "b5eca4d8714300c4a34b3ff2f6b26ca516bfedb81bb2e2bea0dee8a2ec8d4337"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/28.json",
+          "sizeBytes": 35128,
+          "sha256": "7c85b0eaef268468ad42956150b6f6b5d32ceeb689ec86d3e2346e11bea4c400"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/29.json",
+          "sizeBytes": 24362,
+          "sha256": "8491fb78cc287740231b6e584c7d79f23f93195ec99d752b67b1023067d76df3"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/3.json",
+          "sizeBytes": 72583,
+          "sha256": "7c60c04cc8b586c021cc0257647acd5d4e36126b377abc522acfd3fc4f114d7c"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/30.json",
+          "sizeBytes": 20940,
+          "sha256": "b88131fbde723183ef6ceaf2a9f8745c5c2bdeb9728d7960af53112726317741"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/31.json",
+          "sizeBytes": 12926,
+          "sha256": "89ef6669c2e9f8e1112c22e3787af5c3728bcc51aafb1cdab396525764bcb1b0"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/32.json",
+          "sizeBytes": 9210,
+          "sha256": "6597b2d3db3393ef922af54e669bc7e5a10698cc7909d04627852d5804a28f93"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/33.json",
+          "sizeBytes": 36623,
+          "sha256": "f59c75d3c1ab8a62aec24ef540e1b416f604dca824fae7e2f3fdfd9c3878c0c6"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/34.json",
+          "sizeBytes": 23657,
+          "sha256": "303bc730d680032be1961bc7fdd75d06add9e07ae970fe8ceb45179541bef30b"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/35.json",
+          "sizeBytes": 19044,
+          "sha256": "575b5bd50e603a5fef282dcec62d10ffb3e6e759a86967c89a5dd62cbaac7f28"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/36.json",
+          "sizeBytes": 19267,
+          "sha256": "c63ed5dc6c845d976bbf0eaa5cc58cc8747b4ebb9d9da09fa86cd657c26e96fb"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/37.json",
+          "sizeBytes": 29298,
+          "sha256": "095fec3bee37cc9cad05a2e0a9814c71d60385c5d4a1b1f3bfd855cf0af692ef"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/38.json",
+          "sizeBytes": 24303,
+          "sha256": "700319fa7fc81f15b982d064cd9d0246100158f9ad8bb790b85bc721cf3fd99d"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/39.json",
+          "sizeBytes": 30035,
+          "sha256": "0c590aa1e7d883ed55f6c39d0fa8f613cc98250bd58c9f590d0d7c50791dfb3d"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/4.json",
+          "sizeBytes": 80863,
+          "sha256": "1d56440c8c10fa5500d75247212c743caf3012a9133a7f446cc7c79bb2c564e8"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/40.json",
+          "sizeBytes": 31661,
+          "sha256": "1508fdf71ee2dacc26198723b754262c15178f1c249c82bdbff6ea8840d1b63f"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/41.json",
+          "sizeBytes": 22579,
+          "sha256": "29b1b6b582bf9df48a6be0312892106d8dde94dfcda190fecd176dc3060288d2"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/42.json",
+          "sizeBytes": 21830,
+          "sha256": "921d521089c0be654e4731c9ed3217361d0fcb5e3f1b3ecea72a4499cd5efd14"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/43.json",
+          "sizeBytes": 24300,
+          "sha256": "a094d0261603be2b606a3930285360f288215b8980fc526c6ba2586996a2fc28"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/44.json",
+          "sizeBytes": 11428,
+          "sha256": "cc9742fe99fd6267d2a0e136bb5cb1c1edbc04b200b49bc2ac233cda85cbad8d"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/45.json",
+          "sizeBytes": 11523,
+          "sha256": "683e9d26821a418d676c76c61b1d760b366133602e612206c714f21f9059fd6b"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/46.json",
+          "sizeBytes": 16676,
+          "sha256": "5f5e991103795ab6e38ab97ac71cf390226338cae60cc7755cb2cb41e2439be7"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/47.json",
+          "sizeBytes": 15873,
+          "sha256": "4d72b9e04cd0d26aa52073c8e1bd2286d10bc788c11453a0919a5e2ee208ffe0"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/48.json",
+          "sizeBytes": 15941,
+          "sha256": "ca81d728c498534a34723d64d6d9da8a81a20e0979a77d89be3c4cde529ce29b"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/49.json",
+          "sizeBytes": 9399,
+          "sha256": "63a26a3cb1ddd591b5f7e177357f754330e69b6116a1a306f61fb9b8baf7e63b"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/5.json",
+          "sizeBytes": 64403,
+          "sha256": "08ebccd19c6fa806684913afa9062bbce4b20a180c541556e3a9b04d83718d3f"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/50.json",
+          "sizeBytes": 13423,
+          "sha256": "bdb59270c0f417d38ccaa7cdb8c72cef463e13ce7b2fc55954d8422777172835"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/51.json",
+          "sizeBytes": 12531,
+          "sha256": "5ff605e3bc6152c032e5b185298b5f4443ab674eb5b7a0803991cb8204ce678d"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/52.json",
+          "sizeBytes": 11508,
+          "sha256": "58ac1b19e8474b118511e5244ac3df7fe5404a647d555f31118c30273765f6d4"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/53.json",
+          "sizeBytes": 12569,
+          "sha256": "c8a5343b12645e6959adb45a9b4f15c19dba64617922b9bed85f738839997426"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/54.json",
+          "sizeBytes": 14410,
+          "sha256": "0a1e2492299e7e6105a60170f13a5db775cd8324ced49737fb5b74736947774b"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/55.json",
+          "sizeBytes": 14311,
+          "sha256": "246abd1528e44887e82eef03f55171f01dc29bb61d78ba273acd2a534ce05478"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/56.json",
+          "sizeBytes": 17309,
+          "sha256": "a0add9aadac00b538eff97dcb173f947fa981f79aba00967848a06cf37bf630d"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/57.json",
+          "sizeBytes": 15660,
+          "sha256": "40a0d7469f7fb3103c5edc07b741b7382f7ee070c0675975edaf89f7c847f4f8"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/58.json",
+          "sizeBytes": 11524,
+          "sha256": "26381d9a3385278ec28c1d472502317826f2ed23a5cf84eac5b3dfb3d78efe7f"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/59.json",
+          "sizeBytes": 13571,
+          "sha256": "e88a04880c7a2d1d548e8356eef93ea1c809e55921002438ff525172e07e8cb0"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/6.json",
+          "sizeBytes": 66211,
+          "sha256": "7f5e6879cde2b44be13e2c1acd86629332a6bf01c289aebeb352c3ad3f66f9c7"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/60.json",
+          "sizeBytes": 9980,
+          "sha256": "508c7b6b48cc1e45132cb93f5b8eff3edf554aca3e4942d6b5b9e8fd3a9ce331"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/61.json",
+          "sizeBytes": 6072,
+          "sha256": "c784128fe6d5f0c59d58f36d4a20cd7a727fc1a0edd2ff02164787592540ef0e"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/62.json",
+          "sizeBytes": 5053,
+          "sha256": "5dbe9d861317fe8e493bf1c9a618747fe94a149e5485c8076a1d923029c65173"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/63.json",
+          "sizeBytes": 5684,
+          "sha256": "587d6e7eb160f4b08291849334d6909856fb98cd852f50e031df176719878359"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/64.json",
+          "sizeBytes": 6615,
+          "sha256": "7b392a507c9eed3ab118af4d6504cb83d177e36df3f2c737cbcd41dc7bfdd117"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/65.json",
+          "sizeBytes": 7738,
+          "sha256": "88d3f6681865816dcb06fffea34a56283d537ce968c0d6cf6d4005d5175b7f1a"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/66.json",
+          "sizeBytes": 7135,
+          "sha256": "b50c9329708a9b432c3adb0640228152491ca1f9b756fdbbc7720a9bd2b1f038"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/67.json",
+          "sizeBytes": 10245,
+          "sha256": "dccc8d27c51106e3ec77a3b4826bf2ccbf14e22309f82cf782c3ae0bdc83ab95"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/68.json",
+          "sizeBytes": 11946,
+          "sha256": "120d542ceb6c7c8c240bd4a2099af48c667833405781eade1b947bede81ff9e5"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/69.json",
+          "sizeBytes": 10321,
+          "sha256": "b2b450d98bb5d145a6de914d1d6ba521e45e004e6a6c555581dd0f0df0e78714"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/7.json",
+          "sizeBytes": 79384,
+          "sha256": "0542d5aeb020afff3829b2816e3fd38c91a9f9f98a8d81b042b7b15fff8606cd"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/70.json",
+          "sizeBytes": 8604,
+          "sha256": "6abcf157c14bd0546c265f2fd5d3aa66528303df1b5f0f3edf550bb481507203"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/71.json",
+          "sizeBytes": 6685,
+          "sha256": "f17012b8e5ce01e5c8c4897ea1d2e66b90030ec985896c08978e715eeb72b823"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/72.json",
+          "sizeBytes": 8766,
+          "sha256": "b92502c119079ef328f9ff39fd3a7c1f0080689f7e4b82329678921773032b68"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/73.json",
+          "sizeBytes": 6586,
+          "sha256": "035bdaf2a66bf00dab7f282579cc4cfd91f8bde5d479174b975f398854e89e56"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/74.json",
+          "sizeBytes": 8676,
+          "sha256": "b2709d62cd03289d320786d3c0608cdfeeb03913ec8cc7d693e963e90a64714c"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/75.json",
+          "sizeBytes": 7080,
+          "sha256": "a6e1aac8e54a924c7a6db3888686d3f1df9371f16ef695535caef3303cda9a51"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/76.json",
+          "sizeBytes": 9161,
+          "sha256": "a39c4cd5bf58f8a2032b5fe75e457c34499925bcc9cb4a5f22aa4faff7b61bb4"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/77.json",
+          "sizeBytes": 8016,
+          "sha256": "db6713935270df2a224d6ff7f0abb8b5a8b79f497b34fb682ae46a1c811d3b27"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/78.json",
+          "sizeBytes": 7456,
+          "sha256": "6bf91f7f69632bb7f6531ef867225e949f5af1185c5d13a0bc2f08f4262afe7c"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/79.json",
+          "sizeBytes": 8068,
+          "sha256": "a03b5b6c2341918fb4b7bc24eab1abf8105d21da18c44585199df5a1b965c4ec"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/8.json",
+          "sizeBytes": 29626,
+          "sha256": "f0d951d8dc0c1be53ada95341b6be8adc14129f1e9132a6215c4126d5ee19615"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/80.json",
+          "sizeBytes": 5705,
+          "sha256": "c29e6690bc5aa3cb692377c68e28d95ee33529cf0b32b8d2f1005e1295252ec7"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/81.json",
+          "sizeBytes": 5250,
+          "sha256": "9fffd7037d68d7a76882778e2a32edfd563f41ac4fae32ef69eb619392186a30"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/82.json",
+          "sizeBytes": 2825,
+          "sha256": "a0a6e5b93188f3e646bd2b3a325c27791f043c8a28368aaa16514b5dd360380a"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/83.json",
+          "sizeBytes": 5839,
+          "sha256": "01c5d208faa7d5d3cbb0f98bb085621886dbdafa611e6804a1bce56af2b72f0d"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/84.json",
+          "sizeBytes": 4141,
+          "sha256": "280f08cc3b9aed90fc6ba647f2fe20c78c6603bb47cafa35eaef7278abeda04a"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/85.json",
+          "sizeBytes": 3624,
+          "sha256": "4fc93e02b1deca0567ab2c6d20741429cc77cdd0b418591c5b56d702966639bb"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/86.json",
+          "sizeBytes": 2429,
+          "sha256": "9128da2c79dc589ec4d6ac89a90c8f8a3606e391fb34270724917b2b16c5a5c1"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/87.json",
+          "sizeBytes": 2985,
+          "sha256": "e190e5b7f42cdcb461e76a4e6b5663791fcd8c2f90d4c550be9f109c290a17ba"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/88.json",
+          "sizeBytes": 3543,
+          "sha256": "44fcf0418e037ead0b03a940351c4ee33dd292cecbaa3e94ea54d9617efeef33"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/89.json",
+          "sizeBytes": 5569,
+          "sha256": "f7f3e8f42b69532e204b58523b7737d16357e0ea1f07240aa07b7edf1e77330b"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/9.json",
+          "sizeBytes": 58581,
+          "sha256": "a60d9ff034247eacf696d8f52129eceb558ea6438b18c2174ba1f8f5b64322cb"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/90.json",
+          "sizeBytes": 3561,
+          "sha256": "c922ffaad9529d67140f4c7bd17307831725bdb11c9843304f73fe0664c8f406"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/91.json",
+          "sizeBytes": 3211,
+          "sha256": "2c2af048d5ac613109d867b52a5af9552082e74ca3d0c630c7b9545ab038f3fa"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/92.json",
+          "sizeBytes": 2916,
+          "sha256": "3f95edb4c916a0278587b38e14ab2e1fad1646a3ad2e3a19f8b5267cc7a4b476"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/93.json",
+          "sizeBytes": 1775,
+          "sha256": "91eb9c0fea011032e6db6ee97f6d2e8180c6d28a63cd82a6d703dcdd70d17b48"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/94.json",
+          "sizeBytes": 1123,
+          "sha256": "78e51ae36f93470833128c8b9acc63d36d352def83bf4be1ac19b1fcde8dde95"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/95.json",
+          "sizeBytes": 1346,
+          "sha256": "6369eaf7db107b0879f6431d86e25f7a9aa878badd8e38042a0dd0b1900b803d"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/96.json",
+          "sizeBytes": 2813,
+          "sha256": "4cd1fe85cafcf00c7c22281e4aa8ae38a2a6dce4bcb1b453ecc7b286ba8abe50"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/97.json",
+          "sizeBytes": 1282,
+          "sha256": "8e111a06fa01aca103a497bfda77794adb1588dc849438dd63de49605c602d09"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/98.json",
+          "sizeBytes": 3215,
+          "sha256": "03d8fd0996774ddcb827d6af1fe5e27c8c34612f08d7536a0487948f677a4957"
+        },
+        {
+          "path": "assets/quran/tafsir/siraj/99.json",
+          "sizeBytes": 1849,
+          "sha256": "8c4fe3cd08585267412ab5e1e5233d2e3ae03edcf92b9fe8de2c430c734c900b"
+        }
+      ]
+    },
+    {
+      "id": "quran:tajweed-hafs",
+      "titleAr": "بيانات ألوان التجويد — حفص",
+      "titleEn": "Tajweed annotations — Hafs",
+      "version": "cpfair-quran-tajweed-2026-10-04",
+      "source": "cpfair/quran-tajweed",
+      "licenseStatus": "cc-by-4.0",
+      "sizeBytes": 2650581,
+      "sha256": "47e922ae99c6fa0d79fee2532babc734ae8f170c247dbba1bd9b04d018013400",
+      "files": [
+        {
+          "path": "assets/quran/tajweed/hafs/1.json",
+          "sizeBytes": 1544,
+          "sha256": "c62f4bced304d5c92ff70c30bbf1a1dca53484c0a421a9e7b890dd4d31f8f612"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/10.json",
+          "sizeBytes": 61756,
+          "sha256": "90190638bee79a65146506da8869046b3af6b7709d8502d37292b3b8f256d82a"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/100.json",
+          "sizeBytes": 1922,
+          "sha256": "5cb0c4fcc363679e65bff2ef251b7bc8ec2bca692bfb0149e445c6827bfd2dd6"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/101.json",
+          "sizeBytes": 1464,
+          "sha256": "cb1bc8c3bc0c875a5afd35980cd7551660ce687416605b73357bb00d24045d65"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/102.json",
+          "sizeBytes": 1138,
+          "sha256": "a36f7656a9fbad835a62ef7396bf41e40fc98d3e711917ab263c112985b77011"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/103.json",
+          "sizeBytes": 837,
+          "sha256": "a1c43bec35f954590bfeabd73b2e8c002418cc30631407f867ba2b9ecbe191ed"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/104.json",
+          "sizeBytes": 1041,
+          "sha256": "3cd2e0ed7e7598adf88b80ba5b5d7ff3750b6c2e5c419e6b76e4260a617b6126"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/105.json",
+          "sizeBytes": 658,
+          "sha256": "7995978dbc972f1f1f338d86c530f579e87ea37ed52a4f4a2894bae284252a0c"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/106.json",
+          "sizeBytes": 1009,
+          "sha256": "b87646893d9f2f0084c8479091c3e2da661cfc96c9c60d9f188069cebb230953"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/107.json",
+          "sizeBytes": 968,
+          "sha256": "447167559eea8337a2b752b1328127b6740cfc5fc64819ce748bdc11c9d5f095"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/108.json",
+          "sizeBytes": 437,
+          "sha256": "19f0c80038c7dc0101889cda5a1761f263c1e8698a1c7d6794f1f03e7fcbdeaa"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/109.json",
+          "sizeBytes": 1025,
+          "sha256": "dc9b72a30e9bd15db02859dc60cee2ca1a5e994fd14a95094b19a2a86a3852ff"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/11.json",
+          "sizeBytes": 62112,
+          "sha256": "febd0946ecb94af8b1c995780d67245332a376a2bfd330e25a6e8b161d9bcf2f"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/110.json",
+          "sizeBytes": 571,
+          "sha256": "c764598e034a0948a00de015a4baf72da82145371bd2c698091cb59938ed6a00"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/111.json",
+          "sizeBytes": 868,
+          "sha256": "65401382bb909d561ebc09dd62cf5e9d33a0e45868acf0b24667c1bc001a8139"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/112.json",
+          "sizeBytes": 552,
+          "sha256": "eb139fb999e250712933b053af4f0344282d887883bf213e1b8b5194baf5f8b3"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/113.json",
+          "sizeBytes": 793,
+          "sha256": "9bd7aa0d41fa04df3ff8cb4377b7bca6f456e105a0284ba6d74c26d9f9f5f37c"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/114.json",
+          "sizeBytes": 1338,
+          "sha256": "dc8591393d2ce8ab74def3cb4d0ca3235b333c819b6a814694e1e70f9591e61a"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/12.json",
+          "sizeBytes": 57978,
+          "sha256": "2a76001704908c8f36bb1b08ac3d797f9d850921ce1971c91b7c74d9e725b8b3"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/13.json",
+          "sizeBytes": 30486,
+          "sha256": "5cf377e0d104939d59f89019cd13dcffd1a9600d6cf1bb784423c9e6e7a93256"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/14.json",
+          "sizeBytes": 29256,
+          "sha256": "2bf4e24e5f59b4d69bc06fa4e1283721f01bce662b8af312560143dc8f69fd02"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/15.json",
+          "sizeBytes": 25280,
+          "sha256": "3cf60a89050ec9e84f201bfcbccc8fa0ddf7fbe02716d5eb3c0bf896b469c8f3"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/16.json",
+          "sizeBytes": 61306,
+          "sha256": "a1a881c3d3ae8458c80e43cd01a1cf055dac7a9a2918054f92b8c633bfb94c1b"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/17.json",
+          "sizeBytes": 44864,
+          "sha256": "275cbc313cfe7839c9d7b5d9f5205ae7fc65316f3cfc45404dd4de6437cdf5bc"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/18.json",
+          "sizeBytes": 43334,
+          "sha256": "ddb1da91bd0ee49d919a08518da369ed4c05b9feded19f078ce1fe0211032daf"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/19.json",
+          "sizeBytes": 28210,
+          "sha256": "892a8d9d89b88b3a73aff15af8894ceae063879f5a1f0ddd26dedb42b61ddfdf"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/2.json",
+          "sizeBytes": 211219,
+          "sha256": "76c0a419e0359b41f9fe9a00181606d9218410ff83ac273d297dcabaf88d5b08"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/20.json",
+          "sizeBytes": 37435,
+          "sha256": "5ccf548b7d4dc5b7efeb91ae922e8c72f04f4ede226cad58e7ee0baf965decd6"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/21.json",
+          "sizeBytes": 43286,
+          "sha256": "3ad1b4ff0ca2b56251ec8911d7a635eb41501957e789a6aabf4ee045750c1c35"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/22.json",
+          "sizeBytes": 48188,
+          "sha256": "8f14782ab90314e2fda11257c7092e1ab17805d058e02959a546b2994ddc5b80"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/23.json",
+          "sizeBytes": 36525,
+          "sha256": "7a804ee478cae0df369de2ecd5ed90869b8ae3af85966faac2458b3c8c40d0a7"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/24.json",
+          "sizeBytes": 45579,
+          "sha256": "f9fc16d61d1381c7401fb039f84171cf7c25aeac00ba05b824d4e14738b902de"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/25.json",
+          "sizeBytes": 25527,
+          "sha256": "8c6c628f177977e672b8cf178b7cb398872a07b554f070bcb50d31eded16f036"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/26.json",
+          "sizeBytes": 47467,
+          "sha256": "13e048fd0858290fc8af96a7cd5ea70195ef57654a3bb1be90c70fa64be1466c"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/27.json",
+          "sizeBytes": 38300,
+          "sha256": "d93b3954719d3e0e4bfc070c7e83527a05aa23deefaf67db7f93f3753d3d2b28"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/28.json",
+          "sizeBytes": 45923,
+          "sha256": "2fd95bcdfae923eccbc1c0d54c2b3b35e0f8e6fb72a2c8a64a80e72b3a616590"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/29.json",
+          "sizeBytes": 36810,
+          "sha256": "9e31858947c991c80c4c674c4d2849ae7eb6cdff173a9c2c03421aa4884c5d0f"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/3.json",
+          "sizeBytes": 122113,
+          "sha256": "11e3078abda32b5174bb2122bb82e109322758a7b88d7936e83dbbf4a6c49ea0"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/30.json",
+          "sizeBytes": 30983,
+          "sha256": "48a82c5a65c4b5b673f499a3bd6a1db6b515c71a6598aa2b9534c98acce3f140"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/31.json",
+          "sizeBytes": 18539,
+          "sha256": "d4a4e99fbc1e20a6f18eeec8bc16e47028c5df507ca20d7ead71e5cf170090c2"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/32.json",
+          "sizeBytes": 12788,
+          "sha256": "dbd1472288523cb40e7d2457b5a339ad98a80a3d9643e7878ca4a9ccb45ceeac"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/33.json",
+          "sizeBytes": 41665,
+          "sha256": "18d92c9a8d378e4f0aea33ad5a8e71e7be093acd4c1e63c2f2cf611457aabd18"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/34.json",
+          "sizeBytes": 29317,
+          "sha256": "1aebd04fa3e384714a771a29619ef971a4b2175f64d6bb6cfe00567220130797"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/35.json",
+          "sizeBytes": 26573,
+          "sha256": "47690483d2273a41272311f81bcad101168c8d74cbf9d42dc8bcfd4a5e761ec7"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/36.json",
+          "sizeBytes": 25147,
+          "sha256": "902568b7c78e9bbfb76349e6c24eb22539ea2fdd52c5f2b5bfc5ab7f54f3d0f9"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/37.json",
+          "sizeBytes": 36063,
+          "sha256": "b790afbbfb8628426346ad84e995f964fac4cdd0531a13cd31067ee4460a7f13"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/38.json",
+          "sizeBytes": 29093,
+          "sha256": "c3d7f5c57b8cb9f8e6908b33832d5f0ca6686aad68c549446cddc023dabd8207"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/39.json",
+          "sizeBytes": 39953,
+          "sha256": "cd9d5af1a0dff099a4bce64dc4f982ad2b545de03a5f535376bdc87660e8db5a"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/4.json",
+          "sizeBytes": 119347,
+          "sha256": "2ecc5a3348925c8eaa279f19279b364a172410a2f7cd72d91b516468c758c060"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/40.json",
+          "sizeBytes": 43547,
+          "sha256": "929ac7904981c3839ad424c2fd0fe7c92d202aeef3177829772be4ea01ec4859"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/41.json",
+          "sizeBytes": 27645,
+          "sha256": "38dd5080315dc0ebcaa530036912c9a2a01a1e3825e582b73279257f0bd745e3"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/42.json",
+          "sizeBytes": 30014,
+          "sha256": "156e5c86d61bf556748e5d78d91487a604629cb0bb93a9e4a87cd549c637cea2"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/43.json",
+          "sizeBytes": 30186,
+          "sha256": "5fcfb1006d83174ade9bd1ba9e417db53b94b0bdb185d08b92dbdb912605295e"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/44.json",
+          "sizeBytes": 14427,
+          "sha256": "c2c8d4eb5b65ec69fe82f15f71f97a040c59eeb11c514eab546694bad9e596fc"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/45.json",
+          "sizeBytes": 17407,
+          "sha256": "79f61a86131cc87cea94749534ddaa1c2b046a69c123988b0e5a927dca964853"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/46.json",
+          "sizeBytes": 20847,
+          "sha256": "65b6f9c024b236a173acb8a3457baa173ccc56de9aa5738ae7f717bdf28fd4eb"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/47.json",
+          "sizeBytes": 19057,
+          "sha256": "c6203549676270882543eb37d04db2369ff5e98fe9de771dfa2e68d744fe3cbc"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/48.json",
+          "sizeBytes": 15796,
+          "sha256": "5f364719c2df927cfe1e0cf53bc490f029347328ff37dae418ed76ae9fe9d2d0"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/49.json",
+          "sizeBytes": 13010,
+          "sha256": "2b9628b0575019abefd2348586651dc1406755d111bf31c6f458fb3f897771a7"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/5.json",
+          "sizeBytes": 100249,
+          "sha256": "1535ee48ec7a4d74b47c2f81d08a41133353a591bbf98b54295a3d6ac8ca434f"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/50.json",
+          "sizeBytes": 14039,
+          "sha256": "6b17377dbf67b3b9a509b4be8288512fb4f4778ab43344ca20f9bdce2b63bc84"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/51.json",
+          "sizeBytes": 13601,
+          "sha256": "6a77ed669165655a2b3754df783e664cabbca51ee16dd0ece8e6a65a90fd5f0c"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/52.json",
+          "sizeBytes": 11420,
+          "sha256": "36b8ce59f60acc519a2ebf045e05a060c8bf6238773461f525152a0bcf15a24c"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/53.json",
+          "sizeBytes": 12227,
+          "sha256": "94b61a9f4f7a81f2f5532c60cb1c62981683a51e996abb83f85d59673e476c8d"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/54.json",
+          "sizeBytes": 12158,
+          "sha256": "d6e4fdaf4bb5fa02f7814faf9342b1806eb00c2d73745dc584ac8b25fc3980c9"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/55.json",
+          "sizeBytes": 14449,
+          "sha256": "6db40df4a59f4c833b882e7fad22360a7c7eaecbbc66c046fcf2e1ecea40dec2"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/56.json",
+          "sizeBytes": 17380,
+          "sha256": "47e28198ba41f1e77fdc6ab89894cc74435ad331c37b53e12996703b7d5542b0"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/57.json",
+          "sizeBytes": 21045,
+          "sha256": "2a080cb3c8ac22d271953255779d61d61e0279fbb4b57cbb1caefd2852706a3e"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/58.json",
+          "sizeBytes": 16095,
+          "sha256": "35abbfdfe918c12ce4b7ab439c1aa6b5e1309d63fddfcc1ffaad7bb24538c1ef"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/59.json",
+          "sizeBytes": 16399,
+          "sha256": "b7dd3282880042892840dcb34173c85a3f052aa077ea62bf0b11eb11d8a96d68"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/6.json",
+          "sizeBytes": 96026,
+          "sha256": "7b1ad91cedfe138850b8867997f005d8df8c26407a2df449ed0d81b9a230110d"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/60.json",
+          "sizeBytes": 11832,
+          "sha256": "4fb721e9626d332b36b32a1bd9150f511d321625c12a68cdd11f45c98ebf05a2"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/61.json",
+          "sizeBytes": 7719,
+          "sha256": "708cb763565f06e06da04ce62a02445dff9894f20f7222b1a2d376faf25c4333"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/62.json",
+          "sizeBytes": 6995,
+          "sha256": "8e9ae81d6a5cf97364d74cb29c08467fcf58963572a138e333d297b40a371fc6"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/63.json",
+          "sizeBytes": 5810,
+          "sha256": "c442c495808201b97bb829d8f396bc3cadb2c279b399294f80431cf8f5b53d17"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/64.json",
+          "sizeBytes": 9049,
+          "sha256": "a629dfb3ee02b09609f73378bf915d9fd45311f077cd2706fe70e67041f349d4"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/65.json",
+          "sizeBytes": 9630,
+          "sha256": "fa110f6266e377b7379f4a15180ce16221d351dee6ee210c11e405c9d5a40be2"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/66.json",
+          "sizeBytes": 8646,
+          "sha256": "74616c543c866f9e8216576cf250e5b91a8ae5f23e11ac28214029b559b0e4e0"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/67.json",
+          "sizeBytes": 11355,
+          "sha256": "30156bf72e2903c3ded14e65528b03b66b903faaa4627273c3225ff7ed84fa15"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/68.json",
+          "sizeBytes": 11319,
+          "sha256": "e85fe1a184d7a880d554e765bd607b606454b35a40222864f5ae9a8fd301b023"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/69.json",
+          "sizeBytes": 8886,
+          "sha256": "a0e64ec509e335a200e289dd23f2b12478a5ea412ca27256b568388d70793650"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/7.json",
+          "sizeBytes": 112418,
+          "sha256": "d4ee2468775226f7cba971ebb3d44a8eb20dbebe0ab444d48213c4c7abd50dec"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/70.json",
+          "sizeBytes": 8027,
+          "sha256": "f2d6af8277a80ba4caf87baab68c707562615432aa5c5a9c93e42cd4efe81a76"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/71.json",
+          "sizeBytes": 6646,
+          "sha256": "b11ac6f5be99ddf26808e9a997f6ce8987c68a13f34bc8089b22d004163f2af9"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/72.json",
+          "sizeBytes": 8779,
+          "sha256": "6618a8bae4115869a6ac87f07ca5300fc0661b4601f5fb0fd71fb9af6086e6bc"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/73.json",
+          "sizeBytes": 6397,
+          "sha256": "311528d52f6b0ccf2af877558da96cc68e2de080d794ef27069dc38dfcb40575"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/74.json",
+          "sizeBytes": 8355,
+          "sha256": "50da9b539533fe26a734a1bba1d64984569dbe17de1de10f4e138b5440c9a338"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/75.json",
+          "sizeBytes": 5509,
+          "sha256": "bf3edfda500e328a3a71a5681afa9a4a6d9eea64b3fcf1c6deb0cb17fe46ff8d"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/76.json",
+          "sizeBytes": 7422,
+          "sha256": "cf7a17c20de2c394e2b69e6c67d5c801d16552f4fd22ef6dff0e4ede15643b6f"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/77.json",
+          "sizeBytes": 8213,
+          "sha256": "9a5c267bd60c6ba03a37de4fca9dbfd9df01f6df787ded1b78962b2bfc737695"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/78.json",
+          "sizeBytes": 5606,
+          "sha256": "24dea6c9727b9867280e8060b47ed290ad155374feddbb6bd7f857ae0e8d44b7"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/79.json",
+          "sizeBytes": 6869,
+          "sha256": "886306c8bd7f8cf10a3fa086fae52da24a217aa0b61d270cf924caf88bd46ea5"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/8.json",
+          "sizeBytes": 43054,
+          "sha256": "53aa4cae18172b0fb5bacc213e344d3917da1c849a16e99392b54ede32b2a52f"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/80.json",
+          "sizeBytes": 4782,
+          "sha256": "ec09aa60983d5e1c8ab985a67448741074520aafaa2487f061c48cee56fc6f28"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/81.json",
+          "sizeBytes": 4008,
+          "sha256": "417bd281653d14445e4a8ca67c0a5b16ac3159ba1d500ac41aaecdfc6f0e3dd0"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/82.json",
+          "sizeBytes": 3036,
+          "sha256": "1b50521321837c87c1e821a6be1476debe9f22a3469d18845ed920e7d87c95b4"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/83.json",
+          "sizeBytes": 7238,
+          "sha256": "8533533f4a4460fe30c478f172da08fff1cacb464ab4a70fad284f1c5c19996e"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/84.json",
+          "sizeBytes": 3671,
+          "sha256": "a6879c130e8bb0787254f3a81e5a30ccb2f7579667e5c3f327e1c24356514f10"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/85.json",
+          "sizeBytes": 5463,
+          "sha256": "b0b2908f9d83c81dadc09af2853961907f4cb5f47a910e159dbc4bdf66012b2d"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/86.json",
+          "sizeBytes": 3224,
+          "sha256": "b137324763685df8b06374c18f0bb7b3d1a9157c636113bce97341e988c0c312"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/87.json",
+          "sizeBytes": 2458,
+          "sha256": "fd56671ccbf82285d9a8dc9a16dff71d9a4587129e6872b7e69915bea2441ee4"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/88.json",
+          "sizeBytes": 2273,
+          "sha256": "a85482221b9535d1d4a8ec0f643dcc9ba87fd69e170e21dde09fea9deb1977dc"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/89.json",
+          "sizeBytes": 5410,
+          "sha256": "f522448a1802bef6425d036a62092c834380c40f549c7b610e0f8328f57bfbdb"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/9.json",
+          "sizeBytes": 85197,
+          "sha256": "15ac870c1c33ccb5985342e26df29652269c57632d8668be77417f20f819be13"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/90.json",
+          "sizeBytes": 3430,
+          "sha256": "671e92d49e397e32d6eecf1a36f33826e62c2fc7056f88a23fdbca17ada16f96"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/91.json",
+          "sizeBytes": 2031,
+          "sha256": "f51a87b9cd9f43aac4b3c8c9c5f7d19cb544fbf4e68570f1535c7985bb4b99de"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/92.json",
+          "sizeBytes": 2224,
+          "sha256": "e75854ccc750b43f914171c16f05e8413052954b6206c87694ea104b3d8b8820"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/93.json",
+          "sizeBytes": 1111,
+          "sha256": "63b4f6634a1342cab97fb496a8f488e78f843d75ee67cdd82d2f2da96123cbe9"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/94.json",
+          "sizeBytes": 764,
+          "sha256": "51a125175da9d69d37ad10dda6749fa47a1725e89d375eca1274bf8d872bf91d"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/95.json",
+          "sizeBytes": 1830,
+          "sha256": "70c1199b21df0c49fcf978d821809ef24ff5f52b2048db24dccf76a1526c7afc"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/96.json",
+          "sizeBytes": 2719,
+          "sha256": "fd6a9b77190427ee29613e2f7d84d435e91e42e90564c4d814d284459cd30415"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/97.json",
+          "sizeBytes": 1156,
+          "sha256": "84eeba8b29ee9f34bd0d26d63647f34ea749cca36a0fb1a58395bf70cc8d7a12"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/98.json",
+          "sizeBytes": 3370,
+          "sha256": "e590bff4e9bc4f4f46bd857306ce76a4a79e4311604eb191d24f7d4e528b8b53"
+        },
+        {
+          "path": "assets/quran/tajweed/hafs/99.json",
+          "sizeBytes": 1039,
+          "sha256": "53b374a32ac4fe30bb00d7ffa5e2551b959b7baee840977e6d1ecf74244a19d8"
+        }
+      ]
+    },
+    {
+      "id": "quran:words-hafs",
+      "titleAr": "التحليل الصرفي للكلمات — حفص",
+      "titleEn": "Word morphology — Hafs",
+      "version": "qac-0.4",
+      "source": "Quranic Arabic Corpus v0.4",
+      "licenseStatus": "gpl-with-attribution",
+      "sizeBytes": 5690632,
+      "sha256": "dcc376a500398562980266fd83ed5c9fa5bfa134dbb3c74d23a91bc0c5d824e2",
+      "files": [
+        {
+          "path": "assets/quran/words/hafs/1.json",
+          "sizeBytes": 2246,
+          "sha256": "251b5552e42adc79a679bd804fbfc31846fd97075fd78e83c52ae0635ae063ef"
+        },
+        {
+          "path": "assets/quran/words/hafs/10.json",
+          "sizeBytes": 132834,
+          "sha256": "b4290004f33d3208257faa5058b49075f46e400e31c248ef5471884993bf0038"
+        },
+        {
+          "path": "assets/quran/words/hafs/100.json",
+          "sizeBytes": 3210,
+          "sha256": "b982310b04292917c70c495f340240fedc5fafab1189d5d7f7520994ec927d75"
+        },
+        {
+          "path": "assets/quran/words/hafs/101.json",
+          "sizeBytes": 2992,
+          "sha256": "019272e2b15002dd4034910725cc4afb62a89d0db3e15d6594b359318deec280"
+        },
+        {
+          "path": "assets/quran/words/hafs/102.json",
+          "sizeBytes": 2427,
+          "sha256": "f4092999c3fb59be8f2b90c6642323485018a38b02eef19333ec42db890defa4"
+        },
+        {
+          "path": "assets/quran/words/hafs/103.json",
+          "sizeBytes": 1364,
+          "sha256": "0ec70f09472341db746998c8f1c11d6bb0af042a67f7a567b1636a1c156fd577"
+        },
+        {
+          "path": "assets/quran/words/hafs/104.json",
+          "sizeBytes": 2847,
+          "sha256": "36fc63582d54686b5752093df96972c54ba60da63c4ad65db20c80a63f077483"
+        },
+        {
+          "path": "assets/quran/words/hafs/105.json",
+          "sizeBytes": 2020,
+          "sha256": "4f10a8703d8e2293a0b63596b49e21a96bcbb681eb51e91d6c7002e9f8885d66"
+        },
+        {
+          "path": "assets/quran/words/hafs/106.json",
+          "sizeBytes": 1593,
+          "sha256": "5f48147707f01b9d66dc4182a91a80f6c5f6da8f63d408fd125fcde1b4154019"
+        },
+        {
+          "path": "assets/quran/words/hafs/107.json",
+          "sizeBytes": 2178,
+          "sha256": "5b0edd19f81ff2c2f5e63eb5a71f7696a8b719867ddd31ae370425fb1411ec1d"
+        },
+        {
+          "path": "assets/quran/words/hafs/108.json",
+          "sizeBytes": 1056,
+          "sha256": "98e3e9f52f718c9946d9bf216569e0027016e741e4732c3c624973065e4fd075"
+        },
+        {
+          "path": "assets/quran/words/hafs/109.json",
+          "sizeBytes": 2095,
+          "sha256": "248f1cdab0c7be6044d16c13a0d8596b373e07b0b237f251af3df20a1b2f53c8"
+        },
+        {
+          "path": "assets/quran/words/hafs/11.json",
+          "sizeBytes": 139169,
+          "sha256": "7bdfa418a84c249944590001abf00392faf68fc37076381729be02e0c12a2477"
+        },
+        {
+          "path": "assets/quran/words/hafs/110.json",
+          "sizeBytes": 1733,
+          "sha256": "99f83a4621d3e93f3f139e2547cfe56e8ff343946b1ff24fad68375736ffafdd"
+        },
+        {
+          "path": "assets/quran/words/hafs/111.json",
+          "sizeBytes": 1930,
+          "sha256": "e5dbc6d0ebdba1ac86339733c3fab42c4a1ca929ffbcea1a920935b610fd0da1"
+        },
+        {
+          "path": "assets/quran/words/hafs/112.json",
+          "sizeBytes": 1351,
+          "sha256": "c6db2cef864fee6dbb638722128768b7d423092ea9c01d9344b49ef11c964fad"
+        },
+        {
+          "path": "assets/quran/words/hafs/113.json",
+          "sizeBytes": 1864,
+          "sha256": "31a49ff08b45751c4a3559cbff6d2b4ca89f10c17457952affe65c5b671a8854"
+        },
+        {
+          "path": "assets/quran/words/hafs/114.json",
+          "sizeBytes": 1777,
+          "sha256": "72517a99dff5d3f0adbfff215b02f807db1b471c10370b61263e6e29a1fe6c0f"
+        },
+        {
+          "path": "assets/quran/words/hafs/12.json",
+          "sizeBytes": 128802,
+          "sha256": "9df44ac77cb76bc13b08455cd5c6554e5cc3e0857c3f173d4e75caa026dec995"
+        },
+        {
+          "path": "assets/quran/words/hafs/13.json",
+          "sizeBytes": 62596,
+          "sha256": "77c3482e4cae578f64c8a7fe2373bd9e80ed8860c4aa3323363ad02ab6298431"
+        },
+        {
+          "path": "assets/quran/words/hafs/14.json",
+          "sizeBytes": 60835,
+          "sha256": "bd4ec7abe454609c86df77a6307a0d5ed4173ee7c5a968707352d5fe39c88c89"
+        },
+        {
+          "path": "assets/quran/words/hafs/15.json",
+          "sizeBytes": 47980,
+          "sha256": "d1e8f990cdb231bba53abdfdd8712b95036ced0b4c76cb40073621f1b7276cfa"
+        },
+        {
+          "path": "assets/quran/words/hafs/16.json",
+          "sizeBytes": 135026,
+          "sha256": "2773076f902c7c28c31c014232877c3958d9ce7b2eb971651bb391eac98c2020"
+        },
+        {
+          "path": "assets/quran/words/hafs/17.json",
+          "sizeBytes": 113839,
+          "sha256": "ea1914f8accec5d660a0d317cbb0e003f10a0b3710ddff51d249d9966c52380c"
+        },
+        {
+          "path": "assets/quran/words/hafs/18.json",
+          "sizeBytes": 114319,
+          "sha256": "6886ad6054f1875b4dc55aada07826c4183e4f0fbff1037a6e6fe91954c851d4"
+        },
+        {
+          "path": "assets/quran/words/hafs/19.json",
+          "sizeBytes": 69776,
+          "sha256": "f948d6979607a945519601e609d341b7edc63ca9ce76f9d62eed86165dba7283"
+        },
+        {
+          "path": "assets/quran/words/hafs/2.json",
+          "sizeBytes": 448567,
+          "sha256": "fc82b4decc87bb4c8f7bddd1056285d4ab361d7fa7f8406f8ce2b398889e6ef6"
+        },
+        {
+          "path": "assets/quran/words/hafs/20.json",
+          "sizeBytes": 96238,
+          "sha256": "6f643560bbd7ebed3c20a0032a701617a3a83d21bbf1c22e66817e26c388f092"
+        },
+        {
+          "path": "assets/quran/words/hafs/21.json",
+          "sizeBytes": 85703,
+          "sha256": "105d1214ac37fdc64add6b41b1e533951b3c11dc554c05b00f5c0545f7d47c53"
+        },
+        {
+          "path": "assets/quran/words/hafs/22.json",
+          "sizeBytes": 92377,
+          "sha256": "fdcb9dc96d5ead995c8f5320841b86ebe2ba72360571f51cdb95189d028acc01"
+        },
+        {
+          "path": "assets/quran/words/hafs/23.json",
+          "sizeBytes": 76187,
+          "sha256": "9a2c21e16cba56d989686b8bdae7ae92d5f802069b398b15c58d89061e694816"
+        },
+        {
+          "path": "assets/quran/words/hafs/24.json",
+          "sizeBytes": 97240,
+          "sha256": "12fbbae31a51da3c27b93ed36e069d07391ca0fbb92c7ed3ca3b3ae1ca2a9872"
+        },
+        {
+          "path": "assets/quran/words/hafs/25.json",
+          "sizeBytes": 65447,
+          "sha256": "60968ccba869e29c7ba4dddd5f9e58ab5df1d935eb8074dedd483699187f3bca"
+        },
+        {
+          "path": "assets/quran/words/hafs/26.json",
+          "sizeBytes": 96585,
+          "sha256": "f03daae19539b36e8cd680b48f7d5fa2ce56f27fc5d389d17e88ba7f833c2b07"
+        },
+        {
+          "path": "assets/quran/words/hafs/27.json",
+          "sizeBytes": 83278,
+          "sha256": "045640d5ac66221224cc408aaea9b865a78a8d5fd8f06fee3f144d32bd09f433"
+        },
+        {
+          "path": "assets/quran/words/hafs/28.json",
+          "sizeBytes": 103153,
+          "sha256": "7a3958873ad623384832c1ae270bdf6165532faea736afdd0b5f07f705958f59"
+        },
+        {
+          "path": "assets/quran/words/hafs/29.json",
+          "sizeBytes": 71853,
+          "sha256": "db18ce870e9a8b1a89e73404ce4baaa486ab584e3cf7ba2c426f919a2fd544de"
+        },
+        {
+          "path": "assets/quran/words/hafs/3.json",
+          "sizeBytes": 253185,
+          "sha256": "3b788908def478e139f38be324d12f9e630a436fd4175356863e825ee225e250"
+        },
+        {
+          "path": "assets/quran/words/hafs/30.json",
+          "sizeBytes": 59892,
+          "sha256": "e3ef66144773db52729f743724c95bbecab900cb637cd27737457b6284d9efd3"
+        },
+        {
+          "path": "assets/quran/words/hafs/31.json",
+          "sizeBytes": 39320,
+          "sha256": "64b96baa2f2d5827094a592ece6cb8a1d51c49464ea32f212360d4208f6ec0b3"
+        },
+        {
+          "path": "assets/quran/words/hafs/32.json",
+          "sizeBytes": 27208,
+          "sha256": "61a9eac7486135cf045e43327829592c48a757806744725e93a7885ea29b7594"
+        },
+        {
+          "path": "assets/quran/words/hafs/33.json",
+          "sizeBytes": 95125,
+          "sha256": "be9af3571e7904da01458663e56e3ba26064aafd4449c503a3deb65d9a709f9e"
+        },
+        {
+          "path": "assets/quran/words/hafs/34.json",
+          "sizeBytes": 63559,
+          "sha256": "74c849260e03462f74b02d1686ed67e518d7746cd476ba6c01ecd2e749f4ac82"
+        },
+        {
+          "path": "assets/quran/words/hafs/35.json",
+          "sizeBytes": 57175,
+          "sha256": "6c6ac0abb87c7d8e4b17e4a3dc047a741c3ba6cdcb8e739bdd800054bc63afaa"
+        },
+        {
+          "path": "assets/quran/words/hafs/36.json",
+          "sizeBytes": 52609,
+          "sha256": "d48ff024e8447f9c5464a7e352f7c5163f6d7d7eca4df6b73837f5a47c5ebc5e"
+        },
+        {
+          "path": "assets/quran/words/hafs/37.json",
+          "sizeBytes": 64284,
+          "sha256": "8327c2e8e71f15c12f1aca5542312e41d7c071ad7778f12dff43327e59444e1a"
+        },
+        {
+          "path": "assets/quran/words/hafs/38.json",
+          "sizeBytes": 53626,
+          "sha256": "c3fe529098633677408b6d19704dc7c1d0120dffd5f5f7dbae4cb022f6bdde31"
+        },
+        {
+          "path": "assets/quran/words/hafs/39.json",
+          "sizeBytes": 85683,
+          "sha256": "0919de89bd18b6d977bd50c0c0cbc9b4a3f939ae9633737ed2a71f35db4a5aad"
+        },
+        {
+          "path": "assets/quran/words/hafs/4.json",
+          "sizeBytes": 275079,
+          "sha256": "b24794d976ba9204a26c78920516f2e205d74d4163dce2091e51c337f456d613"
+        },
+        {
+          "path": "assets/quran/words/hafs/40.json",
+          "sizeBytes": 88348,
+          "sha256": "3f45dec6222b6b34cb1a1adb763c6fd59e2d34aa417467fd006cdad43194d63c"
+        },
+        {
+          "path": "assets/quran/words/hafs/41.json",
+          "sizeBytes": 57746,
+          "sha256": "3126040327f4621763265da33e9bfe4064fffb3080db54c59b5a46af6aedac3a"
+        },
+        {
+          "path": "assets/quran/words/hafs/42.json",
+          "sizeBytes": 62571,
+          "sha256": "7146a118d7fb4cc79a3975bca4ef9384d5553a4eedda4cae5dafa16901bea28b"
+        },
+        {
+          "path": "assets/quran/words/hafs/43.json",
+          "sizeBytes": 60977,
+          "sha256": "ba61b3f5c07525413f88bc457e282333c8dac6032f730c4f62b80ef9a58a8981"
+        },
+        {
+          "path": "assets/quran/words/hafs/44.json",
+          "sizeBytes": 26073,
+          "sha256": "54789c43940f829ba3b1dd2a52d34008268066c966c6cce4379c6bbe9b5d5b12"
+        },
+        {
+          "path": "assets/quran/words/hafs/45.json",
+          "sizeBytes": 35668,
+          "sha256": "f72dd6f5fad7a60915ad3c467b15e1dc2648f8eb918fc4f496dfb2122629204d"
+        },
+        {
+          "path": "assets/quran/words/hafs/46.json",
+          "sizeBytes": 46396,
+          "sha256": "39ea437b16e780c5a2a25f5367000e5313d806b8145faca410aac5aa7ebe514f"
+        },
+        {
+          "path": "assets/quran/words/hafs/47.json",
+          "sizeBytes": 40157,
+          "sha256": "7f733b0b2fe1d4f14e9d46b6b0e5919f90dc25f25618b3f89bba1f34bb39cfff"
+        },
+        {
+          "path": "assets/quran/words/hafs/48.json",
+          "sizeBytes": 41932,
+          "sha256": "aafbd49998a5f5e7c2b1a04fed06168ba5168679723bee37e9cea801edf6a015"
+        },
+        {
+          "path": "assets/quran/words/hafs/49.json",
+          "sizeBytes": 26185,
+          "sha256": "3dca262f9b40fa93f9a86c9616492734601d18b02122a5b0472c884859f7f96b"
+        },
+        {
+          "path": "assets/quran/words/hafs/5.json",
+          "sizeBytes": 205752,
+          "sha256": "f7611e11b7f4d27da48972771889421281c2525dc1e257b4b2a9f4ba025c69f3"
+        },
+        {
+          "path": "assets/quran/words/hafs/50.json",
+          "sizeBytes": 27100,
+          "sha256": "4153c77d6b50a4cff7b558bef6ac4a6893bf4406984bc95f8d7d0aa1f32a1d1e"
+        },
+        {
+          "path": "assets/quran/words/hafs/51.json",
+          "sizeBytes": 26759,
+          "sha256": "bea80278ec40bcac30bf5fa2417753ca5a799dfb1dd7cf2e11651c3782a86b48"
+        },
+        {
+          "path": "assets/quran/words/hafs/52.json",
+          "sizeBytes": 23296,
+          "sha256": "d18de073b95aaf7647ad22ed711fb6ccbea871fca298c536179af8ccc113222a"
+        },
+        {
+          "path": "assets/quran/words/hafs/53.json",
+          "sizeBytes": 26227,
+          "sha256": "a17777dd0605977eb4d548074bdf7ed33e5149bc94aba268c5ed46e3cef8cef9"
+        },
+        {
+          "path": "assets/quran/words/hafs/54.json",
+          "sizeBytes": 25792,
+          "sha256": "4a27c5e3f2a8843458f35a6b49111de240e608a22757aa9e68c6b907a0925597"
+        },
+        {
+          "path": "assets/quran/words/hafs/55.json",
+          "sizeBytes": 27512,
+          "sha256": "c94920ddbe7aa44f0d2f6b6e01967c7a3bb1fa1693708a6348834cc640c3b506"
+        },
+        {
+          "path": "assets/quran/words/hafs/56.json",
+          "sizeBytes": 28797,
+          "sha256": "b6a1ee4695ad89066a5f27c19ceb8218ed9fcc32d4502988dfb48ba12250992c"
+        },
+        {
+          "path": "assets/quran/words/hafs/57.json",
+          "sizeBytes": 42414,
+          "sha256": "cee2b84f83bc385726f3412a261081e315ca3b670778b283bff2a661dbc9445f"
+        },
+        {
+          "path": "assets/quran/words/hafs/58.json",
+          "sizeBytes": 35182,
+          "sha256": "2a6b1dd072f77a3c9ef68ec0eb86283caf9879bdc933719d2475fdd194cdbd82"
+        },
+        {
+          "path": "assets/quran/words/hafs/59.json",
+          "sizeBytes": 32872,
+          "sha256": "af96c0a6ddc288cdaa8b7ccf5ab825e295b55a82b7bc16854039ec3b11abc63e"
+        },
+        {
+          "path": "assets/quran/words/hafs/6.json",
+          "sizeBytes": 223992,
+          "sha256": "f64153a22f5f124346f443053a60ccc42fef35a45436f01e1a88ec89a624539b"
+        },
+        {
+          "path": "assets/quran/words/hafs/60.json",
+          "sizeBytes": 25963,
+          "sha256": "abb4e6fa3f931579469ca123a0900cfd8f8110ef6f35546c9558d85623ad4ddd"
+        },
+        {
+          "path": "assets/quran/words/hafs/61.json",
+          "sizeBytes": 16457,
+          "sha256": "cf2c9e3ce2ac703f8ba618a79fa3d0b97a8eb8671ae115da5ff19726c922488e"
+        },
+        {
+          "path": "assets/quran/words/hafs/62.json",
+          "sizeBytes": 13002,
+          "sha256": "0bdc0d17aef664129cfba5dacbf0d8d3ddd4678bf9448ff53bc0e78113599d24"
+        },
+        {
+          "path": "assets/quran/words/hafs/63.json",
+          "sizeBytes": 13696,
+          "sha256": "b41e9702e4691d46cc1c36d22a207c7de65959d22cd76c26876422019649c103"
+        },
+        {
+          "path": "assets/quran/words/hafs/64.json",
+          "sizeBytes": 18453,
+          "sha256": "3acbbeda8e1da759d3a58fc045444a38dc1e9f7bef6138919b3f21dc6a38400f"
+        },
+        {
+          "path": "assets/quran/words/hafs/65.json",
+          "sizeBytes": 21632,
+          "sha256": "e2568b6500899f84835181d060d5e4b3e9f3b43dd3d5c791c3fef02d8cdff249"
+        },
+        {
+          "path": "assets/quran/words/hafs/66.json",
+          "sizeBytes": 18691,
+          "sha256": "199808f21b04d9bd119706fa59c9a8a4f674b721f2729d49b5f75651e1735e37"
+        },
+        {
+          "path": "assets/quran/words/hafs/67.json",
+          "sizeBytes": 24160,
+          "sha256": "aa87612238427a756af411bcc8ac95f99f3380cbce7e960dfe8741d19093a86e"
+        },
+        {
+          "path": "assets/quran/words/hafs/68.json",
+          "sizeBytes": 22395,
+          "sha256": "43bd98177d7bcac7cbffb66f5167842f13809d1825131ee5e54ab699a9198560"
+        },
+        {
+          "path": "assets/quran/words/hafs/69.json",
+          "sizeBytes": 19485,
+          "sha256": "1efa04022819549719ef45e80584fea17d7bc28e4932191be32bc305fef00ca8"
+        },
+        {
+          "path": "assets/quran/words/hafs/7.json",
+          "sizeBytes": 243342,
+          "sha256": "126b5b9d3ae6a7cd5eac9a802c2a9ce3cf40343df64b4ab39d1024c25d9c8a35"
+        },
+        {
+          "path": "assets/quran/words/hafs/70.json",
+          "sizeBytes": 16583,
+          "sha256": "c1e2422578fba4518c3a3fffd869ec5b0eca1c4b6be45c6cdbc3543d4d47e432"
+        },
+        {
+          "path": "assets/quran/words/hafs/71.json",
+          "sizeBytes": 16660,
+          "sha256": "ba83cf2e6bc55df43a19705b2b2816cdcbc624c5cc756e4d85a36a7053c3ae7b"
+        },
+        {
+          "path": "assets/quran/words/hafs/72.json",
+          "sizeBytes": 20413,
+          "sha256": "e683dc57b6e39be15ec2ed98e6fb06f6f72fe25f1d0a547903fd577244c163c7"
+        },
+        {
+          "path": "assets/quran/words/hafs/73.json",
+          "sizeBytes": 15102,
+          "sha256": "14f15fdcb92da66dbab7a197620e6455aac2e0f099029c694e78deda99861ca4"
+        },
+        {
+          "path": "assets/quran/words/hafs/74.json",
+          "sizeBytes": 19314,
+          "sha256": "138267bdcc22743085e3508be1ba5615b5f6e6359e48cc29b9af7edccfa345eb"
+        },
+        {
+          "path": "assets/quran/words/hafs/75.json",
+          "sizeBytes": 12497,
+          "sha256": "0ded8ff3fb1969f7f7faf17fe6e3dd6821127e1c22d004130eedff71eb4bfca7"
+        },
+        {
+          "path": "assets/quran/words/hafs/76.json",
+          "sizeBytes": 18399,
+          "sha256": "3408c919d8f75ef56adafa5d7d4fcdb64e3f5d62f99672dc0079a3ae154737e2"
+        },
+        {
+          "path": "assets/quran/words/hafs/77.json",
+          "sizeBytes": 14227,
+          "sha256": "8ef21f1545afac0d1a9d2992c9cfa4fe4c45e5b57013972c0712d48e7361932f"
+        },
+        {
+          "path": "assets/quran/words/hafs/78.json",
+          "sizeBytes": 13408,
+          "sha256": "3a6692dc900635179048fff9d417b57232186cb78cbb2d06b13fa312fe53c197"
+        },
+        {
+          "path": "assets/quran/words/hafs/79.json",
+          "sizeBytes": 13678,
+          "sha256": "e7e7fc48e82f44cf020993b17714d4069893120272086579932b7a116403d046"
+        },
+        {
+          "path": "assets/quran/words/hafs/8.json",
+          "sizeBytes": 90786,
+          "sha256": "51e3e3d98b16bbd0ae8e043b8bbb7da48642d2f2fcdea6ac0435947dadfc7a97"
+        },
+        {
+          "path": "assets/quran/words/hafs/80.json",
+          "sizeBytes": 10537,
+          "sha256": "0dd735ffbf5e24160eacaa386af79c04c06293a84dac59279bdbce7ab75e137b"
+        },
+        {
+          "path": "assets/quran/words/hafs/81.json",
+          "sizeBytes": 8005,
+          "sha256": "5b67528c28a4e3780249e283502c71c7d144ea9b712d5dd724d0b60be44aef41"
+        },
+        {
+          "path": "assets/quran/words/hafs/82.json",
+          "sizeBytes": 6212,
+          "sha256": "6fba69ae98f7f2a1f932b17953b551bd9e1743d1e451b19e0a594548e243a457"
+        },
+        {
+          "path": "assets/quran/words/hafs/83.json",
+          "sizeBytes": 13066,
+          "sha256": "3235980c0db1c86378fe77d0fbcdb8174e24a0aa48c4b36f43db92807acfcaad"
+        },
+        {
+          "path": "assets/quran/words/hafs/84.json",
+          "sizeBytes": 8194,
+          "sha256": "e7ed8262ca6a28c07f960d030bd3ed2df87858aa6a274cab4b7143a3d5df5fa8"
+        },
+        {
+          "path": "assets/quran/words/hafs/85.json",
+          "sizeBytes": 8257,
+          "sha256": "da1bce2c10237a9bcb646081960a41c93f3be7d8e67d67de6c9aa5b12606f4b0"
+        },
+        {
+          "path": "assets/quran/words/hafs/86.json",
+          "sizeBytes": 4791,
+          "sha256": "103078060076001c9c2d60988c241df169b3163f78d485ba7a35dae8ef408b02"
+        },
+        {
+          "path": "assets/quran/words/hafs/87.json",
+          "sizeBytes": 5653,
+          "sha256": "711ca2b57ae7cab4c9661fcde83ce0ea5b4dccb131428b7356464f11b51ef3eb"
+        },
+        {
+          "path": "assets/quran/words/hafs/88.json",
+          "sizeBytes": 7281,
+          "sha256": "fd759fafeb67e4de781d13aa513fe59392de719fb91719e297316833367844d8"
+        },
+        {
+          "path": "assets/quran/words/hafs/89.json",
+          "sizeBytes": 10481,
+          "sha256": "1bfddd8d5d725d78c7fedfee38ace936a2af1fe91d4592fb1b9b12ac8661642b"
+        },
+        {
+          "path": "assets/quran/words/hafs/9.json",
+          "sizeBytes": 183675,
+          "sha256": "1b9f5b99ccee9ac037a9141c4a3c689b58511762e010b87cb37b9f01d18dbb05"
+        },
+        {
+          "path": "assets/quran/words/hafs/90.json",
+          "sizeBytes": 6329,
+          "sha256": "f395d9d452479be6e94482a521e224883267b66d7f1564e3c6e083f9b959cff9"
+        },
+        {
+          "path": "assets/quran/words/hafs/91.json",
+          "sizeBytes": 4427,
+          "sha256": "f7ee94c5ef1882ecb85ba6828e6086b09a85993ad4dbedd5ed9ed05f7bb7c91a"
+        },
+        {
+          "path": "assets/quran/words/hafs/92.json",
+          "sizeBytes": 5700,
+          "sha256": "b7c7d05a989bbd7f63e9af51b799fc3d8029487210a85bf3511fb275fe0ef132"
+        },
+        {
+          "path": "assets/quran/words/hafs/93.json",
+          "sizeBytes": 3238,
+          "sha256": "3e87df1010467cdd197e3403fff1f6412359e4bd5ea5b6d020961c661432a722"
+        },
+        {
+          "path": "assets/quran/words/hafs/94.json",
+          "sizeBytes": 2254,
+          "sha256": "fe4a5d61624634f46b31683dcf1a7f4a937971e2403b5b3da7ccfd9d3d6c8c82"
+        },
+        {
+          "path": "assets/quran/words/hafs/95.json",
+          "sizeBytes": 2882,
+          "sha256": "4d89bdb65598ad661fb9e1934ff902114ab9e211f66dc2100387dd6706f5c26d"
+        },
+        {
+          "path": "assets/quran/words/hafs/96.json",
+          "sizeBytes": 5668,
+          "sha256": "c01d921aff85dae3705e195e3d8f7b075c7c276b4745bfb98365b720829cd38b"
+        },
+        {
+          "path": "assets/quran/words/hafs/97.json",
+          "sizeBytes": 2457,
+          "sha256": "247f2514a53a89775606f1a2d133b5b82a73d592223e2101d865f39e58ca33fa"
+        },
+        {
+          "path": "assets/quran/words/hafs/98.json",
+          "sizeBytes": 7158,
+          "sha256": "0730a07c67bc2efe57e6ed80c54b4227da2f168de87275102e8390d26169b162"
+        },
+        {
+          "path": "assets/quran/words/hafs/99.json",
+          "sizeBytes": 3044,
+          "sha256": "ff7e628719a39fcc50be85858262288a104fe72a041c32c50ff28392ec44697c"
+        }
+      ]
+    },
+    {
+      "id": "hadith:abudawud",
+      "titleAr": "سنن أبي داود",
+      "titleEn": "Sunan Abi Dawud",
+      "version": "hadith-api-1",
+      "source": "fawazahmed0/hadith-api@1 ara-abudawud",
+      "licenseStatus": "underlying-text-rights-unresolved",
+      "sizeBytes": 6626968,
+      "sha256": "bf60821170282672614c81f35532eb91a832c448b601eac7b26b4f6b24ac9786",
+      "files": [
+        {
+          "path": "assets/hadith/abudawud/index.json",
+          "sizeBytes": 4486,
+          "sha256": "680b587c3b09fea4795babbcfe1e86e471a4638ed13d207dcdff350ff2de3733"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/0.json",
+          "sizeBytes": 97,
+          "sha256": "ac6ad20df9a80c3798f427eb94fe2ea9c18adb8f4940ca956fb22457534d3b41"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/1.json",
+          "sizeBytes": 497102,
+          "sha256": "d9d632560a66441225c200221b6682a6c1d0ac02cc0a3237a64c979aebac8f31"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/10.json",
+          "sizeBytes": 27993,
+          "sha256": "4d912c85f7c2dfe39f1bf6541fe0427fa047e2a8da1ebe88dea67fd3233154a2"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/11.json",
+          "sizeBytes": 399498,
+          "sha256": "744209317c7bfb48913ba10da8a84e9ba6f8648cfa880aa1735693b106ce8708"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/12.json",
+          "sizeBytes": 165474,
+          "sha256": "2b5fd6e578dbd2783410044fc4c0e29ec224bf4ef03d5f93b3b2d914104e0e81"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/13.json",
+          "sizeBytes": 200862,
+          "sha256": "9ed87a4f6d970f55c53ec1e764951ed4f4712a1802c401bc0511a089aceef702"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/14.json",
+          "sizeBytes": 193332,
+          "sha256": "43c5b4f5fbe06dc5e9d695596719322047f7c2045297fe0db4690ad9efeb2cfe"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/15.json",
+          "sizeBytes": 418295,
+          "sha256": "08f6b9bb9cc322c1f8274f9e7b0195bd4d7f25ba99df3490c0de24e54b388e6e"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/16.json",
+          "sizeBytes": 65156,
+          "sha256": "77c721ea0223759e34935681bb55025176ab1aaa6a1bb3b5abe962b10a882e76"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/17.json",
+          "sizeBytes": 20772,
+          "sha256": "d896a650990c76b081633d95bc34bebb94fb94c0052cff5dec9560ab69943e29"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/18.json",
+          "sizeBytes": 31293,
+          "sha256": "2c35cfd8007f34042975d4e4a41bb8b1f214bb88ac7754db384da007947b25e9"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/19.json",
+          "sizeBytes": 52793,
+          "sha256": "f0beb94f1b578f45a173625552f2eb0153edcda0e822db3705c4f102c0b557b5"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/2.json",
+          "sizeBytes": 963967,
+          "sha256": "e41666a27ad6dd0334cd957d413780c61fc3d647dfe8115c9b0213683d72ba66"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/20.json",
+          "sizeBytes": 246305,
+          "sha256": "99c2a74e103da68fca4287135a4049cb3272e4757b62652bab33cf5063abf700"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/21.json",
+          "sizeBytes": 176834,
+          "sha256": "7a8f8ac95cc9e1908ab080ad03dcf8e55d5a8db22c0be2f9e9f62a6f05d53951"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/22.json",
+          "sizeBytes": 106648,
+          "sha256": "9f2b9441559a2cb375bac12dd4d059fffac31d71b38e0de7135c467c890eca9e"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/23.json",
+          "sizeBytes": 105009,
+          "sha256": "4d50d93c226dd9804b7784dbd993faafe4c993d6788b505676e89f67d12af70e"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/24.json",
+          "sizeBytes": 164795,
+          "sha256": "095c3e687696f4c4bb797fe0a4ea2890cdfed86cd7c35f5836b38f5d78b5ce6a"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/25.json",
+          "sizeBytes": 87050,
+          "sha256": "5c2d9b2716a5a66249a16a096bd9d6693a5bc1f0f5d31181f9c59b38d4045c97"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/26.json",
+          "sizeBytes": 33057,
+          "sha256": "fb0fe9f90863296b259e943eb90bc80612e5eb6b60bee71febcada5971e5b24c"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/27.json",
+          "sizeBytes": 75723,
+          "sha256": "347a63a238ed1c75fd0da4a999bfa10ca3800285ae0e01ff46e4acecffd07754"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/28.json",
+          "sizeBytes": 125666,
+          "sha256": "8b9afbd8a4a44225f7aa1d7b7dcb7516890c9b09b0c20bd18ba26f5edc81942b"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/29.json",
+          "sizeBytes": 55120,
+          "sha256": "083923024ce2c5dd8cc57e91fecc87ea5233329ad4ad5bf32645e7237c7944f5"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/3.json",
+          "sizeBytes": 51236,
+          "sha256": "13603ba769f18d3db93948cf46b650ea1580cc9f71d1a3b99ba29b36ea8655f0"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/30.json",
+          "sizeBytes": 24255,
+          "sha256": "0df88bc735ee3fc98c86a54cb2aa650954efc4c7859da8370cc483cea92d87fa"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/31.json",
+          "sizeBytes": 50189,
+          "sha256": "0dce9b0289030c928eb8fa5c3cc6aca85ff885218a11cb7a70773e9cfff489e9"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/32.json",
+          "sizeBytes": 40773,
+          "sha256": "d510cc686f6160131ec8aa5425dcce7cda0abb68b06e190c02179cb01bf3d1bf"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/33.json",
+          "sizeBytes": 12564,
+          "sha256": "835d2a33e15095a608f18cbfd8f05a2b1d1a7c3c3f2d357fa53770692fb12076"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/34.json",
+          "sizeBytes": 156908,
+          "sha256": "844f775981694bcdc073f5c7db8bba9c2291ed3d293c27ba9517acde36f76178"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/35.json",
+          "sizeBytes": 58282,
+          "sha256": "40f483ecfe45a5b0140f1fb10c0dadd02f3fb1a8027d17d26f9500e88cbe25fe"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/36.json",
+          "sizeBytes": 28722,
+          "sha256": "b5b9a55159057eb4a3b639cfa8f8fbdae02ded715b95f3f5cefba836bd815baf"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/37.json",
+          "sizeBytes": 56309,
+          "sha256": "cbef721a4d45166ec58c968503b8e9dc1b84bc0c9dea18c961a147521bc65b5a"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/38.json",
+          "sizeBytes": 14189,
+          "sha256": "f8ca970b7a0aa8a96367910851e05e71cefc784eaecfd5fdbaab6c89700aec6e"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/39.json",
+          "sizeBytes": 80944,
+          "sha256": "9cdccf4d493f15a5a5466761d02191aa8bd7cf46c94118f97ccea57c068bc918"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/4.json",
+          "sizeBytes": 72241,
+          "sha256": "44cc7165c08b328b4076898c2c24880a333d6eda83dda429ee0efe6a5702a29c"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/40.json",
+          "sizeBytes": 204293,
+          "sha256": "1608bf5ae34e591bcf9fc23a36a8ec5ac50c634371d70ffa55e761acd42c96f0"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/41.json",
+          "sizeBytes": 141827,
+          "sha256": "ceaf9c54e1c1ecc2851913de3308606e24d9e7da9e8a1eed22c1274e6c4444dd"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/42.json",
+          "sizeBytes": 245851,
+          "sha256": "cc4eb52dcde240ddbcf4f188f38724fdc02de12bbbc518bc7157dcd8af669cd5"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/43.json",
+          "sizeBytes": 582508,
+          "sha256": "bcafa93da1d6824d63b44485d8fee95c872c2321e68fe298b3f779ff4e28f0d7"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/5.json",
+          "sizeBytes": 161252,
+          "sha256": "f54688ab253439dda783881cbdb0f9bc3cfd26355f8dfc8ff6c913cd0c862d60"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/6.json",
+          "sizeBytes": 44760,
+          "sha256": "50163cb3ae6305e28d164e2e02350efe2d1433c1a9c76115714f85d6b0367a2a"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/7.json",
+          "sizeBytes": 15521,
+          "sha256": "e56d1cb0e4667d57a736b1ebb75460b2fe7ae942b2b91fb372d090c6cdfa4d43"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/8.json",
+          "sizeBytes": 164658,
+          "sha256": "e9728e9ff57a668bfe67e11ed6a0341646b0ac5bdabebae46234c839b9205876"
+        },
+        {
+          "path": "assets/hadith/abudawud/sections/9.json",
+          "sizeBytes": 202359,
+          "sha256": "41292366813dfb83b08bb189d6c4a4569e5b35f4d8e6f42e2416d85ff5e12fd4"
+        }
+      ]
+    },
+    {
+      "id": "hadith:tirmidhi",
+      "titleAr": "جامع الترمذي",
+      "titleEn": "Jami at-Tirmidhi",
+      "version": "hadith-api-1",
+      "source": "fawazahmed0/hadith-api@1 ara-tirmidhi",
+      "licenseStatus": "underlying-text-rights-unresolved",
+      "sizeBytes": 6587507,
+      "sha256": "42b8881fa161998d9d0dc5d0716f6d86a38e9ddb066de8dc8ae4e74a68878a90",
+      "files": [
+        {
+          "path": "assets/hadith/tirmidhi/index.json",
+          "sizeBytes": 4505,
+          "sha256": "59682ed9cba35a37b7e79bdf1de20b4e295e19bea04ff8ae6946fea1b8dfd66c"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/0.json",
+          "sizeBytes": 98,
+          "sha256": "ac15a1d0aa1ce50be39f775fb6f0baa4d273ffee5251e51e3b8f108ecdabebc4"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/1.json",
+          "sizeBytes": 282302,
+          "sha256": "4723bf08de4fc13229ca5fb52d3894259f3d81a8a54b24cfd2cabe20e3267a58"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/10.json",
+          "sizeBytes": 189805,
+          "sha256": "7eb8969113678fe9ae355a81c6880e19c52263c15c7abfae0b64ff0893f39208"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/11.json",
+          "sizeBytes": 130675,
+          "sha256": "3830452b3d318f2671655ef08ede8456807ce4b5f6abe5e305b1e656ceb8849e"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/12.json",
+          "sizeBytes": 52820,
+          "sha256": "f7a9809a19addf2314aa6c541d547bf48b7fa709952de72faaa0ec897db310ff"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/13.json",
+          "sizeBytes": 67957,
+          "sha256": "6fa3b801bf1a30d757b08aad72e5f79ab48c786d03c9fd2ab5e7d3fbc813d729"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/14.json",
+          "sizeBytes": 187647,
+          "sha256": "03bf3f09468175f1014e7d35621b3ae206b4d979a1e74d0dd82b0d289397e8da"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/15.json",
+          "sizeBytes": 111549,
+          "sha256": "107e24174404be60166f0add41823af0e356e8087dc9afe14f4b6934cf76d244"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/16.json",
+          "sizeBytes": 58341,
+          "sha256": "5fdb2357324ed829151bbdba5d7eb6ee1fddfaed0be2f5ce281620b461d06b8a"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/17.json",
+          "sizeBytes": 85486,
+          "sha256": "59613e78d1e63cfedf4b5dd611bbf5a75bec924c50ecd43d3b8963714c7164ab"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/18.json",
+          "sizeBytes": 36941,
+          "sha256": "4f9bc23aa824a5b6abce8befedc97d59c481fd7aa43f144189099db283448413"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/19.json",
+          "sizeBytes": 41881,
+          "sha256": "e248e097f37a4fe82df3400425ecb0b402f5afe016e1d0d8dd88487df34eea6c"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/2.json",
+          "sizeBytes": 550316,
+          "sha256": "006041a96d39047d35d658fca19cc1a3b477558118f91daa9855e5b744c16ace"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/20.json",
+          "sizeBytes": 38839,
+          "sha256": "b57149b23fe9310b43d7addec5283c30df414272e24f2c3b93b187ae65672aa6"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/21.json",
+          "sizeBytes": 98153,
+          "sha256": "10f0206321e41c00a362e4f59c01df4dc265844682cae76a5b08dceff1a7cd10"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/22.json",
+          "sizeBytes": 73609,
+          "sha256": "6929897fedcccdc2201070560f761572432589c966681b170ebc51ab7b75e075"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/23.json",
+          "sizeBytes": 65783,
+          "sha256": "1dead41a220309223fcfe8b16743f1a650e4e664342b62a00cbbf06cf99dd1a4"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/24.json",
+          "sizeBytes": 81201,
+          "sha256": "d18782869a53ce2cb8410916c3cc9a59dfb050942b5c81d68579f565f9e98f3b"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/25.json",
+          "sizeBytes": 97395,
+          "sha256": "8cc8a25e19509da49c10d1eab56911e65ffe52ef5fcf16a149eac59cd138f25b"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/26.json",
+          "sizeBytes": 45202,
+          "sha256": "1f6f1fa055163143aad667bb358ee78c23a64f429693a3ccdef4454f9c4c2528"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/27.json",
+          "sizeBytes": 193482,
+          "sha256": "9ac5f89727bfc44893bd121cb0647b019f4fc7a8e3f10c98378d87cc4ffbbf92"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/28.json",
+          "sizeBytes": 80193,
+          "sha256": "9af835861ce115a6c279510da5819a018f458cb904746c8ea65402ba793014fb"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/29.json",
+          "sizeBytes": 41138,
+          "sha256": "9823c96024dd67b0c6bf7e43dfb0868a218254d6fff51348901ece92d1a658de"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/3.json",
+          "sizeBytes": 62580,
+          "sha256": "2cb557beb67e482aac50d3b51c496497f2eaec9057a9908a4026be0f069a2d41"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/30.json",
+          "sizeBytes": 18507,
+          "sha256": "4a5bcef2ead6b34a88bbb01bd0302d0619720dd696633c0fd85bb410ab62655f"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/31.json",
+          "sizeBytes": 12590,
+          "sha256": "0644030c3208eb67a4368f685b2e71ab063c30f8b4c0f3ffdab11b310ebb4c6d"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/32.json",
+          "sizeBytes": 283447,
+          "sha256": "0e5deb7408f7ed51d001e56339f6d498d7a8f47e69d775e8d7e19c50a3d6c6f4"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/33.json",
+          "sizeBytes": 125,
+          "sha256": "b11ce169e07640a4f3b490f3676a4d221bbf904213ac7037cc8b7be3a07d597a"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/34.json",
+          "sizeBytes": 123,
+          "sha256": "cd9257d22af47da5ba1c859f94c577db33652a3b82a2a4e3025cf5b7be727ef8"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/35.json",
+          "sizeBytes": 8506,
+          "sha256": "5f86e26137d7fbae8bb7666ee61bdf3aaef31abb46a5c51e606c07e65fe1dd21"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/36.json",
+          "sizeBytes": 167702,
+          "sha256": "0dc406273bf3c3c3952bd018c3e93d85a7a79d07ce4696fc0f95f530e8fef1a4"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/37.json",
+          "sizeBytes": 178518,
+          "sha256": "7d32fcc30696af803eff31e028ff3984622e36a3fda6858d122cf871cfe3ccf3"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/38.json",
+          "sizeBytes": 358271,
+          "sha256": "62911e3e62bd85afbe363f40e9c26e266240a26178cbd51bd01a602d5422d5b7"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/39.json",
+          "sizeBytes": 78537,
+          "sha256": "88688e4f18b495c05a45bebdae0c50e3c99b3ea357b882ac40f8968bd9e367e5"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/4.json",
+          "sizeBytes": 73512,
+          "sha256": "8ed1c7e4c8fc8766de74029c31c2d675d4bfc80e093edb3dfe9bcab0080a2ab0"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/40.json",
+          "sizeBytes": 122,
+          "sha256": "1bfd5688402b8849996c450bff7df1c559d0e1e0ea7b47041167fab68cf45b65"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/41.json",
+          "sizeBytes": 126,
+          "sha256": "b0284faa3ee6715df81f0373142089986f8fabe08ff494569d4a7c0efddc889e"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/42.json",
+          "sizeBytes": 135,
+          "sha256": "5298641c646dce4e28b8a7926ce0ce8626e27ef73a5f6cb10c923d73efd9b929"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/43.json",
+          "sizeBytes": 102657,
+          "sha256": "6f33207c096ff5849f41e8bf7485f0ad3a5bf54f187a11434534c65ea6189f25"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/44.json",
+          "sizeBytes": 32772,
+          "sha256": "0ff01c70d8c06ea3fc702fbb5e596fed24368ad2840d38e508115c97f2e1ef26"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/45.json",
+          "sizeBytes": 90342,
+          "sha256": "37008d4a676a1a741baa3b47a56a3fe2de84edccf4fff38f406cf2bc4a4560f3"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/46.json",
+          "sizeBytes": 39617,
+          "sha256": "42c835273eba72c72c03d1fcf241ac3ed236125fb89438eca559e5bf5419f66e"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/47.json",
+          "sizeBytes": 1428979,
+          "sha256": "5cde6e17ca2faf00efb9f2678604382647bc9fbab7a5d2963ded691752417dfc"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/48.json",
+          "sizeBytes": 129,
+          "sha256": "539862fcd25a6d72a2f1e9403247525d42a9e8071710421957ac6c0feecf545b"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/49.json",
+          "sizeBytes": 319905,
+          "sha256": "2e5591b7047a654b60f690fa1c10b8abf46d08b297499168284cde4c0569519b"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/5.json",
+          "sizeBytes": 22721,
+          "sha256": "f4928b59e4b4fe0bc3434193a90876015c63895811f734d96306e0a66655064a"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/6.json",
+          "sizeBytes": 116683,
+          "sha256": "d897c40f54fd72e0dbf162ce0693e85eac0ecde41a16518310bde416d1852dd2"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/7.json",
+          "sizeBytes": 117567,
+          "sha256": "671f9462ecc852691a2dc6d7f2fa784c1356db8278a7df4b5b7dd05650ee8468"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/8.json",
+          "sizeBytes": 210617,
+          "sha256": "103760f12c013e39d9db38553a5e28b2272f2684f1789157ac99671664e57f20"
+        },
+        {
+          "path": "assets/hadith/tirmidhi/sections/9.json",
+          "sizeBytes": 247399,
+          "sha256": "66bbdad4d0aaa4abf30364870a3803440096877e3611ad754a3e1fd5cdb4d1ac"
+        }
+      ]
+    },
+    {
+      "id": "hadith:nasai",
+      "titleAr": "سنن النسائي",
+      "titleEn": "Sunan an-Nasa’i",
+      "version": "hadith-api-1",
+      "source": "fawazahmed0/hadith-api@1 ara-nasai",
+      "licenseStatus": "underlying-text-rights-unresolved",
+      "sizeBytes": 6451388,
+      "sha256": "32bb38c34cc7a6671b82c94f0c78057aacdf85dd34cd88f14764838158d7e813",
+      "files": [
+        {
+          "path": "assets/hadith/nasai/index.json",
+          "sizeBytes": 4942,
+          "sha256": "74028d99ea46a610b75080c8028bf78537d4c18b5d7907c7cc57b3f7e6037e09"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/0.json",
+          "sizeBytes": 96,
+          "sha256": "4a6b622310ced02fc465bdf12bbbed5b4c7d3d7d2ec7560574feef6c020b6ff8"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/1.json",
+          "sizeBytes": 349882,
+          "sha256": "cea2715a4bfda22a00baa98e650b4d02c385bc62d43c3356c1e894f908449d4e"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/10.json",
+          "sizeBytes": 119285,
+          "sha256": "c010bbf9daa13f1eba56949fedbff3db0d4fe98e0ce69518faf17321053a9a07"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/11.json",
+          "sizeBytes": 175671,
+          "sha256": "f71c004daf5921a7d6401f4aa890810c6267a8a813d22b5a25e37b5d0beb69ab"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/12.json",
+          "sizeBytes": 176287,
+          "sha256": "9dcdf06dccceb9188fc221fd71b50f84366bb5b6d068957dd7301e02dab8ae24"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/13.json",
+          "sizeBytes": 234487,
+          "sha256": "4cece6f0c2a84865868287912ca05653bddfaca29b0001e33ed03638b4a73962"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/14.json",
+          "sizeBytes": 72890,
+          "sha256": "3c2c24c09092a7ceff9e9f8703943348d0e050893466121b42587a45a9d6555e"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/15.json",
+          "sizeBytes": 24656,
+          "sha256": "444006fdcd26e531901a88542c8ce3aaae7fc2fda39e078f8ddffea25c681cf3"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/16.json",
+          "sizeBytes": 74049,
+          "sha256": "113c7a65ed2cd316e0feaea4787bd8532badef004a26269063039525d790c1f5"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/17.json",
+          "sizeBytes": 32524,
+          "sha256": "6db7144db4649f5a134adc56b955903f779e3590575102f5c21f86f9976a5c1d"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/18.json",
+          "sizeBytes": 42917,
+          "sha256": "a175d0f4dbf740fb5b92948fc7b6e13546f124284c2a90ecc1e386f7a0a41583"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/19.json",
+          "sizeBytes": 44148,
+          "sha256": "6cdfe628021784753e42d602e52ccd210b41d07a7ce38c14983ceb75952ca6f8"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/2.json",
+          "sizeBytes": 21280,
+          "sha256": "7b30753041dd03353213d768a1a20592d4cb2ce1003ee936b1fd2b8d48610a34"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/20.json",
+          "sizeBytes": 239246,
+          "sha256": "7f53c2d1ffacd9dc6635aa06f5ce0d98d9350aebbc776a4a1fed572e3c345233"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/21.json",
+          "sizeBytes": 312096,
+          "sha256": "3d747275452d73279c1029e30c587f86ef9abcfb38d3d11e1d995d14ab29fa72"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/22.json",
+          "sizeBytes": 366459,
+          "sha256": "ae6f95f3c2d25b54f06ff22db83b7d6e136ec2322339af87468a28e716b0a696"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/23.json",
+          "sizeBytes": 241607,
+          "sha256": "4fb40c5a0907619bbaafc7df1caded5e00b79e4f103dc1c1c12707d67a3c91ca"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/24.json",
+          "sizeBytes": 501572,
+          "sha256": "581c7ff37e0e434fcf9656dadf3b2438c63f9a138e523d3d4aac4a17293bf424"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/25.json",
+          "sizeBytes": 154124,
+          "sha256": "99beba1b9d5d4a4764f6df43b7220530bddcbaa71b3acd3d7d00cd583b23bfac"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/26.json",
+          "sizeBytes": 233829,
+          "sha256": "6d70a31d6900dea4838ecfc23d57d8f7c0b520581bc949008fbc3f2578713155"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/27.json",
+          "sizeBytes": 241258,
+          "sha256": "5f2b19b672239b1549e02a9a4d7d4a892a1bbe42ffc478731ecfeea804eb9ee6"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/28.json",
+          "sizeBytes": 36864,
+          "sha256": "3ec0df5f0eb98b04e6bf0f8975553d7f8e93022c58c024a2657182ac3d4beea3"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/29.json",
+          "sizeBytes": 29194,
+          "sha256": "9aad5c061958b7a390ddaadfb0a02ad570853a636c21fda956ac5b99ed1421a7"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/3.json",
+          "sizeBytes": 52125,
+          "sha256": "4f8a82157046069dda9e2d67f782e93a58e0052a01d78167e00229c12bee0280"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/30.json",
+          "sizeBytes": 69292,
+          "sha256": "bcc1b6a3709fe82b41bd0e835bc70369d5735a4a09aa7f9d619cc45d2c9b047f"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/31.json",
+          "sizeBytes": 19036,
+          "sha256": "0e3b51f7e0f059b20fa8bd70dc75140fed2fbaa0c7e6be8a945af30ca9a57185"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/32.json",
+          "sizeBytes": 22246,
+          "sha256": "6f031493aab3a18d244216793902c53307a3e0bf81abe9a230967f806ec0e39a"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/33.json",
+          "sizeBytes": 10504,
+          "sha256": "d8d51af616b6f8c00d89d70cb232262e037127cc6f76edbcfaf8ce9f47d35c4d"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/34.json",
+          "sizeBytes": 37776,
+          "sha256": "a4095be4cd3ce76db03b85ff35ed7fa6e5b9f1ed661b83ade3481754f269fbfe"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/35.json",
+          "sizeBytes": 114149,
+          "sha256": "e26993c08675c972839a400ffd96ed6c79c2128351ede251bc0507b538cc13e5"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/36.json",
+          "sizeBytes": 41306,
+          "sha256": "a45e0993a68a5e18fd1a2382ca7277bb1dc0360406224a42433276b93a20f84b"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/37.json",
+          "sizeBytes": 192323,
+          "sha256": "e865db29a0ba8cf25d0fa9e4f520939db4e4988f3b1f29a0f9b2a42296eead02"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/38.json",
+          "sizeBytes": 30643,
+          "sha256": "9920dc208efa43d191e99877ba903a7610c58a659e7afc984b0108f0327a7c9f"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/39.json",
+          "sizeBytes": 70958,
+          "sha256": "0830aaed4c66d6432ca7610e68acab249edd84a0e1099c545e7f5bc41a7066df"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/4.json",
+          "sizeBytes": 54045,
+          "sha256": "9e90a6acca075886bb1f1e4fb993341762ec99b72696771cdd4bfcf7837c97f2"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/40.json",
+          "sizeBytes": 9082,
+          "sha256": "6ca5ba8b28d8c9ca905a50e0fbfff5d817d97935ca037edf0466d7de1aaaeee9"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/41.json",
+          "sizeBytes": 44134,
+          "sha256": "f5a42cab8e62ae1f70de337992dd3ba622b810206507e5a4dbae3467d083e928"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/42.json",
+          "sizeBytes": 106126,
+          "sha256": "8ad02d5887575f681216d2ee7676caeca8a21dd2bce65ea8504890a2235fab49"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/43.json",
+          "sizeBytes": 91186,
+          "sha256": "c6f3bb2e57c5037494684b18b7a94681314da1b0204249eae1b84438f3652382"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/44.json",
+          "sizeBytes": 256399,
+          "sha256": "5b0a588a8c9d14ab7b2986b940ad8b802c8ce891df1b19bb6497cee6f67ae7f0"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/45.json",
+          "sizeBytes": 211413,
+          "sha256": "6a4e536fabd80f901ed83e80fb3d67250199d4319d97f6d5fed69fee8b0fe1d4"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/46.json",
+          "sizeBytes": 115116,
+          "sha256": "45cebba2cf80d956b643cedb835c67da77bc411ae6a671ceab62bf22b7db33e7"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/47.json",
+          "sizeBytes": 68055,
+          "sha256": "306b6e7f1206202377fd75296b8ce8b31ba100236a0400373bd1c7b0a3cdcae2"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/48.json",
+          "sizeBytes": 322750,
+          "sha256": "5b207be63fd8806deb8ace59efc1ae67918ad6e02c90e55f3f196fe8102d5811"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/49.json",
+          "sizeBytes": 78388,
+          "sha256": "cd9ab592e61ece91c00b8d07ceabaf6c40e09ad1b09b58c43ef3362c537ea26b"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/5.json",
+          "sizeBytes": 64117,
+          "sha256": "e744e409231b4dd1b966a79e591a549e08060e1228762fae5adc220e23248e47"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/50.json",
+          "sizeBytes": 121391,
+          "sha256": "9763d3c0b9aee787e58088dd372af4e8f47f17df57bc55d375b30c12fafdea20"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/51.json",
+          "sizeBytes": 203138,
+          "sha256": "06f950a1ab238f90b204b6a4a4b479340d8a647f1b17ce2e232418395f0984e4"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/6.json",
+          "sizeBytes": 151779,
+          "sha256": "a9ea849a8022ffb298c9661dda34487a1ae358732ea4a4e9aef3c0aff06cac60"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/7.json",
+          "sizeBytes": 71620,
+          "sha256": "272609e14942522bcae845c99be8c7a6d505ee74e8cb7f70f9db1563ea9e6437"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/8.json",
+          "sizeBytes": 58943,
+          "sha256": "9a91d5c9fdf1089de303b760dff1b24e276f8267666937ab0cf77d7cf002b610"
+        },
+        {
+          "path": "assets/hadith/nasai/sections/9.json",
+          "sizeBytes": 33985,
+          "sha256": "91c9953e994fab3bcf2e3b7f681e73194f9d5f1c47e2027002c402f34f578ac7"
+        }
+      ]
+    },
+    {
+      "id": "hadith:ibnmajah",
+      "titleAr": "سنن ابن ماجه",
+      "titleEn": "Sunan Ibn Majah",
+      "version": "hadith-api-1",
+      "source": "fawazahmed0/hadith-api@1 ara-ibnmajah",
+      "licenseStatus": "underlying-text-rights-unresolved",
+      "sizeBytes": 4974571,
+      "sha256": "c9fa9a190b4f8930dfba36be4e852c35a495843a1736baa067fe81b7d30ebf1e",
+      "files": [
+        {
+          "path": "assets/hadith/ibnmajah/index.json",
+          "sizeBytes": 3405,
+          "sha256": "5429b9ab8649fae8da1c648c843df06fd97c0491c0c8069c08bff925b98ef59f"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/0.json",
+          "sizeBytes": 328885,
+          "sha256": "0ac97e940a5251b903e8ae655a18bbd873b751b45e9b292c2a81ab30873ba65b"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/1.json",
+          "sizeBytes": 420692,
+          "sha256": "8f287a48b6498ca1503c889f7fc660b52562fd05cbc9676ed1239c571207e2f9"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/10.json",
+          "sizeBytes": 514332,
+          "sha256": "83e69a4f0bfa9034a256939e259ec1ac249a5caebe598f45b89d6843b322f74c"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/11.json",
+          "sizeBytes": 129,
+          "sha256": "9c90711fa9d613224a81fa0cf953939c08dfd701e357e39960d935d568310d4a"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/12.json",
+          "sizeBytes": 141,
+          "sha256": "a5aec2c05db17077be7a30d53a65f6f6cf7782a233484444ad1d6791d79a49d8"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/13.json",
+          "sizeBytes": 127,
+          "sha256": "1b6b3489a6e511074c6d1a1d8a7d037f64326141876d405b2ee62c36b0f1b7aa"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/14.json",
+          "sizeBytes": 125,
+          "sha256": "f5bab0b63596198583152d290c0f9a7d6a2b6216e55e2c123c539678b187b7b0"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/15.json",
+          "sizeBytes": 52468,
+          "sha256": "3a51431f85559bbc19a8ba2c25a7c62d418d39fd8d624b22ac63f0f60356883f"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/16.json",
+          "sizeBytes": 127,
+          "sha256": "eaac48b3e97a569895fe709ae9b36eba668c3e014c68d0e732a5eb9e47c89956"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/17.json",
+          "sizeBytes": 131,
+          "sha256": "c1beae2eb6172d87e230c579f8ede47918ba6980dd629d36e3a359195c5f0e6b"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/18.json",
+          "sizeBytes": 133,
+          "sha256": "34ae0a53db133d5c4ee08b323e9588af322495dac44c963cdae6641a6bb39e72"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/19.json",
+          "sizeBytes": 5395,
+          "sha256": "35d8c0e8ef5d94325c8244c9e27b0916c70c511336118876c4c15ffff1123832"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/2.json",
+          "sizeBytes": 43570,
+          "sha256": "d0c1072b49a793688e861f7f1cc137e062055c9ea895ce9cc892fc57e44bea43"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/20.json",
+          "sizeBytes": 94303,
+          "sha256": "98709b16b0a9789238689b944bff3a3d10697dcff1abc376be33365f3e9cce95"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/21.json",
+          "sizeBytes": 96542,
+          "sha256": "468280f28eec505ad7f1e2b2d3517087ba669609565b58ce4f482c60a8cc406c"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/22.json",
+          "sizeBytes": 26113,
+          "sha256": "54c73cb301e1e6ce3ed1461b0dec745c7fe63c75d228c423968f7580abb516ed"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/23.json",
+          "sizeBytes": 41667,
+          "sha256": "518726ad6e7b9d7b04eb45542405b5459926622a8d2c5f74071b9e68918e197b"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/24.json",
+          "sizeBytes": 153658,
+          "sha256": "f7e01a1fc5d7e29d94cd66ef7ff23bb4c46c10c465e9bf3a2b9b3968670d43d7"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/25.json",
+          "sizeBytes": 286781,
+          "sha256": "2667166a3cb00ff7d531a3aaccbc69705db9b2804bb591e62c02f740a7a64738"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/26.json",
+          "sizeBytes": 44121,
+          "sha256": "5115fe1e6147aea5dfc42f9f438a49852234110f00831ea3c76579e62b299a38"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/27.json",
+          "sizeBytes": 38627,
+          "sha256": "9bd9bc8fe6372fd026acde40f1e497aba0ac77229491319e2373f3aefc4eab23"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/28.json",
+          "sizeBytes": 55237,
+          "sha256": "9b613f4dd86b72d2c6c0be48e7b667db86f664fb764725873bfdaa3fcecc3934"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/29.json",
+          "sizeBytes": 124073,
+          "sha256": "fdff0693d0b8bcb30fc24a8ba0abd5053b412f8f883567366e025591e905dc3f"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/3.json",
+          "sizeBytes": 39311,
+          "sha256": "97d559120d31b0420bf00d858c5937494fcdad8a0382339f6a2fb3292dbfb514"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/30.json",
+          "sizeBytes": 61753,
+          "sha256": "1e1c346bc0968a935bd25c35c0e5674f78bc497156008146b88fb958966fc901"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/31.json",
+          "sizeBytes": 128086,
+          "sha256": "b0f1ae3140c5216463b6b7e1bece06436bc247b62ddeefbc6b793a56399482bb"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/32.json",
+          "sizeBytes": 100311,
+          "sha256": "6cb3d73eea020881313ae8bb972d8b40bc309ece7cd397b2efd2ced2482fa003"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/33.json",
+          "sizeBytes": 174529,
+          "sha256": "ab8d9dcd9be805b278cf4740354264d59fd1e3ac50e083ed6dc67b6446872d7b"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/34.json",
+          "sizeBytes": 85315,
+          "sha256": "517fd70608b7d4a0a35c87f548d54a599af9ae1f01f3c77a88987bb7a0e57056"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/35.json",
+          "sizeBytes": 44254,
+          "sha256": "756775a46691b4eb522b3fd9f7d13f649e19a30cd20b2d4e926522a715c9cd1d"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/36.json",
+          "sizeBytes": 268461,
+          "sha256": "5c47cff3cc8cb1396b17bb59a094db744aabb7288e860f5d3eef5054b11def19"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/37.json",
+          "sizeBytes": 305603,
+          "sha256": "ba8d65c534ebecc47130f1f98b072d2594be696528ebb0b8596ab2c8add204c7"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/4.json",
+          "sizeBytes": 74715,
+          "sha256": "7134362f6cff9f3a3701574e24bc04bf97bbf0f82ec5acda5cd09cf5515f5da9"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/5.json",
+          "sizeBytes": 718368,
+          "sha256": "ce9f8edbe69a05baaf0bb566af5e26e41732f34b8f71a8eab8075d1fd9a433ed"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/6.json",
+          "sizeBytes": 228408,
+          "sha256": "40ca391aa7cd2afa4c9d623abec95738f7cb8fa9701e6f455b518bee9f3929b1"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/7.json",
+          "sizeBytes": 147716,
+          "sha256": "7a5b4516440dc64cf3aef084a8450f9f5b89ee8d824841f5a76f6e1211608edc"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/8.json",
+          "sizeBytes": 77291,
+          "sha256": "c11667b93ab0d35e71f7c28f41aabd7b74d8a22364d21e5f5042bea11ef853a1"
+        },
+        {
+          "path": "assets/hadith/ibnmajah/sections/9.json",
+          "sizeBytes": 189668,
+          "sha256": "3b8e39d074f8e748817ba55080845894aa88c316e127871ebb5d67d5c5d02f33"
+        }
+      ]
+    },
+    {
+      "id": "hadith:malik",
+      "titleAr": "موطأ مالك",
+      "titleEn": "Muwatta Malik",
+      "version": "hadith-api-1",
+      "source": "fawazahmed0/hadith-api@1 ara-malik",
+      "licenseStatus": "underlying-text-rights-unresolved",
+      "sizeBytes": 2012391,
+      "sha256": "fea664ab76374c8ce31a2e5c499b218e8dc18c138dd9ce36dd1052c82805011e",
+      "files": [
+        {
+          "path": "assets/hadith/malik/index.json",
+          "sizeBytes": 4766,
+          "sha256": "bbe9f0eaa9653be6e97eb6ff01eaf87c0b6f4a89df5762bc541781dc11c69224"
+        },
+        {
+          "path": "assets/hadith/malik/sections/0.json",
+          "sizeBytes": 95,
+          "sha256": "c016ed002c0a4298d30d9ef1a63b6489074192593140e6f5243807b8888bd087"
+        },
+        {
+          "path": "assets/hadith/malik/sections/1.json",
+          "sizeBytes": 29230,
+          "sha256": "0d02d572b09517b7c57cebb61a744ae0eaeb8858b89aa12f97b10a955d5dc4b2"
+        },
+        {
+          "path": "assets/hadith/malik/sections/10.json",
+          "sizeBytes": 8962,
+          "sha256": "882d8a8ccb71bd19be5ed9f1e9e55b429f64dbe4c7848d410a4629c0c24687a4"
+        },
+        {
+          "path": "assets/hadith/malik/sections/11.json",
+          "sizeBytes": 5451,
+          "sha256": "4e70fa10a4bc59c3eddc1faeb0f9f5d76e6d28a1744574ed55d69e4657e9c306"
+        },
+        {
+          "path": "assets/hadith/malik/sections/12.json",
+          "sizeBytes": 10646,
+          "sha256": "c90335888380cd5bce67470caef030e9838d667f9803f4034d0a4b65236575b1"
+        },
+        {
+          "path": "assets/hadith/malik/sections/13.json",
+          "sizeBytes": 5718,
+          "sha256": "cfc82755dc48d7f573468b483e1b6a8d8493a79d3a8ca1b66e7535066b062c13"
+        },
+        {
+          "path": "assets/hadith/malik/sections/14.json",
+          "sizeBytes": 10977,
+          "sha256": "7865b5e68616a6aaa976154d774336d4ced36703e511e63505e5a12208d5fd93"
+        },
+        {
+          "path": "assets/hadith/malik/sections/15.json",
+          "sizeBytes": 44338,
+          "sha256": "114b2328dbeb3084870ecaa63ee8fa756525a611a3dea6a29fcece2551057e87"
+        },
+        {
+          "path": "assets/hadith/malik/sections/16.json",
+          "sizeBytes": 48754,
+          "sha256": "78d7ce6bf33ed3ad5854df1ed695f76506f27d4330939945c2261db1021d28e7"
+        },
+        {
+          "path": "assets/hadith/malik/sections/17.json",
+          "sizeBytes": 84979,
+          "sha256": "509852884b99864bbc634ea6095944a8080bdf047c7ad37a7d6d40b4ba646652"
+        },
+        {
+          "path": "assets/hadith/malik/sections/18.json",
+          "sizeBytes": 56646,
+          "sha256": "46ab0e6ac8105751d082663a99bdce0521d0e1ec578849599edc9b0a6f98f7bd"
+        },
+        {
+          "path": "assets/hadith/malik/sections/19.json",
+          "sizeBytes": 17537,
+          "sha256": "64cc26f76e5accdaec27bbca80ddd797f03291664e1a6b9987d64b9addfcf40e"
+        },
+        {
+          "path": "assets/hadith/malik/sections/2.json",
+          "sizeBytes": 101359,
+          "sha256": "e37aa8197aa389bfa8331b29b4cce03612daf04d9ca3361150b29e2290d0bfb6"
+        },
+        {
+          "path": "assets/hadith/malik/sections/20.json",
+          "sizeBytes": 254610,
+          "sha256": "c4d7862ffdb0e55456e36180a577c07f39f477179f0295356c41b77d9e6170dd"
+        },
+        {
+          "path": "assets/hadith/malik/sections/21.json",
+          "sizeBytes": 58299,
+          "sha256": "ef5689c25977090e44d1d0278370b876332262634229f847d277fb1655f83ae2"
+        },
+        {
+          "path": "assets/hadith/malik/sections/22.json",
+          "sizeBytes": 22071,
+          "sha256": "e52c4ba58c4ecfc42b9057c46f8f433705bbd3aa962531bbb7e98249d9bf306c"
+        },
+        {
+          "path": "assets/hadith/malik/sections/23.json",
+          "sizeBytes": 12550,
+          "sha256": "6bb84eb7b8ab8f95ba7539ed1618e723402df30456e28ebf112b6b82109ae24a"
+        },
+        {
+          "path": "assets/hadith/malik/sections/24.json",
+          "sizeBytes": 7666,
+          "sha256": "dd2acd05fd228358723d2f911018ed4333d6a110b75dda178c357f433ea2588e"
+        },
+        {
+          "path": "assets/hadith/malik/sections/25.json",
+          "sizeBytes": 9938,
+          "sha256": "3a881cfe7f6647d6d78f428ed12c1b781191e734354e4cbba9e260d742395014"
+        },
+        {
+          "path": "assets/hadith/malik/sections/26.json",
+          "sizeBytes": 5315,
+          "sha256": "a160b79c1debac60ed8dcfbeac85845e00e1b798d19f400eac3f8d843b4ed18f"
+        },
+        {
+          "path": "assets/hadith/malik/sections/27.json",
+          "sizeBytes": 26553,
+          "sha256": "3d04434a7f40b4d1b6f7cada6008299ee056a477f37a71f7943b0da9d76a6bf4"
+        },
+        {
+          "path": "assets/hadith/malik/sections/28.json",
+          "sizeBytes": 62562,
+          "sha256": "46702e11d942879bc0fcdeff025baf11193fa7874abadab920c5206f3af0e92f"
+        },
+        {
+          "path": "assets/hadith/malik/sections/29.json",
+          "sizeBytes": 131532,
+          "sha256": "8a90d09f8a61956e95566ba2973dbce39b03a98a85b7159cbb07934a3ca8e0b9"
+        },
+        {
+          "path": "assets/hadith/malik/sections/3.json",
+          "sizeBytes": 69496,
+          "sha256": "b7454f881e84caece7c4713ad83c306b68067db7f5cfc253111251aa48326c8e"
+        },
+        {
+          "path": "assets/hadith/malik/sections/30.json",
+          "sizeBytes": 20111,
+          "sha256": "7adeef5571c4c72cea7858e3f5998200c0edeb4bcccea777d30725eac2704c87"
+        },
+        {
+          "path": "assets/hadith/malik/sections/31.json",
+          "sizeBytes": 161186,
+          "sha256": "9795bfd77283dc0b176111176209944b04dabf3e788810616c540c06b13df9c9"
+        },
+        {
+          "path": "assets/hadith/malik/sections/32.json",
+          "sizeBytes": 3770,
+          "sha256": "dc6577696e94b5bf464d445abe6cc7b144e39c688edc19011233d5047506f346"
+        },
+        {
+          "path": "assets/hadith/malik/sections/33.json",
+          "sizeBytes": 1368,
+          "sha256": "b90ae23308a71e9e4dc180ff46fe2f8ed9186722a6f45c143db2062404d27e9b"
+        },
+        {
+          "path": "assets/hadith/malik/sections/34.json",
+          "sizeBytes": 3697,
+          "sha256": "1f01405186ac8a28ae557ef533482118ebec256f6c661b018fba1b52863e254e"
+        },
+        {
+          "path": "assets/hadith/malik/sections/35.json",
+          "sizeBytes": 17040,
+          "sha256": "c9454c4caa0ef5decca2755864d57edd08c3274a0ed9ebd1740e3d58679b23be"
+        },
+        {
+          "path": "assets/hadith/malik/sections/36.json",
+          "sizeBytes": 70792,
+          "sha256": "6f6c4a1a3f428c38da1fb68d7d19bff1b150c6da08cd83b319b6c4ef9d6c544a"
+        },
+        {
+          "path": "assets/hadith/malik/sections/37.json",
+          "sizeBytes": 14457,
+          "sha256": "c405adb05ff1b87ba8fa7ee9a6c3cfb717360f5c07b5c52ca9acf0bca03ee2eb"
+        },
+        {
+          "path": "assets/hadith/malik/sections/38.json",
+          "sizeBytes": 34447,
+          "sha256": "9c70577372b97feb46014f44601df114b6cb0d1b09d04094833108edcd97b6f1"
+        },
+        {
+          "path": "assets/hadith/malik/sections/39.json",
+          "sizeBytes": 30661,
+          "sha256": "65e0be7bec5eee7fa044f66a2ab6c53bbe9f5dfadb5c64068ed57b694145e7a6"
+        },
+        {
+          "path": "assets/hadith/malik/sections/4.json",
+          "sizeBytes": 2083,
+          "sha256": "57b6f101858350c2088e3999d80fb321937c0e4ea0d21d657b79734c4f04a248"
+        },
+        {
+          "path": "assets/hadith/malik/sections/40.json",
+          "sizeBytes": 8018,
+          "sha256": "778f72457ab697d71f66347725301f3a2fbe6364f8109739a32653ceeefcfdb0"
+        },
+        {
+          "path": "assets/hadith/malik/sections/41.json",
+          "sizeBytes": 59227,
+          "sha256": "b360bafbb593c2e99fffaa036d8d91652d17c7c883554ccd3dcfa1e5029ee6eb"
+        },
+        {
+          "path": "assets/hadith/malik/sections/42.json",
+          "sizeBytes": 13592,
+          "sha256": "9903de40e0620b0f1e196fd70c8e683de034bdc4c8e164611eeada59b3fc7184"
+        },
+        {
+          "path": "assets/hadith/malik/sections/43.json",
+          "sizeBytes": 58637,
+          "sha256": "eddbe1b62bab0f06b6198a541b953e384513a24c648457b7bdd990fac6f7e180"
+        },
+        {
+          "path": "assets/hadith/malik/sections/44.json",
+          "sizeBytes": 3326,
+          "sha256": "edec5d1b148be1b8df3d5ace6792eeb5b9fc237e56813d51c23d85731e312117"
+        },
+        {
+          "path": "assets/hadith/malik/sections/45.json",
+          "sizeBytes": 28298,
+          "sha256": "d229e3c643f1debc7282508810a2aab7ce62c5f1734759e2d0817db89b965392"
+        },
+        {
+          "path": "assets/hadith/malik/sections/46.json",
+          "sizeBytes": 9668,
+          "sha256": "b7abfd520db9b8ed37fbf7369da8b8288f13cf0bd428bc5315bc7fa5bcdbf57a"
+        },
+        {
+          "path": "assets/hadith/malik/sections/47.json",
+          "sizeBytes": 13459,
+          "sha256": "9fc5a3a2ccc9cac5f1c153a03083369be87c71dbbeb15d2db63e05fde6026b7c"
+        },
+        {
+          "path": "assets/hadith/malik/sections/48.json",
+          "sizeBytes": 17736,
+          "sha256": "4a7a98b976ef49f091100c9c1a3475c0420c8018137dffe81f0c99746f76d8bc"
+        },
+        {
+          "path": "assets/hadith/malik/sections/49.json",
+          "sizeBytes": 41416,
+          "sha256": "88d642e641938effecf7283bac42bc9eb56f21f3a9ae4d241106892b10cf53c3"
+        },
+        {
+          "path": "assets/hadith/malik/sections/5.json",
+          "sizeBytes": 22427,
+          "sha256": "94a59111f00d35c9fe4aca1dc51e65b0b32c84e0876ba0cd19cef10377c9de37"
+        },
+        {
+          "path": "assets/hadith/malik/sections/50.json",
+          "sizeBytes": 17170,
+          "sha256": "ec1a11fbd1d7460939dae0b8af10cd4ece1bc4085c9c1f13c5b926228e32366b"
+        },
+        {
+          "path": "assets/hadith/malik/sections/51.json",
+          "sizeBytes": 17795,
+          "sha256": "b8aeb8079ac36f496d1f2a10e8e9914d08314f3dda424bc519c6c84d446ad185"
+        },
+        {
+          "path": "assets/hadith/malik/sections/52.json",
+          "sizeBytes": 7284,
+          "sha256": "6e855b85f5922c3366b9bf1ff6ad337d306b96b1a08900b3e089b78aa33fe455"
+        },
+        {
+          "path": "assets/hadith/malik/sections/53.json",
+          "sizeBytes": 7238,
+          "sha256": "884eeff702ae74017c9de983973ee0b643aacf30d903491bf0fbc02933bb53fc"
+        },
+        {
+          "path": "assets/hadith/malik/sections/54.json",
+          "sizeBytes": 42236,
+          "sha256": "560e9db202f9956292e046d81c8a32a97c66620a4e8d1fbae70ee82de80e2d11"
+        },
+        {
+          "path": "assets/hadith/malik/sections/55.json",
+          "sizeBytes": 3522,
+          "sha256": "6daeea05c9210e9053986e1f2bdf12ba0595196f97e80ce073e5255e21dfc540"
+        },
+        {
+          "path": "assets/hadith/malik/sections/56.json",
+          "sizeBytes": 22000,
+          "sha256": "35ae0e9d37de7130f97c827913e38c237bad0f333b98a17698be2df198207bd6"
+        },
+        {
+          "path": "assets/hadith/malik/sections/57.json",
+          "sizeBytes": 1506,
+          "sha256": "821ce76d561515b8bb13f9023e82b405be85cb381493ab8c455d80d8cf242a0c"
+        },
+        {
+          "path": "assets/hadith/malik/sections/58.json",
+          "sizeBytes": 16651,
+          "sha256": "c6cd45123aa96835a45e8b2d25ef7a69c50bcaae77e2cecc17ae451081246fd6"
+        },
+        {
+          "path": "assets/hadith/malik/sections/59.json",
+          "sizeBytes": 839,
+          "sha256": "87416111d0be18406b6e72b1ca74f182e49acbb49a7c92a0595419ebc285629c"
+        },
+        {
+          "path": "assets/hadith/malik/sections/6.json",
+          "sizeBytes": 7415,
+          "sha256": "f9f49d19fe00b7e58fd9bf0b2630a4080a5f3833c929981f059171f0a825fe00"
+        },
+        {
+          "path": "assets/hadith/malik/sections/60.json",
+          "sizeBytes": 2282,
+          "sha256": "927e75f837cfc81bbb0d39c74eb3df49eebc1b62088ac1b4f0d6c420347dfe85"
+        },
+        {
+          "path": "assets/hadith/malik/sections/61.json",
+          "sizeBytes": 926,
+          "sha256": "5915fd25105f5e704b52cda23d460bdc3ced0446c110fc8860a5a285995e1c7b"
+        },
+        {
+          "path": "assets/hadith/malik/sections/7.json",
+          "sizeBytes": 28295,
+          "sha256": "b8187ecf31e9835180764a42229aa80a3820e8455586f04d942dfb7b1bf0a854"
+        },
+        {
+          "path": "assets/hadith/malik/sections/8.json",
+          "sizeBytes": 31822,
+          "sha256": "5bcd8f0416184390771d389e409e7d5fae9d41bd30a087ce4cdf0ed597217557"
+        },
+        {
+          "path": "assets/hadith/malik/sections/9.json",
+          "sizeBytes": 79944,
+          "sha256": "7b4746d1312da12f8a50ee64148de3a1c8ee8e74acd67f298465eb0819815080"
+        }
+      ]
+    },
+    {
+      "id": "hadith:nawawi",
+      "titleAr": "الأربعون النووية",
+      "titleEn": "Forty Hadith of an-Nawawi",
+      "version": "hadith-api-1",
+      "source": "fawazahmed0/hadith-api@1 ara-nawawi",
+      "licenseStatus": "underlying-text-rights-unresolved",
+      "sizeBytes": 47538,
+      "sha256": "659924dfeaf50dd69dd65a002ca01a3505714b792744eaaf042fabfca1b698dd",
+      "files": [
+        {
+          "path": "assets/hadith/nawawi/index.json",
+          "sizeBytes": 265,
+          "sha256": "bcb96f03b38e765ed5928c99b22b3b9aaa351199528ac4056912ae448848e523"
+        },
+        {
+          "path": "assets/hadith/nawawi/sections/0.json",
+          "sizeBytes": 107,
+          "sha256": "4b370e7675e28637c74de026598521d9fca9635623eb80fa4bb6a6d27428726a"
+        },
+        {
+          "path": "assets/hadith/nawawi/sections/1.json",
+          "sizeBytes": 47166,
+          "sha256": "e953b33883b1c95142dea0ab1f24a0eade8e9f2961deecdf95047f715e7006b5"
+        }
+      ]
+    },
+    {
+      "id": "hadith:qudsi",
+      "titleAr": "الأحاديث القدسية",
+      "titleEn": "Forty Hadith Qudsi",
+      "version": "hadith-api-1",
+      "source": "fawazahmed0/hadith-api@1 ara-qudsi",
+      "licenseStatus": "underlying-text-rights-unresolved",
+      "sizeBytes": 53748,
+      "sha256": "8d3a996c68b483d9dcce6289c0481a3825a6c522624ed217a3941e4b7ff0fc4f",
+      "files": [
+        {
+          "path": "assets/hadith/qudsi/index.json",
+          "sizeBytes": 250,
+          "sha256": "33801e1640d125929fa9896153ee331f9c003eb24c8cf035616b3a5e8871846c"
+        },
+        {
+          "path": "assets/hadith/qudsi/sections/0.json",
+          "sizeBytes": 100,
+          "sha256": "30fd913617dc5bb3dc6b37e27cf2800a62b3ef8c57ba16663664b51aa04c7676"
+        },
+        {
+          "path": "assets/hadith/qudsi/sections/1.json",
+          "sizeBytes": 53398,
+          "sha256": "a92db6f5c8c803080458b659590ca6da2caa1c6ae52157e17318ab8129417c0c"
+        }
+      ]
+    },
+    {
+      "id": "hadith:dehlawi",
+      "titleAr": "أربعون شاه ولي الله الدهلوي",
+      "titleEn": "Forty Hadith Shah Waliullah Dehlawi",
+      "version": "hadith-api-1",
+      "source": "fawazahmed0/hadith-api@1 ara-dehlawi",
+      "licenseStatus": "underlying-text-rights-unresolved",
+      "sizeBytes": 7400,
+      "sha256": "dcdad0200a2eb4efccd7fa596d10e66ee993b3a329d468cc5bdd45147aa478da",
+      "files": [
+        {
+          "path": "assets/hadith/dehlawi/index.json",
+          "sizeBytes": 292,
+          "sha256": "7ceadd6f93de191ddc9790e508a7307112d86d7e062f04e140ca87d2e3482aa5"
+        },
+        {
+          "path": "assets/hadith/dehlawi/sections/0.json",
+          "sizeBytes": 120,
+          "sha256": "542f1b5bd784d164de0648432bdd41f9f39432cd6233da1f5d6964483dd75974"
+        },
+        {
+          "path": "assets/hadith/dehlawi/sections/1.json",
+          "sizeBytes": 6988,
+          "sha256": "58cd01687cf8697339734eca592cb552effe8d0cdf046c8a7ee470ce50a8c41c"
+        }
+      ]
+    }
+  ]
+}
