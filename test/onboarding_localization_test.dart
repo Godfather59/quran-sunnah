@@ -81,13 +81,22 @@ void main() {
     }
 
     expect(find.text('محتوى إضافي'), findsOneWidget);
+    expect(find.text('ابدأ'), findsOneWidget);
+
+    // The additional-content page is intentionally long on small screens.
+    // Scroll it so lazy ListView children are built before asserting them.
+    final pageList = find.byType(ListView).last;
+    await tester.drag(pageList, const Offset(0, -350));
+    await _pumpStable(tester);
     expect(
       find.text('الترجمة الإنجليزية — صحيح إنترناشونال'),
       findsOneWidget,
     );
     expect(find.text('تفسير الجلالين'), findsOneWidget);
+
+    await tester.drag(pageList, const Offset(0, -600));
+    await _pumpStable(tester);
     expect(find.text('ألوان التجويد'), findsOneWidget);
     expect(find.text('حجم التنزيل المحدد'), findsOneWidget);
-    expect(find.text('ابدأ'), findsOneWidget);
   });
 }
