@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/l10n/app_strings.dart';
+import '../../data/models/hadith.dart';
 import '../../data/repositories/hadith_repository.dart';
 import '../../data/seed/hadith_collections.dart';
 import '../../state/download_state.dart';
@@ -95,7 +96,7 @@ class CollectionSelectorScreen extends ConsumerWidget {
 
   String _subtitle(
     AppStrings s,
-    dynamic collection,
+    HadithCollection collection,
     bool installed,
   ) {
     final count = collection.totalHadith ?? '?';
