@@ -82,6 +82,7 @@ const List<TafsirInfo> kTafsirCatalog = [
 final tafsirSurahProvider =
     FutureProvider.family<Map<int, String>, (String, int)>(
         (ref, args) async {
+  ref.watch(contentRevisionProvider);
   final (tafsirId, surah) = args;
   final info = kTafsirCatalog.where((t) => t.id == tafsirId).firstOrNull;
   if (info == null || !info.bundled) {
