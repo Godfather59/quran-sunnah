@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:crypto/crypto.dart';
 
-const sourceRevision = '5990a7a7da5eff7251f71d5d2bc9be328a0e529c';
+const sourceRevision = '14511839381c742a78d40834d40eec840b1a2ad6';
 const sourceBaseUrl =
     'https://raw.githubusercontent.com/Godfather59/quran-sunnah/$sourceRevision/';
 
