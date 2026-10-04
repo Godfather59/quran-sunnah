@@ -225,6 +225,15 @@ class ContentPackageStore {
     for (final pkg in m.packages) {
       if (await isInstalled(pkg.id, bundle: bundle)) {
         out.add(pkg.id);
+        continue;
+      }
+      // A mismatched marker means this directory belongs to an older
+      // package revision. Remove it so stale bytes never consume hidden
+      // storage or get mistaken for current verified content.
+      final dir = await packageDirectory(pkg.id);
+      final marker = await markerFile(pkg.id);
+      if (await dir.exists() && await marker.exists()) {
+        await dir.delete(recursive: true);
       }
     }
     return out;
