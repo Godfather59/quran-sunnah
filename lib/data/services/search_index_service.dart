@@ -55,8 +55,8 @@ class SearchIndexService {
               normalizedTitle: normalizeForIndex(
                 'Surah ${a.surah} Ayah ${a.displayAyahNumber}',
               ),
-              surah: a.surah,
-              ayah: a.displayAyahNumber,
+              surah: a.canonicalSurahNumber,
+              ayah: a.canonicalAyahNumber,
               editionId: editionId,
             ))
         .toList(growable: false);
