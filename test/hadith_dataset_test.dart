@@ -1,6 +1,9 @@
-// Integrity tests for the bundled Bukhari dataset.
+// Integrity tests for core Bukhari/Muslim plus optional package sources.
 // Structural only: counts preserved losslessly, references intact,
 // no empty matn, ids unique, Arabic search normalization works.
+
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quran_sunnah_app/core/utils/text_utils.dart';
@@ -114,8 +117,10 @@ void main() {
       expect(page.first.collectionId, 'bukhari');
     });
 
-    test('new collections: counts preserved, honest nulls', () async {
+    test('optional collections stay uninstalled but source counts remain exact',
+        () async {
       final repo = VerifiedAssetHadithRepository();
+      final collections = await repo.collections();
       const expected = {
         'abudawud': (44, 5274),
         'tirmidhi': (50, 3998),
@@ -126,24 +131,35 @@ void main() {
         'qudsi': (2, 40),
         'dehlawi': (2, 40),
       };
+
       for (final entry in expected.entries) {
-        final secs = await repo.sections(entry.key);
-        expect(secs.length, entry.value.$1,
+        final meta =
+            collections.firstWhere((c) => c.id == entry.key);
+        expect(meta.isDownloaded, isFalse, reason: entry.key);
+
+        final index = jsonDecode(
+          await File('assets/hadith/${entry.key}/index.json')
+              .readAsString(),
+        ) as Map<String, dynamic>;
+        final sections = index['sections'] as List;
+        expect(sections.length, entry.value.$1,
             reason: '${entry.key} sections');
-        final all = await repo.allIn(entry.key);
-        expect(all.length, entry.value.$2,
+        final counted = sections.fold<int>(
+          0,
+          (sum, item) =>
+              sum +
+              ((item as Map<String, dynamic>)['count'] as num)
+                  .toInt(),
+        );
+        expect(counted, entry.value.$2,
             reason: '${entry.key} entries');
-        final ids = <String>{};
-        for (final h in all) {
-          expect(ids.add(h.id), isTrue);
-          expect(h.collectionId, entry.key);
-          expect(h.grade, isNull);
-        }
-        final hit = await repo.query(
-            HadithFilter(
-                collectionIds: {entry.key}, query: '1'),
-            limit: 5);
-        expect(hit.isNotEmpty, isTrue);
+
+        final page = await repo.query(
+          HadithFilter(collectionIds: {entry.key}),
+          limit: 5,
+        );
+        expect(page, isEmpty,
+            reason: '${entry.key} must require package install');
       }
     });
   });
