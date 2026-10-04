@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
-/// Isnad chain visualization (§19). Tapping a narrator opens a
-/// profile ONLY when reliable biographical metadata exists.
+import '../../core/l10n/app_strings.dart';
+
+/// Narrator view shown only when the source exposes a narrator name.
+///
+/// We intentionally do not synthesize an isnad chain or biography. Detailed
+/// narrator metadata is rendered only after a verified structured dataset
+/// provides it.
 class NarratorViewScreen extends StatelessWidget {
   const NarratorViewScreen({super.key, required this.name});
 
@@ -9,39 +14,27 @@ class NarratorViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const chain = [
-      'Prophet ﷺ',
-      'Abu Huraira',
-      'Narrator (verified)',
-      'Narrator (verified)',
-      'Compiler',
-    ];
+    final s = AppStrings.of(context);
+
     return Scaffold(
-      appBar: AppBar(title: Text('Chain · $name')),
+      appBar: AppBar(
+        title: Text('${s.t('narratorLabel')} · $name'),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          const Text(
-              'Relationships shown only from verified metadata. Never invented.'),
-          const SizedBox(height: 16),
-          ...chain.expand((n) => [
-                Card(
-                  child: ListTile(
-                    leading:
-                        const Icon(Icons.person_outline),
-                    title: Text(n),
-                    subtitle: const Text(
-                        'Tap for biography when available'),
-                    onTap: () {},
-                  ),
-                ),
-                const Icon(Icons.arrow_downward, size: 18),
-              ]),
-          const Card(
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.person_outline),
+              title: Text(name),
+              subtitle: Text(s.t('narratorDetailsUnavailable')),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Card(
             child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Text(
-                  'Related Narrations: parallel versions from other collections are listed separately with their own references — never merged.'),
+              padding: const EdgeInsets.all(16),
+              child: Text(s.t('relatedNarrationsHint')),
             ),
           ),
         ],
