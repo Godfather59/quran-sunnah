@@ -90,11 +90,13 @@ class QuranPrefs {
 
 class QuranPrefsNotifier extends StateNotifier<QuranPrefs> {
   QuranPrefsNotifier() : super(const QuranPrefs()) {
-    _load();
+    final initial = state;
+    _load(initial);
   }
 
-  Future<void> _load() async {
+  Future<void> _load(QuranPrefs initial) async {
     final p = await SharedPreferences.getInstance();
+    if (!identical(state, initial)) return;
     final riwayaIndex = p.getInt('q.riwaya') ?? 0;
     final scriptIndex = p.getInt('q.script') ?? 0;
     final modeIndex = p.getInt('q.mode') ?? 0;
@@ -229,15 +231,19 @@ class AppPrefs {
 
 class AppPrefsNotifier extends StateNotifier<AppPrefs> {
   AppPrefsNotifier() : super(const AppPrefs()) {
-    _load();
+    final initial = state;
+    _load(initial);
   }
 
-  Future<void> _load() async {
+  Future<void> _load(AppPrefs initial) async {
     final p = await SharedPreferences.getInstance();
+    if (!identical(state, initial)) return;
+    final themeIndex = p.getInt('app.theme') ?? 0;
     state = state.copyWith(
       locale: p.getString('app.locale') ?? 'ar',
-      themeMode:
-          AppThemeMode.values[p.getInt('app.theme') ?? 0],
+      themeMode: themeIndex >= 0 && themeIndex < AppThemeMode.values.length
+          ? AppThemeMode.values[themeIndex]
+          : AppThemeMode.system,
       useDynamicColor: p.getBool('app.dynamicColor') ?? false,
       qari: p.getString('app.qari') ?? '',
       playbackSpeed: p.getDouble('app.playbackSpeed') ?? 1.0,
