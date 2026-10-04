@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/l10n/app_strings.dart';
+import '../../data/models/quran.dart';
 import '../../data/seed/surah_metadata.dart';
 import '../../data/services/audio_service.dart';
 import '../../state/providers.dart';
