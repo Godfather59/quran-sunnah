@@ -336,6 +336,52 @@ class AppStrings {
     'downloading': {'ar': 'جارٍ التنزيل', 'en': 'Downloading', 'fr': 'Téléchargement'},
     'retry': {'ar': 'إعادة المحاولة', 'en': 'Retry', 'fr': 'Réessayer'},
     'remove': {'ar': 'إزالة', 'en': 'Remove', 'fr': 'Retirer'},
+    'dataNoticesUnavailable': {
+      'ar': 'إشعارات مصادر البيانات غير متاحة.',
+      'en': 'Data notices are unavailable.',
+      'fr': 'Les notices de données sont indisponibles.',
+    },
+    'contentProvenance': {
+      'ar': 'مصدر المحتوى',
+      'en': 'Content provenance',
+      'fr': 'Provenance du contenu',
+    },
+    'provenanceExplanation': {
+      'ar': 'نص القرآن والترجمات والتفسير والحديث والصرف والتجويد والخطوط لكل منها مصدر وشروط إعادة نشر مستقلة. الحالات غير المحسومة مذكورة صراحة.',
+      'en': 'Quran text, translations, tafsir, Hadith, morphology, Tajweed annotations and fonts have separate provenance and redistribution terms. Unresolved entries are stated explicitly.',
+      'fr': 'Le texte coranique, les traductions, le tafsir, les hadiths, la morphologie, les annotations de tajwid et les polices ont des provenances et conditions distinctes. Les cas non résolus sont indiqués explicitement.',
+    },
+    'source': {'ar': 'المصدر', 'en': 'Source', 'fr': 'Source'},
+    'tafsirDatasetRequired': {
+      'ar': 'يحتاج هذا التفسير إلى حزمة موثقة ومسموح بإعادة نشرها قبل عرضه.',
+      'en': 'This tafsir requires a verified redistributable dataset before it can be shown.',
+      'fr': 'Ce tafsir nécessite un jeu de données vérifié et redistribuable avant affichage.',
+    },
+    'dynamicColorHint': {
+      'ar': 'أندرويد · اختياري',
+      'en': 'Android · optional',
+      'fr': 'Android · facultatif',
+    },
+    'tajweedLegend': {
+      'ar': 'دليل ألوان التجويد',
+      'en': 'Tajweed legend',
+      'fr': 'Légende du tajwid',
+    },
+    'mushafReading': {
+      'ar': 'المصحف / القراءة',
+      'en': 'Mushaf / Reading',
+      'fr': 'Moushaf / Lecture',
+    },
+    'fullscreen': {
+      'ar': 'ملء الشاشة',
+      'en': 'Fullscreen',
+      'fr': 'Plein écran',
+    },
+    'verifiedDatasetRequired': {
+      'ar': 'يلزم مصدر موثق لعرض هذا المحتوى.',
+      'en': 'A verified dataset is required to display this content.',
+      'fr': 'Un jeu de données vérifié est requis pour afficher ce contenu.',
+    },
     // ── Shared ──
     'contentUnavailable': {
       'ar': 'المحتوى غير متوفر لهذا المصدر.',
