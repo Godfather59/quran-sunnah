@@ -140,6 +140,8 @@ class AudioState {
     this.offlineSurahs = const {},
     this.downloads = const {},
     this.storageBytes = 0,
+    this.reciterStorageBytes = 0,
+    this.surahStorageBytes = const {},
   });
 
   final bool playing;
@@ -151,6 +153,8 @@ class AudioState {
   final Set<int> offlineSurahs;
   final Map<String, AudioDownloadTask> downloads;
   final int storageBytes;
+  final int reciterStorageBytes;
+  final Map<int, int> surahStorageBytes;
 
   AudioState copyWith({
     bool? playing,
@@ -162,6 +166,8 @@ class AudioState {
     Set<int>? offlineSurahs,
     Map<String, AudioDownloadTask>? downloads,
     int? storageBytes,
+    int? reciterStorageBytes,
+    Map<int, int>? surahStorageBytes,
   }) =>
       AudioState(
         playing: playing ?? this.playing,
@@ -173,6 +179,10 @@ class AudioState {
         offlineSurahs: offlineSurahs ?? this.offlineSurahs,
         downloads: downloads ?? this.downloads,
         storageBytes: storageBytes ?? this.storageBytes,
+        reciterStorageBytes:
+            reciterStorageBytes ?? this.reciterStorageBytes,
+        surahStorageBytes:
+            surahStorageBytes ?? this.surahStorageBytes,
       );
 }
 
@@ -259,11 +269,16 @@ class AudioService extends StateNotifier<AudioState> {
 
   Future<void> refreshOffline() async {
     final surahs = await _cache.downloadedSurahs(state.reciterId);
+    final perSurah = await _cache.surahStorageBytes(state.reciterId);
+    final reciterStorage =
+        perSurah.values.fold<int>(0, (sum, bytes) => sum + bytes);
     final storage = await _cache.storageBytes();
     if (mounted) {
       state = state.copyWith(
         offlineSurahs: surahs,
         storageBytes: storage,
+        reciterStorageBytes: reciterStorage,
+        surahStorageBytes: perSurah,
       );
     }
   }
@@ -656,6 +671,31 @@ class AudioCache {
         await part.delete();
       }
       rethrow;
+    }
+  }
+
+  Future<Map<int, int>> surahStorageBytes(String reciterId) async {
+    try {
+      final base = await getApplicationDocumentsDirectory();
+      final root = Directory('${base.path}/audio/$reciterId');
+      if (!await root.exists()) return const {};
+      final out = <int, int>{};
+      await for (final entity in root.list()) {
+        if (entity is! Directory) continue;
+        final surah =
+            int.tryParse(entity.path.split(Platform.pathSeparator).last);
+        if (surah == null) continue;
+        var bytes = 0;
+        await for (final file in entity.list()) {
+          if (file is File && file.path.endsWith('.mp3')) {
+            bytes += await file.length();
+          }
+        }
+        if (bytes > 0) out[surah] = bytes;
+      }
+      return out;
+    } catch (_) {
+      return const {};
     }
   }
 
