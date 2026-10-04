@@ -1,0 +1,61 @@
+name: Internal beta feedback
+description: Report a correctness, offline, layout, search, audio or persistence issue
+title: "[Beta] "
+labels: []
+body:
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - P0 — sacred text/data integrity or core crash
+        - P1 — data loss/wrong reference/core offline failure
+        - P2 — audio/download/layout/accessibility
+        - P3 — cosmetic/polish
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device / OS
+      placeholder: "e.g. Pixel 7 / Android 16"
+    validations:
+      required: true
+  - type: dropdown
+    id: network
+    attributes:
+      label: Network state
+      options:
+        - Offline / airplane mode
+        - Online
+        - Switched during test
+    validations:
+      required: true
+  - type: input
+    id: locale
+    attributes:
+      label: Locale / theme
+      placeholder: "e.g. Arabic RTL / dark"
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Source/reference check
+      description: For Quran/Hadith/Tafsir issues, include edition, reference and source used to verify.

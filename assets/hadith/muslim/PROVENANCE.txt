@@ -13,7 +13,10 @@ Empty matn: 203 upstream numbers ship without matn (esp. section 0).
            Kept as placeholders with references intact — never invented.
 Sanad    : matn "text" ships as one verbatim string. No sanad parsing;
            narrator fields stay null until a structured sanad source.
-License  : verify upstream terms before redistribution
-           (https://github.com/fawazahmed0/hadith-api).
+License  : hadith-api repository code/material is Unlicensed, but that does
+           not establish the license of the underlying Arabic edition texts.
+           Upstream issue #129 ("What is the license of the texts?") remains
+           open. Treat redistribution of the bundled text as unresolved.
+
 Local layout: index.json + sections/<n>.json, split losslessly from the
            full edition by hadithnumber ranges (duplicates kept).

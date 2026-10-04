@@ -1,446 +1,211 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import '../data/database/library_store.dart';
 import '../data/models/library.dart';
-
-const _bookmarksKey = 'library.bookmarks.v1';
-const _notesKey = 'library.notes.v1';
-const _collectionsKey = 'library.collections.v1';
-const _highlightsKey = 'library.highlights.v1';
-const _recentKey = 'library.recent.v1';
-
-List<dynamic> _decodeList(String? raw) {
-  if (raw == null || raw.isEmpty) return const [];
-  try {
-    final value = jsonDecode(raw);
-    return value is List ? value : const [];
-  } catch (_) {
-    return const [];
-  }
-}
+import 'database_provider.dart';
 
 class LibraryNotifier extends StateNotifier<List<Bookmark>> {
-  LibraryNotifier() : super(const []) {
-    final initial = state;
-    ready = _load(initial);
+  LibraryNotifier(this._storeFuture) : super(const []) {
+    ready = _load();
   }
 
-  /// Completes when persisted bookmarks have been hydrated.
+  final Future<LibraryStore> _storeFuture;
   late final Future<void> ready;
 
-  Future<void> _load(List<Bookmark> initial) async {
-    final p = await SharedPreferences.getInstance();
-    if (!identical(state, initial)) return;
-    final out = <Bookmark>[];
-    for (final item in _decodeList(p.getString(_bookmarksKey))) {
-      if (item is! Map) continue;
-      final m = Map<String, dynamic>.from(item);
-      final kindIndex = m['kind'] as int? ?? -1;
-      if (kindIndex < 0 || kindIndex >= BookmarkKind.values.length) continue;
-      out.add(Bookmark(
-        id: m['id'] as String? ?? '',
-        kind: BookmarkKind.values[kindIndex],
-        refKey: m['refKey'] as String? ?? '',
-        title: m['title'] as String? ?? '',
-        subtitle: m['subtitle'] as String? ?? '',
-        collectionId: m['collectionId'] as String?,
-        createdAt: DateTime.tryParse(m['createdAt'] as String? ?? ''),
-      ));
-    }
-    state = out.where((b) => b.id.isNotEmpty && b.refKey.isNotEmpty).toList();
+  Future<void> _load() async {
+    final store = await _storeFuture;
+    state = await store.bookmarks();
   }
 
-  Future<void> _save() async {
-    final p = await SharedPreferences.getInstance();
-    await p.setString(
-      _bookmarksKey,
-      jsonEncode([
-        for (final b in state)
-          {
-            'id': b.id,
-            'kind': b.kind.index,
-            'refKey': b.refKey,
-            'title': b.title,
-            'subtitle': b.subtitle,
-            'collectionId': b.collectionId,
-            'createdAt': b.createdAt?.toIso8601String(),
-          },
-      ]),
-    );
+  Future<void> reload() async {
+    await ready;
+    final store = await _storeFuture;
+    state = await store.bookmarks();
   }
 
   Future<void> toggleAyah(int surah, int ayah) async {
-    final key = '$surah:$ayah';
-    if (state.any((b) => b.refKey == key)) {
-      state = state.where((b) => b.refKey != key).toList();
-    } else {
-      state = [
-        ...state,
-        Bookmark(
-          id: 'bm-$key-${DateTime.now().microsecondsSinceEpoch}',
-          kind: BookmarkKind.ayah,
-          refKey: key,
-          title: 'Surah $surah · Ayah $ayah',
-          subtitle: 'Quran bookmark',
-          createdAt: DateTime.now(),
-        ),
-      ];
-    }
-    await _save();
+    await ready;
+    final store = await _storeFuture;
+    await store.toggleAyah(surah, ayah);
+    state = await store.bookmarks();
   }
 
-  Future<void> setAyahCollection(int surah, int ayah, String? collectionId) async {
-    final key = '$surah:$ayah';
-    final existing = state.where((b) => b.refKey == key).firstOrNull;
-    if (existing == null) {
-      state = [
-        ...state,
-        Bookmark(
-          id: 'bm-$key-${DateTime.now().microsecondsSinceEpoch}',
-          kind: BookmarkKind.ayah,
-          refKey: key,
-          title: 'Surah $surah · Ayah $ayah',
-          subtitle: 'Quran bookmark',
-          collectionId: collectionId,
-          createdAt: DateTime.now(),
-        ),
-      ];
-    } else {
-      state = state
-          .map((b) => b.refKey == key
-              ? Bookmark(
-                  id: b.id,
-                  kind: b.kind,
-                  refKey: b.refKey,
-                  title: b.title,
-                  subtitle: b.subtitle,
-                  collectionId: collectionId,
-                  createdAt: b.createdAt,
-                )
-              : b)
-          .toList();
-    }
-    await _save();
+  Future<void> setAyahCollection(
+      int surah, int ayah, String? collectionId) async {
+    await ready;
+    final store = await _storeFuture;
+    await store.setAyahCollection(surah, ayah, collectionId);
+    state = await store.bookmarks();
   }
 
   Future<void> toggleHadith(String id, String title) async {
-    if (state.any((b) => b.refKey == id)) {
-      state = state.where((b) => b.refKey != id).toList();
-    } else {
-      state = [
-        ...state,
-        Bookmark(
-          id: 'bm-$id',
-          kind: BookmarkKind.hadith,
-          refKey: id,
-          title: title,
-          subtitle: 'Hadith bookmark',
-          createdAt: DateTime.now(),
-        ),
-      ];
-    }
-    await _save();
+    await ready;
+    final store = await _storeFuture;
+    await store.toggleHadith(id, title);
+    state = await store.bookmarks();
   }
 
   bool isBookmarked(String key) => state.any((b) => b.refKey == key);
 
   Future<void> remove(String id) async {
-    state = state.where((b) => b.id != id).toList();
-    await _save();
+    await ready;
+    final store = await _storeFuture;
+    await store.removeBookmark(id);
+    state = await store.bookmarks();
   }
 }
 
 final libraryProvider =
     StateNotifierProvider<LibraryNotifier, List<Bookmark>>(
-        (ref) => LibraryNotifier());
+  (ref) => LibraryNotifier(ref.watch(libraryStoreProvider)),
+);
 
 class NotesNotifier extends StateNotifier<List<UserNote>> {
-  NotesNotifier() : super(const []) {
-    final initial = state;
-    unawaited(_load(initial));
+  NotesNotifier(this._storeFuture) : super(const []) {
+    ready = _load();
   }
 
-  Future<void> _load(List<UserNote> initial) async {
-    final p = await SharedPreferences.getInstance();
-    if (!identical(state, initial)) return;
-    final out = <UserNote>[];
-    for (final item in _decodeList(p.getString(_notesKey))) {
-      if (item is! Map) continue;
-      final m = Map<String, dynamic>.from(item);
-      final id = m['id'] as String? ?? '';
-      final refKey = m['refKey'] as String? ?? '';
-      final text = m['text'] as String? ?? '';
-      if (id.isEmpty || refKey.isEmpty || text.isEmpty) continue;
-      out.add(UserNote(
-        id: id,
-        refKey: refKey,
-        text: text,
-        createdAt: DateTime.tryParse(m['createdAt'] as String? ?? ''),
-      ));
-    }
-    state = out;
-  }
+  final Future<LibraryStore> _storeFuture;
+  late final Future<void> ready;
 
-  Future<void> _save() async {
-    final p = await SharedPreferences.getInstance();
-    await p.setString(
-      _notesKey,
-      jsonEncode([
-        for (final n in state)
-          {
-            'id': n.id,
-            'refKey': n.refKey,
-            'text': n.text,
-            'createdAt': n.createdAt?.toIso8601String(),
-          },
-      ]),
-    );
+  Future<void> _load() async {
+    final store = await _storeFuture;
+    state = await store.notes();
   }
 
   UserNote? forRef(String refKey) =>
       state.where((n) => n.refKey == refKey).firstOrNull;
 
-  void upsert(String refKey, String text) {
-    final trimmed = text.trim();
-    if (trimmed.isEmpty) {
-      state = state.where((n) => n.refKey != refKey).toList();
-      unawaited(_save());
-      return;
-    }
-    final existing = forRef(refKey);
-    if (existing == null) {
-      state = [
-        ...state,
-        UserNote(
-          id: 'note-$refKey-${DateTime.now().microsecondsSinceEpoch}',
-          refKey: refKey,
-          text: trimmed,
-          createdAt: DateTime.now(),
-        ),
-      ];
-    } else {
-      state = state
-          .map((n) => n.refKey == refKey
-              ? UserNote(
-                  id: n.id,
-                  refKey: n.refKey,
-                  text: trimmed,
-                  createdAt: n.createdAt,
-                )
-              : n)
-          .toList();
-    }
-    unawaited(_save());
+  Future<void> upsert(String refKey, String text) async {
+    await ready;
+    final store = await _storeFuture;
+    await store.upsertNote(refKey, text);
+    state = await store.notes();
   }
 
-  void remove(String id) {
-    state = state.where((n) => n.id != id).toList();
-    unawaited(_save());
+  Future<void> remove(String id) async {
+    await ready;
+    final store = await _storeFuture;
+    await store.removeNote(id);
+    state = await store.notes();
   }
 }
 
 final notesProvider =
     StateNotifierProvider<NotesNotifier, List<UserNote>>(
-        (ref) => NotesNotifier());
+  (ref) => NotesNotifier(ref.watch(libraryStoreProvider)),
+);
 
-const _defaultCollections = [
-  CustomCollection(id: 'fav-ayat', name: 'Favorite Ayat'),
-  CustomCollection(id: 'prayer', name: 'Prayer Hadith'),
-  CustomCollection(id: 'ramadan', name: 'Ramadan'),
-];
-
-class CollectionsNotifier extends StateNotifier<List<CustomCollection>> {
-  CollectionsNotifier() : super(_defaultCollections) {
-    final initial = state;
-    unawaited(_load(initial));
+class CollectionsNotifier
+    extends StateNotifier<List<CustomCollection>> {
+  CollectionsNotifier(this._storeFuture, this._afterRemove)
+      : super(defaultCollections) {
+    ready = _load();
   }
 
-  Future<void> _load(List<CustomCollection> initial) async {
-    final p = await SharedPreferences.getInstance();
-    if (!identical(state, initial)) return;
-    final raw = p.getString(_collectionsKey);
-    if (raw == null) return;
-    final out = <CustomCollection>[];
-    for (final item in _decodeList(raw)) {
-      if (item is! Map) continue;
-      final m = Map<String, dynamic>.from(item);
-      final id = m['id'] as String? ?? '';
-      final name = m['name'] as String? ?? '';
-      if (id.isNotEmpty && name.isNotEmpty) {
-        out.add(CustomCollection(id: id, name: name));
-      }
-    }
-    state = out;
+  final Future<LibraryStore> _storeFuture;
+  final Future<void> Function() _afterRemove;
+  late final Future<void> ready;
+
+  Future<void> _load() async {
+    final store = await _storeFuture;
+    state = await store.collections();
   }
 
-  Future<void> _save() async {
-    final p = await SharedPreferences.getInstance();
-    await p.setString(
-      _collectionsKey,
-      jsonEncode([
-        for (final c in state) {'id': c.id, 'name': c.name},
-      ]),
-    );
+  Future<void> add(String name) async {
+    await ready;
+    final store = await _storeFuture;
+    await store.addCollection(name);
+    state = await store.collections();
   }
 
-  void add(String name) {
-    final trimmed = name.trim();
-    if (trimmed.isEmpty) return;
-    state = [
-      ...state,
-      CustomCollection(
-        id: 'c-${DateTime.now().microsecondsSinceEpoch}',
-        name: trimmed,
-      ),
-    ];
-    unawaited(_save());
+  Future<void> rename(String id, String name) async {
+    await ready;
+    final store = await _storeFuture;
+    await store.renameCollection(id, name);
+    state = await store.collections();
   }
 
-  void rename(String id, String name) {
-    final trimmed = name.trim();
-    if (trimmed.isEmpty) return;
-    state = state
-        .map((c) => c.id == id
-            ? CustomCollection(id: c.id, name: trimmed)
-            : c)
-        .toList();
-    unawaited(_save());
-  }
-
-  void remove(String id) {
-    state = state.where((c) => c.id != id).toList();
-    unawaited(_save());
+  Future<void> remove(String id) async {
+    await ready;
+    final store = await _storeFuture;
+    await store.removeCollection(id);
+    state = await store.collections();
+    await _afterRemove();
   }
 }
 
 final collectionsProvider =
     StateNotifierProvider<CollectionsNotifier, List<CustomCollection>>(
-        (ref) => CollectionsNotifier());
+  (ref) => CollectionsNotifier(
+    ref.watch(libraryStoreProvider),
+    () => ref.read(libraryProvider.notifier).reload(),
+  ),
+);
 
 class HighlightsNotifier extends StateNotifier<List<Highlight>> {
-  HighlightsNotifier() : super(const []) {
-    final initial = state;
-    unawaited(_load(initial));
+  HighlightsNotifier(this._storeFuture) : super(const []) {
+    ready = _load();
   }
 
-  Future<void> _load(List<Highlight> initial) async {
-    final p = await SharedPreferences.getInstance();
-    if (!identical(state, initial)) return;
-    final out = <Highlight>[];
-    for (final item in _decodeList(p.getString(_highlightsKey))) {
-      if (item is! Map) continue;
-      final m = Map<String, dynamic>.from(item);
-      final id = m['id'] as String? ?? '';
-      final refKey = m['refKey'] as String? ?? '';
-      final color = m['colorValue'] as int?;
-      if (id.isNotEmpty && refKey.isNotEmpty && color != null) {
-        out.add(Highlight(id: id, refKey: refKey, colorValue: color));
-      }
-    }
-    state = out;
-  }
+  final Future<LibraryStore> _storeFuture;
+  late final Future<void> ready;
 
-  Future<void> _save() async {
-    final p = await SharedPreferences.getInstance();
-    await p.setString(
-      _highlightsKey,
-      jsonEncode([
-        for (final h in state)
-          {
-            'id': h.id,
-            'refKey': h.refKey,
-            'colorValue': h.colorValue,
-          },
-      ]),
-    );
+  Future<void> _load() async {
+    final store = await _storeFuture;
+    state = await store.highlights();
   }
 
   Highlight? forRef(String refKey) =>
       state.where((h) => h.refKey == refKey).firstOrNull;
 
-  void toggle(String refKey, int colorValue) {
-    final existing = forRef(refKey);
-    if (existing != null && existing.colorValue == colorValue) {
-      state = state.where((h) => h.refKey != refKey).toList();
-    } else {
-      state = [
-        ...state.where((h) => h.refKey != refKey),
-        Highlight(id: 'hl-$refKey', refKey: refKey, colorValue: colorValue),
-      ];
-    }
-    unawaited(_save());
+  Future<void> toggle(String refKey, int colorValue) async {
+    await ready;
+    final store = await _storeFuture;
+    await store.toggleHighlight(refKey, colorValue);
+    state = await store.highlights();
   }
 
-  void remove(String id) {
-    state = state.where((h) => h.id != id).toList();
-    unawaited(_save());
+  Future<void> remove(String id) async {
+    await ready;
+    final store = await _storeFuture;
+    await store.removeHighlight(id);
+    state = await store.highlights();
   }
 }
 
 final highlightsProvider =
     StateNotifierProvider<HighlightsNotifier, List<Highlight>>(
-        (ref) => HighlightsNotifier());
+  (ref) => HighlightsNotifier(ref.watch(libraryStoreProvider)),
+);
 
 class RecentNotifier extends StateNotifier<List<RecentItem>> {
-  RecentNotifier() : super(const []) {
-    final initial = state;
-    unawaited(_load(initial));
+  RecentNotifier(this._storeFuture) : super(const []) {
+    ready = _load();
   }
 
-  Future<void> _load(List<RecentItem> initial) async {
-    final p = await SharedPreferences.getInstance();
-    if (!identical(state, initial)) return;
-    final out = <RecentItem>[];
-    for (final item in _decodeList(p.getString(_recentKey))) {
-      if (item is! Map) continue;
-      final m = Map<String, dynamic>.from(item);
-      final kindIndex = m['kind'] as int? ?? -1;
-      if (kindIndex < 0 || kindIndex >= BookmarkKind.values.length) continue;
-      final refKey = m['refKey'] as String? ?? '';
-      if (refKey.isEmpty) continue;
-      out.add(RecentItem(
-        refKey: refKey,
-        title: m['title'] as String? ?? '',
-        subtitle: m['subtitle'] as String? ?? '',
-        kind: BookmarkKind.values[kindIndex],
-      ));
-    }
-    state = out;
+  final Future<LibraryStore> _storeFuture;
+  late final Future<void> ready;
+
+  Future<void> _load() async {
+    final store = await _storeFuture;
+    state = await store.recent();
   }
 
-  Future<void> _save() async {
-    final p = await SharedPreferences.getInstance();
-    await p.setString(
-      _recentKey,
-      jsonEncode([
-        for (final r in state)
-          {
-            'refKey': r.refKey,
-            'title': r.title,
-            'subtitle': r.subtitle,
-            'kind': r.kind.index,
-          },
-      ]),
-    );
-  }
-
-  void touch(RecentItem item) {
-    state = [
-      item,
-      ...state.where((r) => r.refKey != item.refKey),
-    ].take(50).toList();
-    unawaited(_save());
+  Future<void> touch(RecentItem item) async {
+    await ready;
+    final store = await _storeFuture;
+    await store.touchRecent(item);
+    state = await store.recent();
   }
 }
 
 final recentProvider =
     StateNotifierProvider<RecentNotifier, List<RecentItem>>(
-        (ref) => RecentNotifier());
+  (ref) => RecentNotifier(ref.watch(libraryStoreProvider)),
+);
 
-/// Highlight palette (opaque dots, translucent wash on text).
 const List<Color> kHighlightColors = [
   Color(0xFFFFD54F),
   Color(0xFFA5D6A7),

@@ -12,7 +12,10 @@ Sections : 98 (book/chapter titles from upstream "sections" metadata,
 Sanad    : matn "text" ships as one verbatim string (sanad inline where
            present upstream). No sanad parsing is performed; narrator
            fields stay null until a structured sanad source is wired.
-License  : verify upstream terms before redistribution
-           (https://github.com/fawazahmed0/hadith-api).
+License  : hadith-api repository code/material is Unlicensed, but that does
+           not establish the license of the underlying Arabic edition texts.
+           Upstream issue #129 ("What is the license of the texts?") remains
+           open. Treat redistribution of the bundled text as unresolved.
+
 Local layout: index.json + sections/<n>.json, split losslessly from the
            full edition by hadithnumber ranges (duplicates kept).

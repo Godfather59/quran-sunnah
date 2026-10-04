@@ -4,7 +4,7 @@ publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.9.0 <4.0.0"
+  sdk: ">=3.10.0 <4.0.0"
   flutter: ">=3.44.0"
 
 dependencies:
@@ -22,17 +22,22 @@ dependencies:
   share_plus: ^10.0.3
   collection: ^1.18.0
   xml: ^6.5.0
+  drift: ^2.35.1
+  drift_flutter: ^0.3.1
+  crypto: ^3.0.7
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
-  crypto: ^3.0.7
+  drift_dev: ^2.35.1
+  build_runner: ^2.15.1
 
 flutter:
   uses-material-design: true
   assets:
     - assets/integrity_manifest.json
+    - assets/licenses/DATA_NOTICES.txt
     - assets/quran/PROVENANCE-indopak.txt
     - assets/quran/PROVENANCE-riwayat.txt
     - assets/quran/tafsir/PROVENANCE.txt

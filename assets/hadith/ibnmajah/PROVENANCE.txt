@@ -2,4 +2,8 @@
 Upstream : fawazahmed0/hadith-api@1, edition "ara-ibnmajah"
 Fetched  : 2026-10-04 via jsDelivr CDN
 Grades   : UPSTREAM GRADES ARE EMPTY - shown as unavailable, never invented.
-License  : verify upstream terms before redistribution.
+License  : hadith-api repository code/material is Unlicensed, but that does
+           not establish the license of the underlying Arabic edition texts.
+           Upstream issue #129 ("What is the license of the texts?") remains
+           open. Treat redistribution of the bundled text as unresolved.
+

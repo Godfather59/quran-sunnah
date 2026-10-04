@@ -42,7 +42,7 @@ class _AyahSheet extends ConsumerWidget {
       await ref.read(audioServiceProvider.notifier).playRange(
             riwayaKey: riwayaKey,
             surah: ayah.surah,
-            fromAyah: ayah.ayah,
+            fromAyah: ayah.canonicalAyahNumber,
             repeatAyah: repeat,
           );
       if (context.mounted &&
@@ -66,7 +66,7 @@ class _AyahSheet extends ConsumerWidget {
         Navigator.pop(context);
         Navigator.of(context).push(MaterialPageRoute(
             builder: (_) =>
-                TafsirScreen(surah: ayah.surah, ayah: ayah.ayah)));
+                TafsirScreen(surah: ayah.canonicalSurahNumber, ayah: ayah.canonicalAyahNumber)));
       }),
       _Action(Icons.translate, s.t('translation'), () {
         Navigator.pop(context);
@@ -88,7 +88,7 @@ class _AyahSheet extends ConsumerWidget {
       }),
       _Action(bookmarked ? Icons.bookmark : Icons.bookmark_outline,
           s.t('bookmark'), () {
-        ref.read(libraryProvider.notifier).toggleAyah(ayah.surah, ayah.ayah);
+        ref.read(libraryProvider.notifier).toggleAyah(ayah.canonicalSurahNumber, ayah.canonicalAyahNumber);
         Navigator.pop(context);
       }),
       _Action(Icons.create_new_folder_outlined,
@@ -107,7 +107,7 @@ class _AyahSheet extends ConsumerWidget {
             SnackBar(content: Text(s.t('copy'))));
       }),
       _Action(Icons.share, s.t('share'), () {
-        Share.share('Quran ${ayah.surah}:${ayah.ayah}');
+        Share.share('Quran ${ayah.surah}:${ayah.displayAyahNumber}');
       }),
       _Action(Icons.edit_note, s.t('notes'), () {
         Navigator.pop(context);
@@ -130,7 +130,7 @@ class _AyahSheet extends ConsumerWidget {
         Navigator.pop(context);
         Navigator.of(context).push(MaterialPageRoute(
             builder: (_) => CompareRiwayatScreen(
-                surah: ayah.surah, ayah: ayah.ayah)));
+                surah: ayah.canonicalSurahNumber, ayah: ayah.canonicalAyahNumber)));
       }),
     ];
 
@@ -141,7 +141,7 @@ class _AyahSheet extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Ayah ${ayah.surah}:${ayah.ayah}',
+            Text('Ayah ${ayah.surah}:${ayah.displayAyahNumber}',
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
             GridView.builder(
@@ -196,7 +196,7 @@ class _TranslationSheet extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('${s.t('translation')} · ${ayah.surah}:${ayah.ayah}',
+            Text('${s.t('translation')} · ${ayah.surah}:${ayah.displayAyahNumber}',
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
             Flexible(
@@ -337,7 +337,7 @@ class _CollectionSheet extends ConsumerWidget {
     void pick(String? id) {
       ref
           .read(libraryProvider.notifier)
-          .setAyahCollection(ayah.surah, ayah.ayah, id);
+          .setAyahCollection(ayah.canonicalSurahNumber, ayah.canonicalAyahNumber, id);
       Navigator.pop(context);
     }
 
@@ -514,7 +514,7 @@ class _WordMeaningsSheet extends ConsumerWidget {
                     child: CircularProgressIndicator()),
                 error: (_, __) => Text(s.t('contentUnavailable')),
                 data: (map) {
-                  final words = map[ayah.ayah];
+                  final words = map[ayah.canonicalAyahNumber];
                   if (words == null || words.isEmpty) {
                     return Text(s.t('contentUnavailable'));
                   }
@@ -567,8 +567,8 @@ class _WordMeaningsSheet extends ConsumerWidget {
                 Navigator.pop(context);
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (_) => TafsirScreen(
-                        surah: ayah.surah,
-                        ayah: ayah.ayah)));
+                        surah: ayah.canonicalSurahNumber,
+                        ayah: ayah.canonicalAyahNumber)));
               },
               child: Text(s.t('tafsir')),
             ),

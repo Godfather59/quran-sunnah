@@ -200,27 +200,34 @@ class _QuickActions extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 16),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: actions
-            .map((a) => InkWell(
-                  borderRadius: BorderRadius.circular(16),
-                  onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => a.$3)),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 8),
-                    child: Column(
-                      children: [
-                        CircleAvatar(
-                          radius: 26,
-                          child: Icon(a.$1),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(a.$2,
+            .map((a) => Expanded(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(16),
+                    onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => a.$3)),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 4, vertical: 8),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CircleAvatar(
+                            radius: 24,
+                            child: Icon(a.$1),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            a.$2,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
                             style: Theme.of(context)
                                 .textTheme
-                                .labelMedium),
-                      ],
+                                .labelMedium,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ))

@@ -9,4 +9,8 @@ Fetched  : 2026-10-04 via jsDelivr CDN, converted losslessly from
 Entries  : 6236 each, zero gaps, verbatim (incl. Quranic marks
            U+06DF–U+06EC, standard Unicode — no PUA).
 Compare  : Riwayat comparison now shows REAL Warsh/Qalun differences.
-License  : verify upstream terms before redistribution.
+License  : quran-api itself is Unlicensed, but that software/repository
+           license does not establish direct redistribution rights for
+           the underlying QuranComplex-derived Warsh/Qalun editions.
+           Treat redistribution as unresolved until direct terms or
+           permission are recorded.

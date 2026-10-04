@@ -111,7 +111,9 @@ class VerifiedAssetQuranRepository implements QuranRepository {
     for (final e in editionIds) {
       final all = await _loadEdition(e);
       final match = all.where(
-          (a) => a.surah == surah && a.ayah == ayah);
+          (a) =>
+              a.canonicalSurahNumber == surah &&
+              a.canonicalAyahNumber == ayah);
       if (match.isEmpty) {
         out.add(Ayah(
             surah: surah,

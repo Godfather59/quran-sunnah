@@ -3,10 +3,11 @@
 Premium, calm, offline-first Quran + authentic Sunnah app with bundled Arabic fonts. Material 3 on
 Android, native-feeling navigation/gestures/safe-areas on iOS.
 
-> **Data integrity (highest priority):** this repo ships **no verse wording
-> and no hadith matn**. Every sacred-text widget renders either rows from a
-> verified dataset file or the string **"Content unavailable for this source."**
-> Never wire an LLM or auto-generated text into `Ayah.text` / `Hadith.matnAr`.
+> **Data integrity (highest priority):** this repo ships verified, source-backed
+> Quran and Hadith datasets and never fabricates sacred text. Every sacred-text
+> widget renders either exact rows from a verified bundled source or the string
+> **"Content unavailable for this source."** Never wire an LLM or generated text
+> into `Ayah.text` / `Hadith.matnAr`.
 
 ## Structure
 
@@ -18,8 +19,9 @@ lib/
   data/models (QuranEdition/Ayah, HadithCollection/Hadith, library)
   data/seed (114 surah metadata, 14-riwaya catalog, 11 collections — metadata only)
   data/repositories (Quran/Hadith interfaces + stubs — swap in verified loaders)
-  data/services (verified asset loaders, bounded search, just_audio)
-  state (Riverpod: QuranPrefs, AppPrefs, library, downloads)
+  data/database (Drift/SQLite personal library + FTS5 search index)
+  data/services (verified asset loaders, integrity-aware indexed search, just_audio)
+  state (Riverpod: QuranPrefs, AppPrefs, database-backed library, downloads)
   features/ splash, onboarding(5 pages), home, quran (surah list, reader,
      mushaf, riwaya selector, script selector, font sheet, ayah sheet,
      compare, audio, tafsir), sunnah (home, sources, filters, reader card,
@@ -33,9 +35,9 @@ lib/
   overlay only for Hafs/Uthmani; it never creates or alters Quran wording.
 - **Adding a Riwaya** = append to `kRiwayaCatalog` + ship its verified file.
   No UI change needed.
-- **Search** normalizes Arabic (tashkeel/tatweel/alef) for the index only
-  (`normalizeArabic`); display text is never mutated.
+- **Search** uses an on-device SQLite FTS5 index. Arabic normalization is index-only; display text is never mutated. Index fingerprints are derived from the integrity manifest and rebuild automatically when verified asset bytes change.
 - **Audio** reciters are bound to the Riwaya they actually recite (`kReciters`); never mislabel a Hafs recording as Warsh/Qalun.
+- **Personal library** (bookmarks, notes, highlights, collections and recent items) is stored in Drift/SQLite. Existing SharedPreferences data is migrated transactionally once.
 - **Notes** render in `UserNoteCard`, visually distinct from sacred text.
 - **Translations** use a muted latin-first style, never Quran-styled.
 
@@ -81,9 +83,7 @@ lib/
    background playback with lock-screen metadata; per-surah offline
    download with size shown BEFORE downloading + local-first playback.
    Other Riwayat honestly report no recitation — never mislabeled.
-5. **Search:** global search over all bundled Quran/Hadith/Tafsir +
-   Surah metadata, diacritic-insensitive Arabic, verse shortcuts
-   (`2:255`), narrator/topic honestly empty pending datasets.
+5. **Search:** global search over bundled Quran/Hadith/Tafsir through SQLite FTS5 + Surah metadata, diacritic-insensitive Arabic, verse shortcuts (`2:255`), narrator/topic honestly empty pending verified structured datasets.
 6. **Offline:** Download Manager reflects the 14 pre-bundled datasets
    as installed and protects them from deletion.
 
@@ -112,7 +112,7 @@ view · Global search · Library (bookmarks/notes/collections/recent/downloads)
 ## Accessibility & performance
 
 - Dynamic text, screen-reader labels, ≥48dp targets, RTL-first layout.
-- Hadith queries stream bundled sections and stop at the requested page; a future SQLite/FTS5 index remains the recommended next step for very large future corpora.
+- Hadith browsing streams bundled sections; global Quran/Hadith/Tafsir search uses a persisted FTS5 index instead of rescanning the corpus on every query.
 - 60/120Hz scrolling: reader uses `ListView.separated`, no heavy shadows.
 
 
@@ -124,3 +124,20 @@ view · Global search · Library (bookmarks/notes/collections/recent/downloads)
 - Do not publish a dataset until its provenance and redistribution terms have
   been checked. Upstream API repositories may be permissively licensed while
   individual source editions/translations can have separate terms.
+
+
+## Canonical verse identity
+
+`Ayah.canonicalVerseId` is separate from `displayAyahNumber`. Current bundled
+editions map to the same normalized 6236-row coordinates, so both values are
+identical today. The separation is deliberate: a future verified mushaf
+tradition may use edition-specific display numbering while bookmarks,
+cross-edition comparison and internal references remain attached to the same
+canonical verse identity.
+
+## Data licensing
+
+See `docs/DATA_LICENSES.md` for the dataset-by-dataset audit and
+`assets/licenses/DATA_NOTICES.txt` for the notices bundled with the app.
+Unresolved underlying-text redistribution rights are explicitly marked
+unresolved rather than inferred from an aggregator repository license.
