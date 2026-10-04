@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../data/models/quran.dart';
 import '../../data/repositories/quran_repository.dart';
+import '../../data/repositories/verified_asset_quran_repository.dart';
 import '../../data/seed/riwayat_catalog.dart';
 
 /// Compare Riwayat (§11): same ayah from each edition's own verified
@@ -48,7 +49,9 @@ class _CompareRiwayatScreenState
               const SizedBox(height: 12),
               Wrap(
                 spacing: 8,
-                children: kRiwayaCatalog.take(4).map((r) {
+                children: kRiwayaCatalog.where((r) =>
+                    kVerifiedQuranAssets.containsKey(
+                        '${r.id.storageKey}__uthmani')).map((r) {
                   final id = '${r.id.storageKey}__uthmani';
                   return FilterChip(
                     label: Text(r.riwayaEn),
@@ -89,7 +92,7 @@ class _CompareRiwayatScreenState
                           crossAxisAlignment:
                               CrossAxisAlignment.stretch,
                           children: [
-                            Text(a.editionId,
+                            Text('${a.editionId} · ${a.surah}:${a.displayAyahNumber}',
                                 style: Theme.of(context)
                                     .textTheme
                                     .labelSmall),
