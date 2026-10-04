@@ -1,73 +1,90 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../core/l10n/app_strings.dart';
+import '../../data/models/hadith.dart';
 import '../../data/repositories/hadith_repository.dart';
 import '../../data/seed/hadith_collections.dart';
 import '../../state/download_state.dart';
 
-/// Source filter (§16) with presets. Persisted in filter provider.
 class CollectionSelectorScreen extends ConsumerWidget {
   const CollectionSelectorScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = AppStrings.of(context);
     final filter = ref.watch(hadithFilterProvider);
     final dl = ref.watch(downloadProvider);
 
-    void set(Set<String> ids) => ref
-        .read(hadithFilterProvider.notifier)
-        .state = filter.copyWith(collectionIds: ids);
+    void set(Set<String> ids) {
+      ref.read(hadithFilterProvider.notifier).state =
+          filter.copyWith(collectionIds: ids);
+    }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Sources · المصادر')),
+      appBar: AppBar(title: Text(s.t('sources'))),
       body: ListView(
         padding: const EdgeInsets.all(12),
         children: [
           Wrap(
             spacing: 8,
+            runSpacing: 8,
             children: [
               ActionChip(
-                  label: const Text('Select All'),
-                  onPressed: () => set(kHadithCollections
-                      .map((c) => c.id)
-                      .toSet())),
+                label: Text(s.t('selectAll')),
+                onPressed: () =>
+                    set(kHadithCollections.map((c) => c.id).toSet()),
+              ),
               ActionChip(
-                  label: const Text('Deselect All'),
-                  onPressed: () => set({})),
+                label: Text(s.t('deselectAll')),
+                onPressed: () => set({}),
+              ),
               ActionChip(
-                  label: const Text('Only Sahihayn'),
-                  onPressed: () => set(kSahihayn)),
+                label: Text(s.t('onlySahihayn')),
+                onPressed: () => set(kSahihayn),
+              ),
               ActionChip(
-                  label: const Text('Kutub al-Sittah'),
-                  onPressed: () => set(kKutubSittah)),
+                label: Text(s.t('kutubSittah')),
+                onPressed: () => set(kKutubSittah),
+              ),
             ],
           ),
           const SizedBox(height: 8),
           FutureBuilder(
-            future:
-                ref.read(hadithRepositoryProvider).collections(),
+            future: ref.read(hadithRepositoryProvider).collections(),
             builder: (context, snap) {
               final items = snap.data ?? kHadithCollections;
               return Column(
                 children: items
-                    .map((c) => Card(
-                          child: CheckboxListTile(
-                            value: filter.collectionIds
-                                .contains(c.id),
-                            onChanged: (v) {
-                              final next = {
-                                ...filter.collectionIds
-                              };
-                              v == true
-                                  ? next.add(c.id)
-                                  : next.remove(c.id);
-                              set(next);
-                            },
-                            title: Text(
-                                '${c.nameAr} · ${c.nameEn}'),
-                            subtitle: Text(
-                                '${c.compiler} · ${c.totalHadith ?? '?'} hadith · ${c.downloadSizeMb ?? '?'} MB · ${(c.isDownloaded || dl.installed.contains('hadith:${c.id}')) ? 'Downloaded' : 'Not downloaded'}'),
+                    .map(
+                      (collection) => Card(
+                        child: CheckboxListTile(
+                          value: filter.collectionIds.contains(collection.id),
+                          onChanged: (enabled) {
+                            final next = {...filter.collectionIds};
+                            enabled == true
+                                ? next.add(collection.id)
+                                : next.remove(collection.id);
+                            set(next);
+                          },
+                          title: Text(
+                            s.isArabic
+                                ? collection.nameAr
+                                : '${collection.nameAr} · ${collection.nameEn}',
                           ),
-                        ))
+                          subtitle: Text(
+                            _subtitle(
+                              s,
+                              collection,
+                              collection.isDownloaded ||
+                                  dl.installed.contains(
+                                    'hadith:${collection.id}',
+                                  ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
                     .toList(),
               );
             },
@@ -75,5 +92,19 @@ class CollectionSelectorScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  String _subtitle(
+    AppStrings s,
+    HadithCollection collection,
+    bool installed,
+  ) {
+    final count = collection.totalHadith ?? '?';
+    final state = installed ? s.t('downloaded') : s.t('notDownloaded');
+    if (s.isArabic) {
+      return '$count ${s.t('hadithCountUnit')} · $state';
+    }
+    return '${collection.compiler} · $count ${s.t('hadithCountUnit')} · '
+        '${collection.downloadSizeMb ?? '?'} MB · $state';
   }
 }

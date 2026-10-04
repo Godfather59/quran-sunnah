@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/l10n/app_strings.dart';
 import '../../data/models/hadith.dart';
 import '../../data/repositories/hadith_repository.dart';
 import 'collection_selector_screen.dart';
@@ -56,17 +57,18 @@ class _SunnahHomeScreenState
 
   @override
   Widget build(BuildContext context) {
+    final s = AppStrings.of(context);
     final filter = ref.watch(hadithFilterProvider);
     // Refetch when the filter changes.
     ref.listen(hadithFilterProvider, (_, __) => _reset());
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sunnah · السنة'),
+        title: Text(s.t('sunnah')),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list),
-            tooltip: 'Filters',
+            tooltip: s.t('filters'),
             onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
                     builder: (_) =>
@@ -74,7 +76,7 @@ class _SunnahHomeScreenState
           ),
           IconButton(
             icon: const Icon(Icons.library_books),
-            tooltip: 'Books & chapters',
+            tooltip: s.t('booksChapters'),
             onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
                     builder: (_) =>
@@ -88,9 +90,8 @@ class _SunnahHomeScreenState
           _SourceBar(filter: filter),
           Expanded(
             child: _items.isEmpty && !_loading
-                ? const Center(
-                    child: Text(
-                        'No hadith match these filters.'))
+                ? Center(
+                    child: Text(s.t('noHadithMatches')))
                 : ListView.builder(
                     padding: const EdgeInsets.all(12),
                     itemCount:
@@ -132,6 +133,7 @@ class _SourceBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final s = AppStrings.of(context);
     return Container(
       padding:
           const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -140,8 +142,8 @@ class _SourceBar extends ConsumerWidget {
           Expanded(
             child: Text(
               filter.collectionIds.isEmpty
-                  ? 'Sources: none'
-                  : 'Sources: ${filter.collectionIds.length} selected',
+                  ? s.t('sourcesNone')
+                  : '${filter.collectionIds.length} ${s.t('sourcesSelected')}',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
@@ -150,7 +152,7 @@ class _SourceBar extends ConsumerWidget {
                 MaterialPageRoute(
                     builder: (_) =>
                         const CollectionSelectorScreen())),
-            child: const Text('Sources'),
+            child: Text(s.t('sources')),
           ),
         ],
       ),

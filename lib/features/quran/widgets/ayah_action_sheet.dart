@@ -109,7 +109,7 @@ class _AyahSheet extends ConsumerWidget {
       _Action(Icons.share, s.t('share'), () {
         SharePlus.instance.share(
           ShareParams(
-            text: 'Quran ${ayah.surah}:${ayah.displayAyahNumber}',
+            text: '${s.t('quran')} ${ayah.surah}:${ayah.displayAyahNumber}',
           ),
         );
       }),
@@ -145,7 +145,7 @@ class _AyahSheet extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Ayah ${ayah.surah}:${ayah.displayAyahNumber}',
+            Text('${s.t('ayahLabel')} ${ayah.surah}:${ayah.displayAyahNumber}',
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
             GridView.builder(

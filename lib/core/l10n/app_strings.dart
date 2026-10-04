@@ -384,6 +384,99 @@ class AppStrings {
       'en': 'A verified dataset is required to display this content.',
       'fr': 'Un jeu de données vérifié est requis pour afficher ce contenu.',
     },
+    'riwayaExplanation': {
+      'ar': 'القراءة هي الأصل، والرواية طريق نقلها. كل رواية هنا تعتمد على نص موثق مستقل، ولا يتم استبدال الكلمات برمجيًا.',
+      'en': 'Qira’a is the canonical reading and Riwaya is its transmission. Each Riwaya uses its own verified dataset; wording is never substituted programmatically.',
+      'fr': 'La qira’a est la lecture de référence et la riwaya sa transmission. Chaque riwaya utilise son propre jeu de données vérifié ; le texte n’est jamais remplacé artificiellement.',
+    },
+    'qiraaLabel': {'ar': 'القراءة', 'en': 'Qira’a', 'fr': 'Qira’a'},
+    'versionLabel': {'ar': 'الإصدار', 'en': 'Version', 'fr': 'Version'},
+    'scriptExplanation': {
+      'ar': 'تغيير الرسم يغيّر طريقة العرض فقط، ولا يغيّر ألفاظ القرآن أو معناه.',
+      'en': 'Changing the script changes presentation only; it never changes Quran wording or meaning.',
+      'fr': 'Changer le rasm modifie uniquement l’affichage, jamais les mots ni le sens du Coran.',
+    },
+    'uthmani': {'ar': 'عثماني', 'en': 'Uthmani', 'fr': 'Uthmani'},
+    'uthmaniHint': {
+      'ar': 'الرسم التقليدي بعلامات المصحف.',
+      'en': 'Traditional orthography with Quranic marks.',
+      'fr': 'Orthographe traditionnelle avec les signes coraniques.',
+    },
+    'imlai': {'ar': 'إملائي مبسط', 'en': 'Simple / Imla’i', 'fr': 'Simple / Imla’i'},
+    'imlaiHint': {
+      'ar': 'كتابة مبسطة للقراءة والبحث.',
+      'en': 'Simplified modern reading and search-friendly text.',
+      'fr': 'Écriture simplifiée adaptée à la lecture et à la recherche.',
+    },
+    'indopak': {'ar': 'هندي باكستاني', 'en': 'IndoPak', 'fr': 'IndoPak'},
+    'indopakHint': {
+      'ar': 'رسم هندي باكستاني متوفر لحفص.',
+      'en': 'IndoPak script bundled for Hafs.',
+      'fr': 'Rasm IndoPak inclus pour Hafs.',
+    },
+    'datasetUnavailableForRiwaya': {
+      'ar': 'هذا الرسم غير متوفر لهذه الرواية ضمن مصدر موثق.',
+      'en': 'This script is unavailable for this Riwaya from a verified dataset.',
+      'fr': 'Ce rasm est indisponible pour cette riwaya dans un jeu de données vérifié.',
+    },
+    'tajweedColors': {'ar': 'ألوان التجويد', 'en': 'Tajweed colors', 'fr': 'Couleurs de tajwid'},
+    'tajweedVerifiedHint': {
+      'ar': 'ألوان موثقة فوق نص حفص العثماني، من دون تغيير النص.',
+      'en': 'Verified annotations over Hafs/Uthmani; Quran text remains unchanged.',
+      'fr': 'Annotations vérifiées sur Hafs/Uthmani sans modifier le texte coranique.',
+    },
+    'tajweedHafsOnly': {
+      'ar': 'متاح حاليًا فقط مع حفص بالرسم العثماني.',
+      'en': 'Currently available only with Hafs + Uthmani.',
+      'fr': 'Disponible actuellement uniquement avec Hafs + Uthmani.',
+    },
+    'quranTypography': {'ar': 'تنسيق خط القرآن', 'en': 'Quran typography', 'fr': 'Typographie du Coran'},
+    'fontSize': {'ar': 'حجم الخط', 'en': 'Font size', 'fr': 'Taille du texte'},
+    'lineHeight': {'ar': 'تباعد السطور', 'en': 'Line height', 'fr': 'Hauteur de ligne'},
+    'ayahSpacing': {'ar': 'تباعد الآيات', 'en': 'Ayah spacing', 'fr': 'Espacement des versets'},
+    'allCollections': {'ar': 'كل المجموعات', 'en': 'All collections', 'fr': 'Toutes les collections'},
+    'additionalContent': {'ar': 'محتوى إضافي', 'en': 'Additional content', 'fr': 'Contenu supplémentaire'},
+    'additionalContentHint': {
+      'ar': 'هذه المواد مضمنة أصلًا وتعمل دون اتصال. اختر فقط ما تريد تفعيله افتراضيًا.',
+      'en': 'These items are already bundled and work offline. Choose what you want enabled by default.',
+      'fr': 'Ces contenus sont déjà inclus et fonctionnent hors ligne. Choisissez ce que vous souhaitez activer par défaut.',
+    },
+    'translations': {'ar': 'الترجمات', 'en': 'Translations', 'fr': 'Traductions'},
+    'saheehInternational': {'ar': 'الترجمة الإنجليزية — صحيح إنترناشونال', 'en': 'English — Saheeh International', 'fr': 'Anglais — Saheeh International'},
+    'hamidullahFrench': {'ar': 'الترجمة الفرنسية — محمد حميد الله', 'en': 'French — Muhammad Hamidullah', 'fr': 'Français — Muhammad Hamidullah'},
+    'chooseTafsir': {'ar': 'اختر التفسير الافتراضي', 'en': 'Choose default Tafsir', 'fr': 'Choisir le tafsir par défaut'},
+    'jalalayn': {'ar': 'تفسير الجلالين', 'en': 'Tafsir al-Jalalayn', 'fr': 'Tafsir al-Jalalayn'},
+    'siraj': {'ar': 'السراج في تفسير القرآن', 'en': 'Al-Siraj Tafsir', 'fr': 'Tafsir Al-Siraj'},
+    'noHadithMatches': {'ar': 'لا توجد أحاديث تطابق هذه التصفية.', 'en': 'No hadith match these filters.', 'fr': 'Aucun hadith ne correspond à ces filtres.'},
+    'sourcesNone': {'ar': 'المصادر: لا شيء محدد', 'en': 'Sources: none', 'fr': 'Sources : aucune'},
+    'sourcesSelected': {'ar': 'مصادر محددة', 'en': 'sources selected', 'fr': 'sources sélectionnées'},
+    'hadithCountUnit': {'ar': 'حديث', 'en': 'hadith', 'fr': 'hadiths'},
+    'numbersLabel': {'ar': 'الأرقام', 'en': 'nos.', 'fr': 'n°'},
+    'chainOfNarration': {'ar': 'سلسلة السند', 'en': 'Chain of Narration', 'fr': 'Chaîne de transmission'},
+    'relatedNarrations': {'ar': 'الروايات ذات الصلة', 'en': 'Related Narrations', 'fr': 'Narrations liées'},
+    'narratorLabel': {'ar': 'الراوي', 'en': 'Narrator', 'fr': 'Narrateur'},
+    'profileLabel': {'ar': 'الملف', 'en': 'profile', 'fr': 'profil'},
+    'gradeLabel': {'ar': 'الدرجة', 'en': 'Grade', 'fr': 'Degré'},
+    'gradeUnavailable': {
+      'ar': 'الدرجة غير متوفرة في هذا المصدر، ولن يتم افتراضها.',
+      'en': 'Grade unavailable for this source; it is never assumed.',
+      'fr': 'Le degré est indisponible pour cette source et n’est jamais supposé.',
+    },
+    'narratorDetailsUnavailable': {
+      'ar': 'لا تتوفر حاليًا بيانات موثقة كافية لعرض سلسلة الرواة أو السيرة التفصيلية لهذا الراوي.',
+      'en': 'There is not enough verified structured metadata to show a narrator chain or detailed biography yet.',
+      'fr': 'Les métadonnées structurées vérifiées sont insuffisantes pour afficher la chaîne ou une biographie détaillée.',
+    },
+    'relatedNarrationsHint': {
+      'ar': 'تُعرض الروايات الموازية من المصادر الأخرى منفصلة بمراجعها الأصلية، ولا يتم دمجها.',
+      'en': 'Parallel narrations from other collections are shown separately with their own references and are never merged.',
+      'fr': 'Les narrations parallèles d’autres collections sont affichées séparément avec leurs propres références et ne sont jamais fusionnées.',
+    },
+    'arabicMatnPlaceholderHint': {
+      'ar': 'يظهر المتن والسند والراوي والدرجة والترجمة والروايات الموازية هنا فقط عندما يوفرها مصدر موثق.',
+      'en': 'Matn, sanad, narrator, grade, translation and parallel narrations appear here only when provided by a verified source.',
+      'fr': 'Le matn, le sanad, le narrateur, le degré, la traduction et les narrations parallèles apparaissent ici uniquement lorsqu’une source vérifiée les fournit.',
+    },
     // ── Shared ──
     'contentUnavailable': {
       'ar': 'المحتوى غير متوفر لهذا المصدر.',
@@ -440,17 +533,17 @@ class AppStrings {
       'fr': 'Choisir les sources de hadiths'
     },
     'obDownloads': {
-      'ar': 'تنزيلات اختيارية',
-      'en': 'Optional downloads',
-      'fr': 'Téléchargements facultatifs'
+      'ar': 'محتوى إضافي',
+      'en': 'Additional content',
+      'fr': 'Contenu supplémentaire'
     },
     'obDownloadsHint': {
       'ar':
-          'يمكن تنزيل القرآن والترجمات والتفاسير والحديث والصوت لاحقًا من المكتبة. لا شيء مطلوب الآن.',
+          'الترجمات والتفاسير التالية مضمنة أصلًا وتعمل دون اتصال. اختر ما تريد تفعيله افتراضيًا.',
       'en':
-          'Quran, translations, tafsir, hadith and audio can be downloaded later from Library. Nothing is required now.',
+          'The translations and Tafsir below are already bundled and work offline. Choose what you want enabled by default.',
       'fr':
-          'Coran, traductions, tafsir, hadiths et audio pourront être téléchargés plus tard. Rien n’est requis.',
+          'Les traductions et tafsirs ci-dessous sont déjà inclus et fonctionnent hors ligne. Choisissez ceux à activer par défaut.',
     },
     'obNext': {'ar': 'التالي', 'en': 'Next', 'fr': 'Suivant'},
     'obDone': {'ar': 'ابدأ', 'en': 'Start', 'fr': 'Commencer'},
