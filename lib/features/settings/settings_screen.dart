@@ -8,6 +8,7 @@ import '../downloads/downloads_screen.dart';
 import '../quran/audio_player_screen.dart';
 import '../quran/riwaya_selector_screen.dart';
 import '../../state/providers.dart';
+import 'data_sources_screen.dart';
 
 /// Organized settings (§25): grouped cards with icons, fully
 /// localized — Arabic locale shows Arabic-only chrome (§33 terms kept
@@ -215,6 +216,15 @@ class SettingsScreen extends ConsumerWidget {
                     MaterialPageRoute(
                         builder: (_) =>
                             const DownloadsScreen())),
+              ),
+              _Nav(
+                icon: Icons.source_outlined,
+                title: 'Data sources & licenses',
+                subtitle: 'Provenance, attribution & unresolved terms',
+                onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            const DataSourcesScreen())),
               ),
             ],
           ),
