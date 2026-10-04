@@ -8,8 +8,8 @@
 
 import 'dart:convert';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../content/content_packages.dart';
 
 class TajweedSpan {
   const TajweedSpan({
@@ -175,9 +175,13 @@ final tajweedSurahProvider =
     FutureProvider.family<Map<int, List<TajweedSpan>>, int>(
         (ref, surah) async {
   try {
-    final raw = await rootBundle.loadString(
-        'assets/quran/tajweed/hafs/$surah.json',
-        cache: false);
+    if (!await ContentPackageStore.instance
+        .isInstalled('quran:tajweed-hafs')) {
+      return const {};
+    }
+    final raw = await ContentPackageStore.instance.loadString(
+      'assets/quran/tajweed/hafs/$surah.json',
+    );
     final json = jsonDecode(raw) as Map<String, dynamic>;
     final out = <int, List<TajweedSpan>>{};
     for (final e in (json['entries'] as List)) {
