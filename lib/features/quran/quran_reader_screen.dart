@@ -74,7 +74,7 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
               actions: [
                 if (q.showTajweed && q.tajweedAvailable)
                   IconButton(
-                    tooltip: 'Tajweed legend',
+                    tooltip: s.t('tajweedLegend'),
                     icon: const Icon(Icons.palette_outlined),
                     onPressed: () => showModalBottomSheet(
                         context: context,
@@ -83,7 +83,7 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
                             const TajweedLegendSheet()),
                   ),
                 IconButton(
-                  tooltip: 'Mushaf / Reading',
+                  tooltip: s.t('mushafReading'),
                   icon: Icon(q.readingMode.name == 'reading'
                       ? Icons.auto_stories
                       : Icons.view_agenda),
@@ -93,7 +93,7 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
                               MushafReaderScreen(surah: widget.surah))),
                 ),
                 IconButton(
-                  tooltip: 'Fullscreen',
+                  tooltip: s.t('fullscreen'),
                   icon: const Icon(Icons.fullscreen),
                   onPressed: () =>
                       setState(() => _fullscreen = true),
@@ -118,7 +118,7 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
                   const SizedBox(height: 8),
                   Text(
                     'Edition: ${q.editionId}\nSource: ${riwaya.source} v${riwaya.datasetVersion}\n'
-                    'Connect a verified dataset to render Surah ${meta.nameEn}.',
+                    '${s.t('verifiedDatasetRequired')}',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const SizedBox(height: 16),
@@ -140,7 +140,7 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
                                 builder: (_) => TafsirScreen(
                                     surah: widget.surah,
                                     ayah: 1))),
-                        child: const Text('Tafsir'),
+                        child: Text(s.t('tafsir')),
                       ),
                     ],
                   ),
