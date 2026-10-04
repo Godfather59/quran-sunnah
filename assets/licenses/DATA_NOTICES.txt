@@ -1,0 +1,46 @@
+QURAN & SUNNAH — BUNDLED DATA NOTICES
+Last reviewed: 2026-10-04
+
+QURAN — HAFS
+Source: Tanzil Project
+License: Creative Commons Attribution 3.0, subject to Tanzil Quran Text terms.
+The bundled text must remain verbatim. Source: https://tanzil.net
+
+QURAN TRANSLATIONS
+Saheeh International and Muhammad Hamidullah translations are sourced via
+Tanzil. Tanzil's translation page states downloaded translations are for
+non-commercial purposes unless the necessary permission is obtained from the
+translator or publisher.
+Source: https://tanzil.net/trans/
+
+TAJWEED
+Annotations are generated from the cpfair/quran-tajweed decision-tree/data
+project. Its Tajweed data file is licensed CC BY 4.0.
+Source: https://github.com/cpfair/quran-tajweed
+
+MORPHOLOGY
+Quranic Arabic Corpus v0.4, Kais Dukes. GNU GPL plus Corpus terms. Source must
+be credited and linked.
+Source: https://corpus.quran.com
+
+AL-SIRAJ
+Provenance points to QuranEnc. QuranEnc allows republication subject to its
+no-modification, attribution, version/transcript, and update conditions. The
+exact bundled version identifier still needs to be recorded.
+Source: https://quranenc.com
+
+WARSH / QALUN / INDOPAK
+Aggregator provenance is recorded, but direct upstream redistribution terms
+for the underlying QuranComplex-derived editions remain unresolved.
+
+HADITH
+The hadith-api repository is Unlicensed as software/repository material, but
+the license/source of its underlying Arabic Hadith edition texts is not clearly
+established. Upstream issue #129 asks this exact question and remains open.
+Source: https://github.com/fawazahmed0/hadith-api/issues/129
+
+FONTS
+Amiri Quran and Noto Naskh Arabic are bundled under SIL Open Font License
+terms. Their OFL license files are included in assets/fonts/.
+
+See docs/DATA_LICENSES.md in the source repository for the detailed audit.
