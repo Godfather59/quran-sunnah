@@ -21,6 +21,7 @@ import 'riwaya_selector_screen.dart';
 import 'compare_riwayat_screen.dart';
 import 'tafsir_screen.dart';
 import 'widgets/ayah_action_sheet.dart';
+import 'widgets/tajweed_text.dart';
 import 'widgets/word_tap_text.dart';
 
 /// Reading Mode: vertical ayahs. Mushaf Mode via app-bar toggle.
