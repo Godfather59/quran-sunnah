@@ -117,7 +117,7 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
                         context: context,
                         showDragHandle: true,
                         builder: (_) =>
-                            const TajweedLegendSheet()),
+                            TajweedLegendSheet()),
                   ),
                 IconButton(
                   tooltip: s.t('mushafReading'),
@@ -376,7 +376,6 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
                             translationIds: q.translations),
                       ],
                     ],
-                  ),
                   ),
                 );
               },
