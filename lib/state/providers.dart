@@ -94,37 +94,74 @@ class QuranPrefsNotifier extends StateNotifier<QuranPrefs> {
     _load(initial);
   }
 
+  T _enumByName<T extends Enum>(List<T> values, String? name, T fallback) {
+    if (name == null) return fallback;
+    for (final v in values) {
+      if (v.name == name) return v;
+    }
+    return fallback;
+  }
+
+  RiwayaId _loadRiwaya(SharedPreferences p) {
+    final s = p.getString('q.riwayaName');
+    if (s != null) {
+      return _enumByName(RiwayaId.values, s, RiwayaId.hafsAsim);
+    }
+    final idx = p.getInt('q.riwaya') ?? 0;
+    if (idx >= 0 && idx < RiwayaId.values.length) return RiwayaId.values[idx];
+    return RiwayaId.hafsAsim;
+  }
+
   Future<void> _load(QuranPrefs initial) async {
     final p = await SharedPreferences.getInstance();
     if (!identical(state, initial)) return;
-    final riwayaIndex = p.getInt('q.riwaya') ?? 0;
-    final scriptIndex = p.getInt('q.script') ?? 0;
-    final modeIndex = p.getInt('q.mode') ?? 0;
-    final fontIndex = p.getInt('q.font') ?? 0;
-    final numberStyleIndex = p.getInt('q.ayahNumberStyle') ?? 0;
-
-    final riwaya = riwayaIndex >= 0 && riwayaIndex < RiwayaId.values.length
-        ? RiwayaId.values[riwayaIndex]
-        : RiwayaId.hafsAsim;
-    var script = scriptIndex >= 0 && scriptIndex < QuranScript.values.length
-        ? QuranScript.values[scriptIndex]
-        : QuranScript.uthmani;
-    final legacyTajweed = script == QuranScript.tajweed;
-    script = script.datasetScript;
-
+    final riwaya = _loadRiwaya(p);
+    var script = _enumByName(
+        QuranScript.values, p.getString('q.scriptName'), QuranScript.uthmani);
+    // Migrate legacy int keys once.
+    if (p.getString('q.scriptName') == null && p.containsKey('q.script')) {
+      final si = p.getInt('q.script') ?? 0;
+      if (si >= 0 && si < QuranScript.values.length) {
+        script = QuranScript.values[si];
+      }
+    }
+    var font = _enumByName(
+        QuranFont.values, p.getString('q.fontName'), QuranFont.uthmani);
+    if (p.getString('q.fontName') == null && p.containsKey('q.font')) {
+      final fi = p.getInt('q.font') ?? 0;
+      if (fi >= 0 && fi < QuranFont.values.length) font = QuranFont.values[fi];
+    }
+    var mode = _enumByName(
+        ReadingMode.values, p.getString('q.modeName'), ReadingMode.reading);
+    if (p.getString('q.modeName') == null && p.containsKey('q.mode')) {
+      final mi = p.getInt('q.mode') ?? 0;
+      if (mi >= 0 && mi < ReadingMode.values.length) {
+        mode = ReadingMode.values[mi];
+      }
+    }
+    var numberStyle = _enumByName(AyahNumberStyle.values,
+        p.getString('q.ayahNumberStyleName'), AyahNumberStyle.arabicIndic);
+    if (p.getString('q.ayahNumberStyleName') == null &&
+        p.containsKey('q.ayahNumberStyle')) {
+      final ni = p.getInt('q.ayahNumberStyle') ?? 0;
+      if (ni >= 0 && ni < AyahNumberStyle.values.length) {
+        numberStyle = AyahNumberStyle.values[ni];
+      }
+    }
+    final legacyTajweed = p.getString('q.scriptName') == null &&
+        (p.getInt('q.script') != null &&
+            () {
+              final si = p.getInt('q.script') ?? 0;
+              return si >= 0 &&
+                  si < QuranScript.values.length &&
+                  QuranScript.values[si] == QuranScript.tajweed;
+            }());
     var loaded = state.copyWith(
       riwaya: riwaya,
-      script: script,
-      font: fontIndex >= 0 && fontIndex < QuranFont.values.length
-          ? QuranFont.values[fontIndex]
-          : QuranFont.uthmani,
-      readingMode: modeIndex >= 0 && modeIndex < ReadingMode.values.length
-          ? ReadingMode.values[modeIndex]
-          : ReadingMode.reading,
-      ayahNumberStyle: numberStyleIndex >= 0 &&
-              numberStyleIndex < AyahNumberStyle.values.length
-          ? AyahNumberStyle.values[numberStyleIndex]
-          : AyahNumberStyle.arabicIndic,
+      script: script.datasetScript,
+      font: font,
+      readingMode: mode,
+      ayahNumberStyle: numberStyle,
       fontSize: p.getDouble('q.fontSize') ?? 24,
       lineHeight: p.getDouble('q.lineHeight') ?? 1.9,
       ayahSpacing: p.getDouble('q.ayahSpacing') ?? 12,
@@ -164,11 +201,12 @@ class QuranPrefsNotifier extends StateNotifier<QuranPrefs> {
     final normalized = _normalize(next);
     state = normalized;
     final p = await SharedPreferences.getInstance();
-    await p.setInt('q.riwaya', normalized.riwaya.index);
-    await p.setInt('q.script', normalized.script.index);
-    await p.setInt('q.font', normalized.font.index);
-    await p.setInt('q.mode', normalized.readingMode.index);
-    await p.setInt('q.ayahNumberStyle', normalized.ayahNumberStyle.index);
+    await p.setString('q.riwayaName', normalized.riwaya.name);
+    await p.setString('q.scriptName', normalized.script.name);
+    await p.setString('q.fontName', normalized.font.name);
+    await p.setString('q.modeName', normalized.readingMode.name);
+    await p.setString(
+        'q.ayahNumberStyleName', normalized.ayahNumberStyle.name);
     await p.setDouble('q.fontSize', normalized.fontSize);
     await p.setDouble('q.lineHeight', normalized.lineHeight);
     await p.setDouble('q.ayahSpacing', normalized.ayahSpacing);
@@ -238,12 +276,26 @@ class AppPrefsNotifier extends StateNotifier<AppPrefs> {
   Future<void> _load(AppPrefs initial) async {
     final p = await SharedPreferences.getInstance();
     if (!identical(state, initial)) return;
-    final themeIndex = p.getInt('app.theme') ?? 0;
+    final themeName = p.getString('app.themeName');
+    AppThemeMode mode = AppThemeMode.system;
+    if (themeName != null) {
+      for (final v in AppThemeMode.values) {
+        if (v.name == themeName) {
+          mode = v;
+          break;
+        }
+      }
+    } else {
+      final themeIndex = p.getInt('app.theme') ?? 0;
+      if (themeIndex >= 0 && themeIndex < AppThemeMode.values.length) {
+        // Legacy order was system(0?) — map safely, default system.
+        // Old enum order: system, light, dark (current). Keep index compat.
+        mode = AppThemeMode.values[themeIndex];
+      }
+    }
     state = state.copyWith(
       locale: p.getString('app.locale') ?? 'ar',
-      themeMode: themeIndex >= 0 && themeIndex < AppThemeMode.values.length
-          ? AppThemeMode.values[themeIndex]
-          : AppThemeMode.system,
+      themeMode: mode,
       useDynamicColor: p.getBool('app.dynamicColor') ?? false,
       qari: p.getString('app.qari') ?? '',
       playbackSpeed: p.getDouble('app.playbackSpeed') ?? 1.0,
@@ -257,7 +309,7 @@ class AppPrefsNotifier extends StateNotifier<AppPrefs> {
     state = next;
     final p = await SharedPreferences.getInstance();
     await p.setString('app.locale', next.locale);
-    await p.setInt('app.theme', next.themeMode.index);
+    await p.setString('app.themeName', next.themeMode.name);
     await p.setBool('app.dynamicColor', next.useDynamicColor);
     await p.setString('app.qari', next.qari);
     await p.setDouble('app.playbackSpeed', next.playbackSpeed);

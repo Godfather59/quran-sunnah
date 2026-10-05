@@ -251,6 +251,17 @@ class _AudioPlayerScreenState extends ConsumerState<AudioPlayerScreen> {
                   ),
                   SwitchListTile(
                     title: Text(s.t('repeat')),
+                    subtitle: Text(_to == null || _to == _from
+                        ? s.isArabic
+                            ? 'تكرار الآية الحالية'
+                            : s.locale.languageCode == 'fr'
+                                ? 'Répéter le verset actuel'
+                                : 'Repeat current ayah'
+                        : s.isArabic
+                            ? 'تكرار المقطع $_from–$_to (A-B)'
+                            : s.locale.languageCode == 'fr'
+                                ? 'Répéter la plage $_from–$_to (A-B)'
+                                : 'Repeat range $_from–$_to (A-B)'),
                     value: _repeat,
                     onChanged: (value) {
                       setState(() => _repeat = value);
@@ -282,13 +293,23 @@ class _AudioPlayerScreenState extends ConsumerState<AudioPlayerScreen> {
                   ListTile(
                     leading: const Icon(Icons.bedtime_outlined),
                     title: Text(s.t('sleepTimer')),
+                    subtitle: _sleepMin == null
+                        ? null
+                        : Text('${_sleepMin} min'),
                     trailing: DropdownButton<int?>(
                       value: _sleepMin,
                       hint: Text(s.t('off')),
-                      items: const [
-                        DropdownMenuItem(value: 15, child: Text('15 min')),
-                        DropdownMenuItem(value: 30, child: Text('30 min')),
-                        DropdownMenuItem(value: 60, child: Text('60 min')),
+                      items: [
+                        DropdownMenuItem<int?>(
+                            value: null, child: Text(s.t('off'))),
+                        const DropdownMenuItem(
+                            value: 5, child: Text('5 min')),
+                        const DropdownMenuItem(
+                            value: 15, child: Text('15 min')),
+                        const DropdownMenuItem(
+                            value: 30, child: Text('30 min')),
+                        const DropdownMenuItem(
+                            value: 60, child: Text('60 min')),
                       ],
                       onChanged: (value) {
                         setState(() => _sleepMin = value);

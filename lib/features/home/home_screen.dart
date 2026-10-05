@@ -11,8 +11,10 @@ import '../../data/seed/riwayat_catalog.dart';
 import '../../data/seed/surah_metadata.dart';
 import '../../state/download_state.dart';
 import '../../state/home_prefs.dart';
+import '../../state/khatma_provider.dart';
 import '../../state/library_state.dart';
 import '../../state/providers.dart';
+import '../prayer/prayer_screen.dart';
 import '../quran/audio_player_screen.dart';
 import '../quran/quran_reader_screen.dart';
 import '../quran/surah_list_screen.dart';
@@ -107,7 +109,19 @@ class _ContinueReadingHero extends ConsumerWidget {
         kRiwayaCatalog.firstWhere((r) => r.id == q.riwaya);
     final meta =
         kSurahMetadata.firstWhere((m) => m.number == q.lastSurah);
-    final progress = (q.lastAyah / meta.ayahCount).clamp(0.0, 1.0);
+    // Khatma progress: global position / 6236, not position-in-surah.
+    var _global = 0;
+    for (final m in kSurahMetadata) {
+      if (m.number < q.lastSurah) {
+        _global += m.ayahCount;
+      } else if (m.number == q.lastSurah) {
+        _global += q.lastAyah.clamp(1, m.ayahCount);
+        break;
+      } else {
+        break;
+      }
+    }
+    final progress = (_global / 6236).clamp(0.0, 1.0);
     final scheme = Theme.of(context).colorScheme;
 
     return Card(
@@ -161,7 +175,7 @@ class _ContinueReadingHero extends ConsumerWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                '${s.t('ayahLabel')} ${q.lastAyah} ${s.t('of')} ${meta.ayahCount} · ${(progress * 100).toStringAsFixed(0)}%',
+                '${s.t('ayahLabel')} ${q.lastAyah} ${s.t('of')} ${meta.ayahCount} · ${(progress * 100).toStringAsFixed(1)}% ${s.isArabic ? 'من الختمة' : s.locale.languageCode == 'fr' ? 'du khatma' : 'of khatma'}',
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall
@@ -178,11 +192,33 @@ class _ContinueReadingHero extends ConsumerWidget {
                         .withValues(alpha: 0.2)),
               ),
               const SizedBox(height: 10),
-              Chip(
-                label: Text(
-                  '${s.t('riwaya')}: ${s.isArabic ? riwaya.riwayaAr : riwaya.riwayaEn}',
-                ),
-                visualDensity: VisualDensity.compact,
+              Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                children: [
+                  Chip(
+                    label: Text(
+                      '${s.t('riwaya')}: ${s.isArabic ? riwaya.riwayaAr : riwaya.riwayaEn}',
+                    ),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  Consumer(
+                    builder: (context, ref, _) {
+                      final streak =
+                          ref.watch(streakProvider);
+                      final juz =
+                          ((_global - 1) * 30 ~/ 6236) + 1;
+                      return Chip(
+                        avatar: const Icon(Icons.local_fire_department,
+                            size: 16),
+                        label: Text(
+                            '$streak 🔥 · ${s.t('juz')} $juz'),
+                        visualDensity:
+                            VisualDensity.compact,
+                      );
+                    },
+                  ),
+                ],
               ),
             ],
           ),
@@ -205,6 +241,13 @@ class _QuickActions extends ConsumerWidget {
           const SunnahHomeScreen()),
       (Icons.headphones_outlined, s.t('quickAudio'),
           const AudioPlayerScreen()),
+      (Icons.mosque,
+          s.isArabic
+              ? 'الصلاة'
+              : s.locale.languageCode == 'fr'
+                  ? 'Prière'
+                  : 'Prayer',
+          const PrayerScreen()),
       (Icons.search, s.t('search'), const GlobalSearchScreen()),
     ];
     return Padding(
@@ -360,6 +403,15 @@ final _dailyAyahProvider = FutureProvider.family(
         .watch(quranRepositoryProvider)
         .ayahsOfSurah(args.$1, args.$3));
 
+/// Deterministic daily hadith from bundled Bukhari (cached provider,
+// avoids reloading 9MB JSON on every Home rebuild).
+final _bukhariCachedProvider = FutureProvider((ref) async {
+  final repo = ref.watch(hadithRepositoryProvider);
+  final verified = repo is VerifiedAssetHadithRepository ? repo : null;
+  if (verified == null) return const [];
+  return verified.allBukhari();
+});
+
 /// Deterministic daily hadith from bundled Bukhari.
 class _DailyHadith extends ConsumerWidget {
   const _DailyHadith();
@@ -367,9 +419,7 @@ class _DailyHadith extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = AppStrings.of(context);
-    final repo = ref.watch(hadithRepositoryProvider);
-    final verified =
-        repo is VerifiedAssetHadithRepository ? repo : null;
+    final bukhariAsync = ref.watch(_bukhariCachedProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -378,56 +428,47 @@ class _DailyHadith extends ConsumerWidget {
         Card(
           child: Padding(
             padding: const EdgeInsets.all(18),
-            child: verified == null
-                ? Text(s.t('contentUnavailable'))
-                : FutureBuilder(
-                    future: verified.allBukhari(),
-                    builder: (context, snap) {
-                      if (snap.connectionState ==
-                          ConnectionState.waiting) {
-                        return Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              height: 18,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .surfaceContainerHighest,
-                                borderRadius:
-                                    BorderRadius.circular(6),
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Container(
-                              height: 18,
-                              width: 160,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .surfaceContainerHighest,
-                                borderRadius:
-                                    BorderRadius.circular(6),
-                              ),
-                            ),
-                          ],
-                        );
-                      }
-                      final all = (snap.data ?? [])
-                          .where((h) => !h.isPlaceholder)
-                          .toList();
-                      if (all.isEmpty) {
-                        return Text(
-                            s.t('contentUnavailable'));
-                      }
-                      final now = DateTime.now();
-                      final h = all[DateTime(now.year,
-                                  now.month, now.day)
-                              .difference(DateTime(
-                                  now.year, 1, 1))
-                              .inDays %
-                          all.length];
+            child: bukhariAsync.when(
+              loading: () => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 18,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .surfaceContainerHighest,
+                      borderRadius:
+                          BorderRadius.circular(6),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    height: 18,
+                    width: 160,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .surfaceContainerHighest,
+                      borderRadius:
+                          BorderRadius.circular(6),
+                    ),
+                  ),
+                ],
+              ),
+              error: (e, _) => Text(s.t('contentUnavailable')),
+              data: (list) {
+                final all = list
+                    .where((h) => !h.isPlaceholder)
+                    .toList();
+                if (all.isEmpty) {
+                  return Text(s.t('contentUnavailable'));
+                }
+                final now = DateTime.now();
+                final h = all[DateTime(now.year, now.month, now.day)
+                        .difference(DateTime(now.year, 1, 1))
+                        .inDays %
+                    all.length];
                       return Column(
                         crossAxisAlignment:
                             CrossAxisAlignment.start,
@@ -483,6 +524,21 @@ class _BookmarksPreview extends ConsumerWidget {
                     : Icons.auto_stories),
                 title: Text(b.title),
                 subtitle: Text(b.subtitle),
+                trailing: const Icon(Icons.chevron_right, size: 18),
+                onTap: () {
+                  if (b.kind != BookmarkKind.ayah) return;
+                  final parts = b.refKey.split(':');
+                  if (parts.length != 2) return;
+                  final su = int.tryParse(parts[0]);
+                  final ay = int.tryParse(parts[1]);
+                  if (su == null || ay == null) return;
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => QuranReaderScreen(
+                          surah: su, initialAyah: ay),
+                    ),
+                  );
+                },
               )),
       ],
     );
@@ -500,11 +556,29 @@ class _RecentPreview extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeader(title: s.t('recentlyViewed')),
-        ...recent.map((r) => ListTile(
+        ...recent.take(5).map((r) => ListTile(
               contentPadding: EdgeInsets.zero,
               leading: const Icon(Icons.history),
               title: Text(r.title),
               subtitle: Text(r.subtitle),
+              trailing: r.kind == BookmarkKind.ayah
+                  ? const Icon(Icons.chevron_right, size: 18)
+                  : null,
+              onTap: r.kind != BookmarkKind.ayah
+                  ? null
+                  : () {
+                      final parts = r.refKey.split(':');
+                      if (parts.length != 2) return;
+                      final su = int.tryParse(parts[0]);
+                      final ay = int.tryParse(parts[1]);
+                      if (su == null || ay == null) return;
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => QuranReaderScreen(
+                              surah: su, initialAyah: ay),
+                        ),
+                      );
+                    },
             )),
       ],
     );

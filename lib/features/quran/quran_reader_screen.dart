@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,13 +13,15 @@ import '../../data/seed/riwayat_catalog.dart';
 import '../../data/seed/surah_metadata.dart';
 import '../../data/repositories/quran_repository.dart';
 import '../../state/library_state.dart';
+import '../../state/memorization_provider.dart';
+import '../../state/khatma_provider.dart';
 import '../../state/providers.dart';
 import 'mushaf_reader_screen.dart';
 import 'riwaya_selector_screen.dart';
 import 'compare_riwayat_screen.dart';
 import 'tafsir_screen.dart';
 import 'widgets/ayah_action_sheet.dart';
-import 'widgets/tajweed_text.dart';
+import 'widgets/word_tap_text.dart';
 
 /// Reading Mode: vertical ayahs. Mushaf Mode via app-bar toggle.
 /// Peaceful hierarchy: Quran text → number → translation → actions.
@@ -38,7 +42,29 @@ class QuranReaderScreen extends ConsumerStatefulWidget {
 class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
   bool _fullscreen = false;
   bool _scrolledToInitial = false;
+  bool _hideMode = false;
+  final Set<String> _revealed = {};
   final Map<int, GlobalKey> _keys = {};
+
+  @override
+  void initState() {
+    super.initState();
+    // Streak + last-read persistence (fire-and-forget).
+    Future.microtask(() async {
+      try {
+        ref.read(streakProvider.notifier).touchToday();
+        final q = ref.read(quranPrefsProvider);
+        // Update last position if navigating to a new surah explicitly.
+        if (q.lastSurah != widget.surah) {
+          await ref.read(quranPrefsProvider.notifier).update(
+                q.copyWith(
+                    lastSurah: widget.surah,
+                    lastAyah: widget.initialAyah.clamp(1, 300)),
+              );
+        }
+      } catch (_) {}
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +76,17 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
         kSurahMetadata.firstWhere((m) => m.number == widget.surah);
     final ayahsAsync = ref.watch(
         _surahAyahsProvider((widget.surah, q.editionId)));
+    // Hoisted: watch once per build, not per ayah row (perf).
+    final bookmarkKeys = {
+      for (final b in ref.watch(libraryProvider)) b.refKey
+    };
+    final highlightsByKey = {
+      for (final h in ref.watch(highlightsProvider)) h.refKey: h
+    };
+    final noteKeys = {
+      for (final n in ref.watch(notesProvider)) n.refKey
+    };
+    final memorized = ref.watch(memorizationProvider);
 
     return Scaffold(
       appBar: _fullscreen
@@ -93,6 +130,16 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
                               MushafReaderScreen(surah: widget.surah))),
                 ),
                 IconButton(
+                  tooltip: _hideMode ? '✓' : '◉',
+                  icon: Icon(_hideMode
+                      ? Icons.visibility_off
+                      : Icons.visibility_outlined),
+                  onPressed: () => setState(() {
+                    _hideMode = !_hideMode;
+                    if (!_hideMode) _revealed.clear();
+                  }),
+                ),
+                IconButton(
                   tooltip: s.t('fullscreen'),
                   icon: const Icon(Icons.fullscreen),
                   onPressed: () =>
@@ -110,7 +157,8 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
           error: (e, _) => Center(child: Text('$e')),
           data: (ayahs) {
             if (ayahs.isEmpty ||
-                ayahs.every((a) => a.isPlaceholder)) {              return ListView(
+                ayahs.every((a) => a.isPlaceholder)) {
+              return ListView(
                 padding: EdgeInsets.all(q.margins + 8),
                 children: [
                   UnavailableBanner(
@@ -168,20 +216,18 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
               itemBuilder: (context, i) {
                 final a = ayahs[i];
                 final num = switch (q.ayahNumberStyle) {
-                  AyahNumberStyle.arabicIndic =>
+                  AyahNumberStyle.arabicIndic ||
+                  AyahNumberStyle.easternArabic =>
                     toArabicIndic(a.displayAyahNumber),
-                  _ => '${a.displayAyahNumber}',
+                  AyahNumberStyle.latin => '${a.displayAyahNumber}',
                 };
-                final bookmarked = ref
-                    .watch(libraryProvider)
-                    .any((b) => b.refKey == a.key);
-                final highlight = ref
-                    .watch(highlightsProvider)
-                    .where((h) => h.refKey == a.key)
-                    .firstOrNull;
-                final hasNote = ref
-                    .watch(notesProvider)
-                    .any((n) => n.refKey == a.key);
+                final bookmarked = bookmarkKeys.contains(a.key);
+                final highlight = highlightsByKey[a.key];
+                final hasNote = noteKeys.contains(a.key);
+                final isMemorized = memorized.contains(
+                    '${a.canonicalSurahNumber}:${a.canonicalAyahNumber}');
+                final hidden =
+                    _hideMode && !_revealed.contains(a.key);
                 return Container(
                   decoration: highlight == null
                       ? null
@@ -194,63 +240,137 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
                   padding: highlight == null
                       ? null
                       : const EdgeInsets.all(8),
-                  child: InkWell(
-                  key: _keys.putIfAbsent(
-                      a.canonicalAyahNumber, () => GlobalKey()),
-                  borderRadius: BorderRadius.circular(12),
-                  onTap: () =>
-                      showAyahActionSheet(context, a),
-                  onLongPress: () {
-                    HapticFeedback.lightImpact();
-                    showAyahActionSheet(context, a);
-                  },
                   child: Column(
                     crossAxisAlignment:
                         CrossAxisAlignment.stretch,
                     children: [
-                      TajweedText(
-                          ayah: a, fontSize: q.fontSize),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .outlineVariant),
-                              borderRadius:
-                                  BorderRadius.circular(20),
-                            ),
-                            child: Text('﴿$num﴾',
-                                textDirection:
-                                    TextDirection.rtl),
-                          ),
-                          const Spacer(),
-                          if (a.isSajda)
-                            Semantics(
-                              label: s.t('sajda'),
-                              child: Text(
-                                '۩',
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .tertiary,
-                                  fontSize: 20,
-                                ),
+                      // Tap-only-Arabic opens sheet (translation selectable).
+                      // Hide mode: tap reveals, long-press opens sheet.
+                      InkWell(
+                        key: _keys.putIfAbsent(
+                            a.canonicalAyahNumber, () => GlobalKey()),
+                        borderRadius: BorderRadius.circular(12),
+                        onTap: () {
+                          if (hidden) {
+                            setState(() => _revealed.add(a.key));
+                          } else {
+                            showAyahActionSheet(context, a);
+                          }
+                        },
+                        onLongPress: () {
+                          HapticFeedback.lightImpact();
+                          showAyahActionSheet(context, a);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8),
+                          child: Column(
+                            crossAxisAlignment:
+                                CrossAxisAlignment.stretch,
+                            children: [
+                              if (hidden)
+                                GestureDetector(
+                                  onTap: () => setState(
+                                      () => _revealed.add(a.key)),
+                                  child: ImageFiltered(
+                                    imageFilter: ImageFilter.blur(
+                                        sigmaX: 8, sigmaY: 8),
+                                    child: WordTapAyahText(
+                                        ayah: a,
+                                        fontSize: q.fontSize),
+                                  ),
+                                )
+                              else
+                                WordTapAyahText(
+                                    ayah: a, fontSize: q.fontSize),
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  Container(
+                                    constraints: const BoxConstraints(
+                                        minHeight: 48),
+                                    alignment: Alignment.center,
+                                    padding:
+                                        const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 4),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .outlineVariant),
+                                      borderRadius:
+                                          BorderRadius.circular(20),
+                                    ),
+                                    child: Text('﴿$num﴾',
+                                        textDirection:
+                                            TextDirection.rtl),
+                                  ),
+                                  const Spacer(),
+                                  if (a.isSajda)
+                                    Semantics(
+                                      label: s.t('sajda'),
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.all(12),
+                                        child: Text(
+                                          '۩',
+                                          style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .tertiary,
+                                            fontSize: 22,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  if (hasNote)
+                                    const Padding(
+                                      padding: EdgeInsets.all(12),
+                                      child: Icon(Icons.edit_note,
+                                          size: 22),
+                                    ),
+                                  if (bookmarked)
+                                    const Padding(
+                                      padding: EdgeInsets.all(12),
+                                      child: Icon(Icons.bookmark,
+                                          size: 22),
+                                    ),
+                                  InkWell(
+                                    borderRadius:
+                                        BorderRadius.circular(24),
+                                    onTap: () => ref
+                                        .read(memorizationProvider
+                                            .notifier)
+                                        .toggle(
+                                            a.canonicalSurahNumber,
+                                            a.canonicalAyahNumber),
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.all(12),
+                                      child: Icon(
+                                        isMemorized
+                                            ? Icons.check_circle
+                                            : Icons
+                                                .check_circle_outline,
+                                        size: 22,
+                                        color: isMemorized
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .primary
+                                            : null,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          if (hasNote)
-                            const Icon(Icons.edit_note, size: 18),
-                          if (bookmarked)
-                            const Icon(Icons.bookmark, size: 18),
-                        ],
+                            ],
+                          ),
+                        ),
                       ),
                       if (q.showTranslation &&
                           q.translations.isNotEmpty) ...[
-                        const SizedBox(height: 6),
+                        const Divider(height: 16),
                         _AyahTranslations(
                             ayahKey: a.key,
                             translationIds: q.translations),
@@ -311,7 +431,7 @@ class _AyahTranslations extends ConsumerWidget {
                     style:
                         Theme.of(context).textTheme.labelSmall,
                   ),
-                  Text(text,
+                  SelectableText(text,
                       style: AppTheme.translation(context)),
                 ],
               ),

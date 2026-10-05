@@ -75,36 +75,72 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.all(20),
-                child: Row(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('${_page + 1} / 5'),
-                    const Spacer(),
-                    if (_page > 0 && !_finishing)
-                      TextButton(
-                        onPressed: () => _ctrl.previousPage(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeOut,
+                    // Progress dots (5 pages).
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        5,
+                        (i) => Container(
+                          width: 8,
+                          height: 8,
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 4),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: i == _page
+                                ? Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .outlineVariant,
+                          ),
                         ),
-                        child: const Text('‹'),
                       ),
-                    const SizedBox(width: 8),
-                    FilledButton(
-                      onPressed: _finishing
-                          ? null
-                          : _page == 4
-                              ? _finish
-                              : () => _ctrl.nextPage(
-                                    duration:
-                                        const Duration(milliseconds: 300),
-                                    curve: Curves.easeOut,
-                                  ),
-                      child: Text(
-                        _finishing
-                            ? s.t('downloading')
-                            : _page == 4
-                                ? s.t('obDone')
-                                : s.t('obNext'),
-                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Text('${_page + 1} / 5'),
+                        TextButton(
+                          onPressed: _finishing
+                              ? null
+                              : () => _finish(skipAll: true),
+                          child: Text(s.t('skip')),
+                        ),
+                        const Spacer(),
+                        if (_page > 0 && !_finishing)
+                          TextButton(
+                            onPressed: () => _ctrl.previousPage(
+                              duration:
+                                  const Duration(milliseconds: 300),
+                              curve: Curves.easeOut,
+                            ),
+                            child: Text(s.isArabic ? '›' : '‹'),
+                          ),
+                        const SizedBox(width: 8),
+                        FilledButton(
+                          onPressed: _finishing
+                              ? null
+                              : _page == 4
+                                  ? _finish
+                                  : () => _ctrl.nextPage(
+                                        duration: const Duration(
+                                            milliseconds: 300),
+                                        curve: Curves.easeOut,
+                                      ),
+                          child: Text(
+                            _finishing
+                                ? s.t('downloading')
+                                : _page == 4
+                                    ? s.t('obDone')
+                                    : s.t('obNext'),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

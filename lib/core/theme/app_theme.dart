@@ -101,9 +101,14 @@ class AppTheme {
       colorScheme: scheme,
       scaffoldBackgroundColor: scheme.surface,
       visualDensity: VisualDensity.standard,
-      fontFamily: 'Noto Naskh Arabic',
+      // Do NOT set global Noto Naskh — it hurts Latin (EN/FR) readability.
+      // Arabic Quran text sets its font explicitly via quranArabic().
+      // UI Arabic falls back via fontFamilyFallback below.
     );
     return theme.copyWith(
+      textTheme: theme.textTheme.apply(
+        fontFamilyFallback: const ['Noto Naskh Arabic'],
+      ),
       appBarTheme: theme.appBarTheme.copyWith(
         centerTitle: false,
         backgroundColor: scheme.surface,

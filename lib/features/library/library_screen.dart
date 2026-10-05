@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../core/l10n/app_strings.dart';
+import '../../core/utils/text_utils.dart';
 import '../../core/widgets/common.dart';
 import '../../data/models/library.dart';
 import '../../state/database_provider.dart';
@@ -25,14 +26,15 @@ class LibraryScreen extends ConsumerStatefulWidget {
 class _LibraryScreenState extends ConsumerState<LibraryScreen> {
   String _query = '';
 
-  String get _normalizedQuery => _query.trim().toLowerCase();
+  String get _normalizedQuery =>
+      normalizeArabic(_query).toLowerCase();
 
   bool _matches(Iterable<String?> fields) {
     final q = _normalizedQuery;
     if (q.isEmpty) return true;
-    return fields
-        .whereType<String>()
-        .any((value) => value.toLowerCase().contains(q));
+    return fields.whereType<String>().any((value) =>
+        normalizeArabic(value).toLowerCase().contains(q) ||
+        value.toLowerCase().contains(_query.trim().toLowerCase()));
   }
 
   @override
@@ -126,8 +128,43 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
               (b) => Dismissible(
                 key: ValueKey(b.id),
                 background: Container(color: Colors.redAccent),
-                onDismissed: (_) =>
-                    ref.read(libraryProvider.notifier).remove(b.id),
+                onDismissed: (_) async {
+                  final deleted = b;
+                  await ref.read(libraryProvider.notifier).remove(b.id);
+                  if (!context.mounted) return;
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(s.t('delete')),
+                      action: SnackBarAction(
+                        label: s.t('cancel'),
+                        onPressed: () async {
+                          final notifier =
+                              ref.read(libraryProvider.notifier);
+                          if (deleted.kind == BookmarkKind.ayah) {
+                            final parts = deleted.refKey.split(':');
+                            if (parts.length == 2) {
+                              final su = int.tryParse(parts[0]);
+                              final ay = int.tryParse(parts[1]);
+                              if (su != null && ay != null) {
+                                await notifier.toggleAyah(su, ay);
+                                if (deleted.collectionId != null) {
+                                  await notifier.setAyahCollection(
+                                      su, ay, deleted.collectionId);
+                                }
+                              }
+                            }
+                          } else if (deleted.kind ==
+                              BookmarkKind.hadith) {
+                            await notifier.toggleHadith(
+                                deleted.refKey, deleted.title);
+                          }
+                        },
+                      ),
+                      duration: const Duration(seconds: 5),
+                    ),
+                  );
+                },
                 child: ListTile(
                   leading: Icon(
                     b.kind == BookmarkKind.ayah
@@ -324,10 +361,19 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
   Future<void> _exportBackup(BuildContext context) async {
     final store = await ref.read(libraryStoreProvider);
     final data = await store.backup();
+    final jsonStr =
+        const JsonEncoder.withIndent('  ').convert(data);
+    // Auto-backup copy in support dir (survives temp purge).
+    try {
+      final sup = await getApplicationSupportDirectory();
+      final auto =
+          File('${sup.path}/quran-sunnah-library-auto-v1.json');
+      await auto.writeAsString(jsonStr, flush: true);
+    } catch (_) {}
     final dir = await getTemporaryDirectory();
     final file = File('${dir.path}/quran-sunnah-library-v1.json');
     await file.writeAsString(
-      const JsonEncoder.withIndent('  ').convert(data),
+      jsonStr,
       flush: true,
     );
     if (!context.mounted) return;

@@ -118,7 +118,9 @@ class AudioDownloadTask {
   String get key => '$reciterId:$surah';
 
   /// Estimated remaining seconds from observed throughput, null if unknown.
+  /// Returns null while paused/canceled/failed to avoid wall-clock inflation.
   int? get etaSeconds {
+    if (status != AudioDownloadStatus.downloading) return null;
     if (startedAtMs == null ||
         downloadedBytes <= 0 ||
         totalBytes <= 0) {
@@ -260,6 +262,7 @@ class AudioService extends StateNotifier<AudioState> {
   final List<(Reciter, int, int)> _downloadQueue = [];
   final Set<String> _pausedDownloads = {};
   final Set<String> _cancelledDownloads = {};
+  final Map<String, int> _pauseStartedAtMs = {};
   bool _drainingDownloads = false;
 
   static String _initialReciter(Ref ref) {
@@ -351,8 +354,14 @@ class AudioService extends StateNotifier<AudioState> {
       await _player.setAudioSource(
           ConcatenatingAudioSource(children: sources));
       await _player.setSpeed(state.speed);
-      await _player.setLoopMode(
-          repeatAyah ? LoopMode.one : LoopMode.off);
+      // A-B repeat: single ayah -> LoopMode.one, range -> LoopMode.all,
+      // otherwise off. Previously range+repeat incorrectly used .one.
+      final rangeLen = end - fromAyah + 1;
+      await _player.setLoopMode(!repeatAyah
+          ? LoopMode.off
+          : rangeLen <= 1
+              ? LoopMode.one
+              : LoopMode.all);
       await _player.play();
       state = state.copyWith(loading: false);
     } catch (e) {
@@ -393,9 +402,19 @@ class AudioService extends StateNotifier<AudioState> {
     final client = HttpClient()
       ..connectionTimeout = const Duration(seconds: 15);
     try {
+      // Parallelize HEADs in chunks of 6 (was sequential 286 for Baqarah).
       var total = 0;
-      for (var ayah = 1; ayah <= meta.ayahCount; ayah++) {
-        total += await _cache.remoteSize(client, reciter, surah, ayah);
+      const chunk = 6;
+      for (var start = 1; start <= meta.ayahCount; start += chunk) {
+        final end = (start + chunk - 1).clamp(1, meta.ayahCount);
+        final futs = <Future<int>>[];
+        for (var ayah = start; ayah <= end; ayah++) {
+          futs.add(_cache.remoteSize(client, reciter, surah, ayah));
+        }
+        final sizes = await Future.wait(futs);
+        for (final sz in sizes) {
+          total += sz;
+        }
       }
       return total;
     } finally {
@@ -436,6 +455,7 @@ class AudioService extends StateNotifier<AudioState> {
       return;
     }
     _pausedDownloads.add(key);
+    _pauseStartedAtMs[key] = DateTime.now().millisecondsSinceEpoch;
     _setDownloadTask(task.copyWith(status: AudioDownloadStatus.paused));
   }
 
@@ -445,12 +465,22 @@ class AudioService extends StateNotifier<AudioState> {
       return;
     }
     _pausedDownloads.remove(key);
-    _setDownloadTask(task.copyWith(status: AudioDownloadStatus.downloading));
+    final pausedAt = _pauseStartedAtMs.remove(key);
+    int? shiftedStart = task.startedAtMs;
+    if (pausedAt != null && shiftedStart != null) {
+      final pausedFor = DateTime.now().millisecondsSinceEpoch - pausedAt;
+      shiftedStart += pausedFor;
+    }
+    _setDownloadTask(task.copyWith(
+      status: AudioDownloadStatus.downloading,
+      startedAtMs: shiftedStart,
+    ));
   }
 
   void cancelDownload(String key) {
     _cancelledDownloads.add(key);
     _pausedDownloads.remove(key);
+    _pauseStartedAtMs.remove(key);
     final task = state.downloads[key];
     if (task != null) {
       _setDownloadTask(task.copyWith(status: AudioDownloadStatus.canceled));

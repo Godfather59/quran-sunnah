@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,16 +33,42 @@ class MushafReaderScreen extends ConsumerStatefulWidget {
 class _MushafReaderScreenState extends ConsumerState<MushafReaderScreen> {
   late final PageController _ctrl;
   late int _page;
+  Timer? _rememberDebounce;
+  bool _surahJumpDone = false;
 
   @override
   void initState() {
     super.initState();
+    // Explicit page navigation (Page tab) wins; otherwise resolve surah
+    // to its first Medina page async once metadata loads.
     _page = widget.page.clamp(1, 604);
     _ctrl = PageController(initialPage: _page - 1);
+    if (widget.page == 1 && widget.surah > 1) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _jumpToSurah());
+    } else {
+      _surahJumpDone = true;
+    }
+  }
+
+  Future<void> _jumpToSurah() async {
+    if (_surahJumpDone || !mounted) return;
+    try {
+      final meta = await ref.read(quranMetadataProvider.future);
+      if (!mounted || _surahJumpDone) return;
+      final p = meta.pageOf(widget.surah, 1).clamp(1, 604);
+      _surahJumpDone = true;
+      if (p != _page && _ctrl.hasClients) {
+        await _ctrl.jumpToPage(p - 1);
+      }
+      setState(() => _page = p);
+    } catch (_) {
+      _surahJumpDone = true;
+    }
   }
 
   @override
   void dispose() {
+    _rememberDebounce?.cancel();
     _ctrl.dispose();
     super.dispose();
   }
@@ -176,15 +204,23 @@ class _MushafReaderScreenState extends ConsumerState<MushafReaderScreen> {
 
   Future<void> _rememberPage(QuranMetadata meta, int page) async {
     if (page < 1 || page > meta.pageStarts.length) return;
-    final start = meta.pageStarts[page - 1];
-    final prefs = ref.read(quranPrefsProvider);
-    await ref.read(quranPrefsProvider.notifier).update(
-          prefs.copyWith(
-            lastSurah: start.surah,
-            lastAyah: start.ayah,
-            readingMode: ReadingMode.mushaf,
-          ),
-        );
+    _rememberDebounce?.cancel();
+    _rememberDebounce = Timer(const Duration(milliseconds: 500), () async {
+      if (!mounted) return;
+      final start = meta.pageStarts[page - 1];
+      final prefs = ref.read(quranPrefsProvider);
+      // Skip if already at same position to avoid redundant writes.
+      if (prefs.lastSurah == start.surah && prefs.lastAyah == start.ayah) {
+        return;
+      }
+      await ref.read(quranPrefsProvider.notifier).update(
+            prefs.copyWith(
+              lastSurah: start.surah,
+              lastAyah: start.ayah,
+              readingMode: ReadingMode.mushaf,
+            ),
+          );
+    });
   }
 
   Future<void> _jumpToPage(BuildContext context) async {
@@ -335,8 +371,10 @@ class _PageAyah extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final num = switch (prefs.ayahNumberStyle) {
-      AyahNumberStyle.arabicIndic => toArabicIndic(ayah.displayAyahNumber),
-      _ => '${ayah.displayAyahNumber}',
+      AyahNumberStyle.arabicIndic ||
+      AyahNumberStyle.easternArabic =>
+        toArabicIndic(ayah.displayAyahNumber),
+      AyahNumberStyle.latin => '${ayah.displayAyahNumber}',
     };
     return InkWell(
       onTap: () => showAyahActionSheet(context, ayah),

@@ -8,11 +8,13 @@ import '../../../data/models/quran.dart';
 import '../../../data/content/content_packages.dart';
 import '../../../data/repositories/translation_repository.dart';
 import '../../../data/repositories/word_repository.dart';
+import '../../../data/seed/surah_metadata.dart';
 import '../../../data/services/audio_service.dart';
 import '../../../state/library_state.dart';
 import '../../../state/download_state.dart';
 import '../compare_riwayat_screen.dart';
 import '../tafsir_screen.dart';
+import 'ayah_share_card.dart';
 
 /// Ayah bottom sheet per spec §10. No permanent clutter on reader.
 Future<void> showAyahActionSheet(BuildContext context, Ayah ayah) {
@@ -55,7 +57,7 @@ class _AyahSheet extends ConsumerWidget {
       }
     }
 
-    final actions = <_Action>[
+    final playActions = <_Action>[
       _Action(
           audio.playing && audio.refKey == ayah.key
               ? Icons.pause
@@ -70,6 +72,8 @@ class _AyahSheet extends ConsumerWidget {
               ? () => play(repeat: true)
               : () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(s.t('noVerifiedRecitation'))))),
+    ];
+    final studyActions = <_Action>[
       _Action(Icons.menu_book, s.t('tafsir'), () {
         Navigator.pop(context);
         Navigator.of(context).push(MaterialPageRoute(
@@ -94,6 +98,14 @@ class _AyahSheet extends ConsumerWidget {
           builder: (_) => _WordMeaningsSheet(ayah: ayah),
         );
       }),
+      _Action(Icons.compare_arrows, s.t('compareRiwayat'), () {
+        Navigator.pop(context);
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => CompareRiwayatScreen(
+                surah: ayah.canonicalSurahNumber, ayah: ayah.canonicalAyahNumber)));
+      }),
+    ];
+    final saveActions = <_Action>[
       _Action(bookmarked ? Icons.bookmark : Icons.bookmark_outline,
           s.t('bookmark'), () {
         ref.read(libraryProvider.notifier).toggleAyah(ayah.canonicalSurahNumber, ayah.canonicalAyahNumber);
@@ -106,19 +118,6 @@ class _AyahSheet extends ConsumerWidget {
           context: context,
           showDragHandle: true,
           builder: (_) => _CollectionSheet(ayah: ayah),
-        );
-      }),
-      _Action(Icons.copy, s.t('copy'), () {
-        Clipboard.setData(ClipboardData(text: ayah.text));
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(s.t('copy'))));
-      }),
-      _Action(Icons.share, s.t('share'), () {
-        SharePlus.instance.share(
-          ShareParams(
-            text: '${s.t('quran')} ${ayah.surah}:${ayah.displayAyahNumber}',
-          ),
         );
       }),
       _Action(Icons.edit_note, s.t('notes'), () {
@@ -138,49 +137,99 @@ class _AyahSheet extends ConsumerWidget {
           builder: (_) => _HighlightSheet(refKey: ayah.key),
         );
       }),
-      _Action(Icons.compare_arrows, s.t('compareRiwayat'), () {
+    ];
+    final shareActions = <_Action>[
+      _Action(Icons.copy, s.t('copy'), () {
+        final refKey = '${ayah.surah}:${ayah.displayAyahNumber}';
+        Clipboard.setData(ClipboardData(text: '${ayah.text}\n[$refKey]'));
         Navigator.pop(context);
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (_) => CompareRiwayatScreen(
-                surah: ayah.canonicalSurahNumber, ayah: ayah.canonicalAyahNumber)));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(s.t('copy'))));
+      }),
+      _Action(Icons.share, s.t('share'), () {
+        final refLabel = '${s.t('quran')} ${ayah.surah}:${ayah.displayAyahNumber}';
+        SharePlus.instance.share(
+          ShareParams(
+            text: '${ayah.text}\n\n$refLabel',
+            subject: refLabel,
+          ),
+        );
+      }),
+      _Action(Icons.image_outlined, s.isArabic ? 'صورة' : s.locale.languageCode == 'fr' ? 'Image' : 'Image', () {
+        Navigator.pop(context);
+        showModalBottomSheet(
+          context: context,
+          showDragHandle: true,
+          isScrollControlled: true,
+          builder: (_) => _ShareImageSheet(ayah: ayah),
+        );
       }),
     ];
 
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('${s.t('ayahLabel')} ${ayah.surah}:${ayah.displayAyahNumber}',
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 12),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 4, childAspectRatio: 0.85),
-              itemCount: actions.length,
-              itemBuilder: (_, i) => InkWell(
-                borderRadius: BorderRadius.circular(12),
-                onTap: actions[i].onTap,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(actions[i].icon),
-                    const SizedBox(height: 6),
-                    Text(actions[i].label,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.labelSmall),
-                  ],
-                ),
-              ),
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('${s.t('ayahLabel')} ${ayah.surah}:${ayah.displayAyahNumber}',
+                  style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 12),
+              _ActionSection(actions: playActions),
+              _ActionSection(actions: studyActions),
+              _ActionSection(actions: saveActions),
+              _ActionSection(actions: shareActions, showDivider: false),
+            ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+class _ActionSection extends StatelessWidget {
+  const _ActionSection({required this.actions, this.showDivider = true});
+
+  final List<_Action> actions;
+  final bool showDivider;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4, childAspectRatio: 0.78),
+          itemCount: actions.length,
+          itemBuilder: (_, i) => InkWell(
+            borderRadius: BorderRadius.circular(12),
+            onTap: actions[i].onTap,
+            child: Container(
+              constraints: const BoxConstraints(minHeight: 72),
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(actions[i].icon, size: 24),
+                  const SizedBox(height: 6),
+                  Text(actions[i].label,
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.labelSmall),
+                ],
+              ),
+            ),
+          ),
+        ),
+        if (showDivider) const Divider(height: 16),
+      ],
     );
   }
 }
@@ -190,6 +239,54 @@ class _Action {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
+}
+
+/// Preview + share ayah as branded image card.
+class _ShareImageSheet extends StatelessWidget {
+  const _ShareImageSheet({required this.ayah});
+
+  final Ayah ayah;
+
+  @override
+  Widget build(BuildContext context) {
+    final meta = kSurahMetadata
+        .where((m) => m.number == ayah.surah)
+        .firstOrNull;
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              AyahShareCard(
+                ayah: ayah,
+                surahNameAr: meta?.nameAr ?? 'القرآن',
+              ),
+              const SizedBox(height: 16),
+              FilledButton.icon(
+                onPressed: () async {
+                  // Allow one frame for RepaintBoundary to layout.
+                  await Future<void>.delayed(
+                      const Duration(milliseconds: 100));
+                  final ok = await shareAyahImage();
+                  if (context.mounted && !ok) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Share failed')),
+                    );
+                  }
+                },
+                icon: const Icon(Icons.share),
+                label: const Text('Share image'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 /// All bundled translations for one ayah, translators credited.

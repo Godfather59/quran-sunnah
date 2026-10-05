@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/repositories/hadith_repository.dart';
@@ -40,6 +41,11 @@ class _GlobalSearchScreenState
   Timer? _debounce;
   int _tab = 0; // 0 All · 1 Quran · 2 Hadith · 3 Tafsir · 4 Surah · 5 Narrator · 6 Topic
   Future<SearchResults>? _future;
+  int _gen = 0;
+  static const _historyKey = 'search.history.v1';
+  List<String> _history = [];
+  // Last result counts per tab index for chip badges.
+  final Map<int, int> _counts = {};
 
   List<String> _tabLabels(AppStrings s) => [
         s.t('tabAll'),
@@ -58,22 +64,72 @@ class _GlobalSearchScreenState
     super.dispose();
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _loadHistory();
+  }
+
+  Future<SharedPreferences> _prefs() => SharedPreferences.getInstance();
+
+  Future<void> _loadHistory() async {
+    try {
+      final prefs = await _prefs();
+      _history = prefs.getStringList(_historyKey) ?? [];
+      if (mounted) setState(() {});
+    } catch (_) {}
+  }
+
   void _onChanged(String v) {
     _debounce?.cancel();
     if (v.trim().isEmpty) {
+      _gen++;
       setState(() => _future = null);
       return;
     }
     _debounce = Timer(const Duration(milliseconds: 400), () async {
+      final myGen = ++_gen;
+      final query = v.trim();
       final q = ref.read(quranPrefsProvider);
       final svc = await ref.read(searchServiceProvider.future);
-      if (!mounted) return;
-      setState(() => _future = svc.search(
-            query: v,
-            editionId: q.editionId,
-            tafsirId: q.tafsirId,
-          ));
+      if (!mounted || myGen != _gen) return;
+      final fut = svc.search(
+        query: query,
+        editionId: q.editionId,
+        tafsirId: q.tafsirId,
+      );
+      if (!mounted || myGen != _gen) return;
+      setState(() => _future = fut);
+      unawaited(_saveHistory(query));
+      // Populate tab counts when results arrive (stale gens ignored).
+      fut.then((r) {
+        if (!mounted || myGen != _gen) return;
+        setState(() {
+          _counts[1] = r.quran.length;
+          _counts[2] = r.hadith.length;
+          _counts[3] = r.tafsir.length;
+          _counts[4] = r.surahs.length;
+          _counts[0] = r.total;
+        });
+      }).ignore();
     });
+  }
+
+  Future<void> _saveHistory(String query) async {
+    if (query.isEmpty) return;
+    // Lazy import avoided: use SharedPreferences directly.
+    try {
+      final prefs = await _prefs();
+      final list = [..._history];
+      list.remove(query);
+      list.insert(0, query);
+      while (list.length > 10) {
+        list.removeLast();
+      }
+      _history = list;
+      await prefs.setStringList(_historyKey, list);
+      if (mounted) setState(() {});
+    } catch (_) {}
   }
 
   @override
@@ -114,16 +170,22 @@ class _GlobalSearchScreenState
               children: _tabLabels(s)
                   .asMap()
                   .entries
-                  .map((e) => Padding(
-                        padding: const EdgeInsets.only(
-                            right: 8),
-                        child: ChoiceChip(
-                          label: Text(e.value),
-                          selected: _tab == e.key,
-                          onSelected: (_) => setState(
-                              () => _tab = e.key),
-                        ),
-                      ))
+                  .map((e) {
+                    final c = _counts[e.key];
+                    final label = c == null || _ctrl.text.trim().isEmpty
+                        ? e.value
+                        : '${e.value} · $c';
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                          right: 8),
+                      child: ChoiceChip(
+                        label: Text(label),
+                        selected: _tab == e.key,
+                        onSelected: (_) => setState(
+                            () => _tab = e.key),
+                      ),
+                    );
+                  })
                   .toList(),
             ),
           ),
@@ -136,7 +198,40 @@ class _GlobalSearchScreenState
   Widget _results(BuildContext context) {
     final s = AppStrings.of(context);
     if (_ctrl.text.trim().isEmpty) {
-      return Center(child: Text(s.t('searchHint')));
+      if (_history.isEmpty) {
+        return Center(child: Text(s.t('searchHint')));
+      }
+      return ListView(
+        padding: const EdgeInsets.all(12),
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(4, 4, 4, 8),
+            child: Text(s.t('searchHint'),
+                style: Theme.of(context).textTheme.bodySmall),
+          ),
+          for (final h in _history)
+            ListTile(
+              leading: const Icon(Icons.history),
+              title: Text(h, maxLines: 1, overflow: TextOverflow.ellipsis),
+              onTap: () {
+                _ctrl.text = h;
+                _onChanged(h);
+                setState(() {});
+              },
+              trailing: IconButton(
+                icon: const Icon(Icons.close, size: 18),
+                onPressed: () async {
+                  _history.remove(h);
+                  try {
+                    final p = await _prefs();
+                    await p.setStringList(_historyKey, _history);
+                  } catch (_) {}
+                  setState(() {});
+                },
+              ),
+            ),
+        ],
+      );
     }
     if (_tab == 5 || _tab == 6) {
       return Center(
@@ -165,7 +260,29 @@ class _GlobalSearchScreenState
         }
         final r = snap.data;
         if (r == null || r.total == 0) {
-          return Center(child: Text(s.t('contentUnavailable')));
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.search_off_outlined,
+                      size: 48,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .outline),
+                  const SizedBox(height: 12),
+                  Text(s.t('contentUnavailable'),
+                      textAlign: TextAlign.center),
+                  const SizedBox(height: 4),
+                  Text('2:255 · ${s.t('searchHint')}',
+                      style:
+                          Theme.of(context).textTheme.bodySmall,
+                      textAlign: TextAlign.center),
+                ],
+              ),
+            ),
+          );
         }
         final showAll = _tab == 0;
         return ListView(
@@ -231,6 +348,7 @@ class _GlobalSearchScreenState
     final title = s.isArabic
         ? '${s.t('surahWord')} ${h.surah} · ${s.t('ayat')} ${h.ayah}'
         : h.title;
+    final query = _ctrl.text.trim();
     return Card(
       child: ListTile(
         title: Text(title,
@@ -240,12 +358,8 @@ class _GlobalSearchScreenState
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 4),
-              Text(h.snippet,
-                  textDirection: TextDirection.rtl,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTheme.quranArabic(context,
-                      size: 19)),
+              _highlightedSnippet(
+                  context, h.snippet, query, arabic: true),
             ],
           ),
           onTap: () => Navigator.of(context).push(
@@ -255,6 +369,58 @@ class _GlobalSearchScreenState
                       initialAyah: h.ayah!))),
         ),
       );
+  }
+
+  /// Bold matched query terms inside snippet (display text untouched otherwise).
+  Widget _highlightedSnippet(
+      BuildContext context, String snippet, String query,
+      {bool arabic = false}) {
+    final q = query.trim();
+    if (q.isEmpty || q.length < 2) {
+      return Text(snippet,
+          textDirection: arabic ? TextDirection.rtl : null,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: arabic
+              ? AppTheme.quranArabic(context, size: 19)
+              : Theme.of(context).textTheme.bodyMedium);
+    }
+    final lower = snippet.toLowerCase();
+    final qLower = q.toLowerCase();
+    final idx = lower.indexOf(qLower);
+    if (idx < 0) {
+      return Text(snippet,
+          textDirection: arabic ? TextDirection.rtl : null,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: arabic
+              ? AppTheme.quranArabic(context, size: 19)
+              : Theme.of(context).textTheme.bodyMedium);
+    }
+    final base = arabic
+        ? AppTheme.quranArabic(context, size: 19)
+        : Theme.of(context).textTheme.bodyMedium!;
+    return RichText(
+      textDirection: arabic ? TextDirection.rtl : null,
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      text: TextSpan(
+        style: base,
+        children: [
+          TextSpan(text: snippet.substring(0, idx)),
+          TextSpan(
+            text: snippet.substring(idx, idx + q.length),
+            style: base.copyWith(
+              fontWeight: FontWeight.w800,
+              backgroundColor: Theme.of(context)
+                  .colorScheme
+                  .primaryContainer,
+            ),
+          ),
+          TextSpan(text: snippet.substring(idx + q.length)),
+        ],
+      ),
+    );
   }
 
   Widget _hadithTile(SearchHit h) => Card(

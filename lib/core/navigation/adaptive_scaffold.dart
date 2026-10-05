@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/quran/surah_list_screen.dart';
+import '../../features/quran/widgets/mini_player.dart';
 import '../../features/sunnah/sunnah_home_screen.dart';
 import '../../features/library/library_screen.dart';
 import '../../features/settings/settings_screen.dart';
@@ -21,7 +22,8 @@ class AdaptiveScaffold extends ConsumerStatefulWidget {
 class _AdaptiveScaffoldState extends ConsumerState<AdaptiveScaffold> {
   int _index = 0;
 
-  static const _pages = [
+  // Non-const to allow stateful pages to keep scroll/futures via IndexedStack.
+  final _pages = const [
     HomeScreen(),
     SurahListScreen(),
     SunnahHomeScreen(),
@@ -84,7 +86,17 @@ class _AdaptiveScaffoldState extends ConsumerState<AdaptiveScaffold> {
                 ),
               ),
               const VerticalDivider(width: 1),
-              Expanded(child: _pages[_index]),
+              Expanded(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: IndexedStack(
+                          index: _index, children: _pages),
+                    ),
+                    const MiniPlayer(),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -92,7 +104,17 @@ class _AdaptiveScaffoldState extends ConsumerState<AdaptiveScaffold> {
     }
 
     return Scaffold(
-      body: SafeArea(child: _pages[_index]),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child:
+                  IndexedStack(index: _index, children: _pages),
+            ),
+            const MiniPlayer(),
+          ],
+        ),
+      ),
       bottomNavigationBar: NavigationBar(
         labelBehavior: MediaQuery.textScalerOf(context).scale(1) >= 1.5
             ? NavigationDestinationLabelBehavior.onlyShowSelected

@@ -6,6 +6,9 @@ import '../../data/content/content_packages.dart';
 import '../../data/repositories/tafsir_repository.dart';
 import '../../data/repositories/translation_repository.dart';
 import '../downloads/downloads_screen.dart';
+import '../dhikr/dhikr_screen.dart';
+import '../memorization/memorization_screen.dart';
+import '../prayer/prayer_screen.dart';
 import '../quran/audio_player_screen.dart';
 import '../quran/riwaya_selector_screen.dart';
 import '../../state/providers.dart';
@@ -97,6 +100,30 @@ class SettingsScreen extends ConsumerWidget {
                 onTap: () =>
                     _ayahNumberSheet(context, ref, q),
               ),
+              _Nav(
+                icon: Icons.psychology_outlined,
+                title: s.isArabic
+                    ? 'الحفظ'
+                    : s.locale.languageCode == 'fr'
+                        ? 'Mémorisation'
+                        : 'Memorization',
+                onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            const MemorizationScreen())),
+              ),
+              _Nav(
+                icon: Icons.fingerprint,
+                title: s.isArabic
+                    ? 'الأذكار'
+                    : s.locale.languageCode == 'fr'
+                        ? 'Dhikr'
+                        : 'Dhikr',
+                onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            const DhikrScreen())),
+              ),
             ],
           ),
           _Group(
@@ -129,26 +156,31 @@ class SettingsScreen extends ConsumerWidget {
             icon: Icons.palette_outlined,
             title: s.t('appearanceGroup'),
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 8),
-                child: SegmentedButton<AppThemeMode>(
-                  segments: [
-                    ButtonSegment(
+              ListTile(
+                leading: const Icon(Icons.brightness_6_outlined),
+                title: Text(s.t('system')),
+                subtitle: Text(
+                    '${s.t('light')} · ${s.t('dark')} · ${s.t('system')}'),
+                trailing: DropdownButton<AppThemeMode>(
+                  value: app.themeMode,
+                  underline: const SizedBox.shrink(),
+                  onChanged: (v) {
+                    if (v == null) return;
+                    ref
+                        .read(appPrefsProvider.notifier)
+                        .update(app.copyWith(themeMode: v));
+                  },
+                  items: [
+                    DropdownMenuItem(
                         value: AppThemeMode.light,
-                        label: Text(s.t('light'))),
-                    ButtonSegment(
+                        child: Text(s.t('light'))),
+                    DropdownMenuItem(
                         value: AppThemeMode.dark,
-                        label: Text(s.t('dark'))),
-                    ButtonSegment(
+                        child: Text(s.t('dark'))),
+                    DropdownMenuItem(
                         value: AppThemeMode.system,
-                        label: Text(s.t('system'))),
+                        child: Text(s.t('system'))),
                   ],
-                  selected: {app.themeMode},
-                  onSelectionChanged: (v) => ref
-                      .read(appPrefsProvider.notifier)
-                      .update(app.copyWith(
-                          themeMode: v.first)),
                 ),
               ),
               SwitchListTile(
@@ -161,6 +193,32 @@ class SettingsScreen extends ConsumerWidget {
                     .read(appPrefsProvider.notifier)
                     .update(app.copyWith(
                         useDynamicColor: v)),
+              ),
+              // Live Quran font preview (uses current prefs size/height).
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+                child: Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .surfaceContainerHighest
+                        .withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Text(
+                    'بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ',
+                    textDirection: TextDirection.rtl,
+                    style: TextStyle(
+                      fontFamily: q.font == QuranFont.naskh ||
+                              q.font == QuranFont.notoNaskh
+                          ? 'Noto Naskh Arabic'
+                          : 'Amiri Quran',
+                      fontSize: q.fontSize.clamp(16, 40),
+                      height: q.lineHeight,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
@@ -176,32 +234,46 @@ class SettingsScreen extends ConsumerWidget {
                         builder: (_) =>
                             const AudioPlayerScreen())),
               ),
+              _Nav(
+                icon: Icons.mosque,
+                title: s.isArabic
+                    ? 'الصلاة والقبلة'
+                    : s.locale.languageCode == 'fr'
+                        ? 'Prière & Qibla'
+                        : 'Prayer & Qibla',
+                onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            const PrayerScreen())),
+              ),
             ],
           ),
           _Group(
             icon: Icons.language_outlined,
             title: s.t('languageGroup'),
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 8),
-                child: SegmentedButton<String>(
-                  segments: const [
-                    ButtonSegment(
-                        value: 'ar',
-                        label: Text('العربية')),
-                    ButtonSegment(
-                        value: 'en',
-                        label: Text('English')),
-                    ButtonSegment(
-                        value: 'fr',
-                        label: Text('Français')),
+              ListTile(
+                leading: const Icon(Icons.translate_outlined),
+                title: const Text('Language / اللغة / Langue'),
+                trailing: DropdownButton<String>(
+                  value: ['ar', 'en', 'fr'].contains(app.locale)
+                      ? app.locale
+                      : 'ar',
+                  underline: const SizedBox.shrink(),
+                  onChanged: (v) {
+                    if (v == null) return;
+                    ref
+                        .read(appPrefsProvider.notifier)
+                        .update(app.copyWith(locale: v));
+                  },
+                  items: const [
+                    DropdownMenuItem(
+                        value: 'ar', child: Text('العربية')),
+                    DropdownMenuItem(
+                        value: 'en', child: Text('English')),
+                    DropdownMenuItem(
+                        value: 'fr', child: Text('Français')),
                   ],
-                  selected: {app.locale},
-                  onSelectionChanged: (v) => ref
-                      .read(appPrefsProvider.notifier)
-                      .update(
-                          app.copyWith(locale: v.first)),
                 ),
               ),
             ],
@@ -415,7 +487,13 @@ class SettingsScreen extends ConsumerWidget {
                     },
                     child: RadioListTile<AyahNumberStyle>(
                       value: v,
-                      title: Text(v.name),
+                      title: Text(switch (v) {
+                        AyahNumberStyle.arabicIndic => '٠١٢٣ (Arabic-Indic)',
+                        AyahNumberStyle.easternArabic =>
+                          '٠١٢٣ (Eastern Arabic)',
+                        AyahNumberStyle.latin => '0123 (Latin)',
+                      }),
+                      subtitle: Text(v.name),
                     ),
                   ))
               .toList(),
