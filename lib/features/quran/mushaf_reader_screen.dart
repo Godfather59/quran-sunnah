@@ -58,7 +58,7 @@ class _MushafReaderScreenState extends ConsumerState<MushafReaderScreen> {
       final p = meta.pageOf(widget.surah, 1).clamp(1, 604);
       _surahJumpDone = true;
       if (p != _page && _ctrl.hasClients) {
-        await _ctrl.jumpToPage(p - 1);
+        _ctrl.jumpToPage(p - 1);
       }
       setState(() => _page = p);
     } catch (_) {
