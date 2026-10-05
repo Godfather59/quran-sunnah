@@ -1,0 +1,25 @@
+name: Validate Latest Update Fix
+
+on:
+  push:
+    branches:
+      - fix/latest-update-build
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.44.0'
+          cache: true
+      - run: flutter pub get
+      - run: dart run tool/generate_content_packages.dart
+      - run: git diff --exit-code -- assets/content_packages.json
+      - run: dart run build_runner build
+      - run: git diff --exit-code -- lib/data/database/app_database.g.dart pubspec.lock
+      - run: flutter analyze
+      - run: flutter test

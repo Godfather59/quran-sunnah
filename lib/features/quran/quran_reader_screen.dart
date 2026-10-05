@@ -377,7 +377,6 @@ class _QuranReaderScreenState extends ConsumerState<QuranReaderScreen> {
                       ],
                     ],
                   ),
-                  ),
                 );
               },
             );
