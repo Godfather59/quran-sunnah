@@ -70,7 +70,8 @@ Future<void> schedulePrayerNotifications(
         ),
         androidScheduleMode:
             AndroidScheduleMode.inexactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation: null,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
       );
     }
   } catch (_) {}
