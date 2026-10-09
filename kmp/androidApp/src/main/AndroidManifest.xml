@@ -11,6 +11,7 @@
 
     <application
         android:label="Quran &amp; Sunnah KMP"
+        android:icon="@mipmap/ic_launcher"
         android:theme="@style/Theme.QuranSunnah"
         android:supportsRtl="true">
         <activity

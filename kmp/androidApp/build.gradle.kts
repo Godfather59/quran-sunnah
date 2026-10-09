@@ -42,6 +42,7 @@ dependencies {
     implementation(project(":shared"))
     implementation(libs.appcompat)
     implementation(libs.androidx.core)
+    implementation(libs.androidx.core.ktx)
     implementation(libs.media3.exoplayer)
     implementation(libs.media3.session)
     implementation(libs.activity.compose)

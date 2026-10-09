@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generated from kmp/l10n/oracle/appstrings.json. DO NOT EDIT. -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
     <string name="additionalContent">محتوى إضافي</string>
     <string name="additionalContentHint">هذه المواد مضمنة أصلًا وتعمل دون اتصال. اختر فقط ما تريد تفعيله افتراضيًا.</string>
     <string name="addToCollection">إضافة لمجموعة</string>

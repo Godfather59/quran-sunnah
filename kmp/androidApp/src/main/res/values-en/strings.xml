@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generated from kmp/l10n/oracle/appstrings.json. DO NOT EDIT. -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
     <string name="additionalContent">Additional content</string>
     <string name="additionalContentHint">These items are already bundled and work offline. Choose what you want enabled by default.</string>
     <string name="addToCollection">Add to collection</string>

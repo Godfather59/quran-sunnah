@@ -1,6 +1,7 @@
 package com.godfather59.quransunnah
 
 import android.content.Context
+import androidx.core.content.edit
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -70,28 +71,28 @@ object OnboardingPrefs {
 
     fun saveLocale(context: Context, locale: String) {
         context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-            .edit()
-            .putString("app.locale", locale)
-            .apply()
+            .edit {
+            putString("app.locale", locale)
+            }
     }
 
     fun save(context: Context, choices: OnboardingChoices) {
         context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-            .edit()
-            .putBoolean("app.onboarded", true)
-            .putString("app.locale", choices.locale)
-            .putString("q.riwayaName", choices.riwayaName)
-            .putString("q.scriptName", choices.scriptName)
-            .putString("q.fontName", "uthmani")
-            .putString("q.modeName", "reading")
-            .putString("q.ayahNumberStyleName", "arabicIndic")
-            .putString("q.translations", listOf("en-sahih").joinToString(LIST_SEP))
-            .putString("q.tafsirId", "jalalayn")
-            .putBoolean("q.showTr", true)
-            .putString("app.qari", reciters.first().identifier)
-            .putString("app.hadithSources", choices.hadithSources.joinToString(LIST_SEP))
-            .putString("app.optionalDownloads", choices.optionalDownloads.joinToString(LIST_SEP))
-            .apply()
+            .edit {
+            putBoolean("app.onboarded", true)
+            putString("app.locale", choices.locale)
+            putString("q.riwayaName", choices.riwayaName)
+            putString("q.scriptName", choices.scriptName)
+            putString("q.fontName", "uthmani")
+            putString("q.modeName", "reading")
+            putString("q.ayahNumberStyleName", "arabicIndic")
+            putString("q.translations", listOf("en-sahih").joinToString(LIST_SEP))
+            putString("q.tafsirId", "jalalayn")
+            putBoolean("q.showTr", true)
+            putString("app.qari", reciters.first().identifier)
+            putString("app.hadithSources", choices.hadithSources.joinToString(LIST_SEP))
+            putString("app.optionalDownloads", choices.optionalDownloads.joinToString(LIST_SEP))
+            }
     }
 }
 
@@ -119,10 +120,10 @@ object ReaderPrefs {
         ayah: Int,
     ) {
         context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-            .edit()
-            .putInt("q.lastSurah", surah.coerceIn(1, 114))
-            .putInt("q.lastAyah", ayah.coerceAtLeast(1))
-            .apply()
+            .edit {
+            putInt("q.lastSurah", surah.coerceIn(1, 114))
+            putInt("q.lastAyah", ayah.coerceAtLeast(1))
+            }
     }
 
     fun saveReaderDisplay(
@@ -131,10 +132,10 @@ object ReaderPrefs {
         scriptName: String,
     ) {
         context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-            .edit()
-            .putString("q.riwayaName", riwayaName)
-            .putString("q.scriptName", scriptName)
-            .apply()
+            .edit {
+            putString("q.riwayaName", riwayaName)
+            putString("q.scriptName", scriptName)
+            }
     }
 
     fun saveReaderFont(
@@ -142,9 +143,9 @@ object ReaderPrefs {
         fontName: String,
     ) {
         context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-            .edit()
-            .putString("q.fontName", fontName)
-            .apply()
+            .edit {
+            putString("q.fontName", fontName)
+            }
     }
 
     fun saveReciter(
@@ -153,9 +154,9 @@ object ReaderPrefs {
     ) {
         if (reciterById(reciterId) == null) return
         context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-            .edit()
-            .putString("app.qari", reciterId)
-            .apply()
+            .edit {
+            putString("app.qari", reciterId)
+            }
     }
 
     fun saveShowTranslation(
@@ -163,9 +164,9 @@ object ReaderPrefs {
         showTranslation: Boolean,
     ) {
         context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-            .edit()
-            .putBoolean("q.showTr", showTranslation)
-            .apply()
+            .edit {
+            putBoolean("q.showTr", showTranslation)
+            }
     }
 
     fun saveAyahNumberStyle(
@@ -173,9 +174,9 @@ object ReaderPrefs {
         styleName: String,
     ) {
         context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-            .edit()
-            .putString("q.ayahNumberStyleName", styleName)
-            .apply()
+            .edit {
+            putString("q.ayahNumberStyleName", styleName)
+            }
     }
 
     fun saveTafsir(
@@ -183,9 +184,9 @@ object ReaderPrefs {
         tafsirId: String,
     ) {
         context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-            .edit()
-            .putString("q.tafsirId", tafsirId)
-            .apply()
+            .edit {
+            putString("q.tafsirId", tafsirId)
+            }
     }
 }
 
@@ -227,9 +228,9 @@ object PrayerPrefs {
         enabled: Boolean,
     ) {
         context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-            .edit()
-            .putBoolean("prayer.notif", enabled)
-            .apply()
+            .edit {
+            putBoolean("prayer.notif", enabled)
+            }
     }
 
     fun saveMethod(
@@ -237,9 +238,9 @@ object PrayerPrefs {
         methodName: String,
     ) {
         context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-            .edit()
-            .putString("prayer.method", methodName)
-            .apply()
+            .edit {
+            putString("prayer.method", methodName)
+            }
     }
 
     fun savePresetCity(
@@ -250,12 +251,12 @@ object PrayerPrefs {
         tzOffsetHours: Double,
     ) {
         context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-            .edit()
-            .putString("prayer.city", city)
-            .putDoubleCompat("prayer.lat", latitude)
-            .putDoubleCompat("prayer.lng", longitude)
-            .putDoubleCompat("prayer.tz", tzOffsetHours)
-            .apply()
+            .edit {
+            putString("prayer.city", city)
+            putDoubleCompat("prayer.lat", latitude)
+            putDoubleCompat("prayer.lng", longitude)
+            putDoubleCompat("prayer.tz", tzOffsetHours)
+            }
     }
 
     fun saveGps(
@@ -346,8 +347,8 @@ object DhikrPrefs {
     ): DhikrState {
         val prefs = context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
         val cal = java.util.Calendar.getInstance()
-        prefs.edit()
-            .putStringSet(
+        prefs.edit {
+            putStringSet(
                 dayKey(
                     cal.get(java.util.Calendar.YEAR),
                     cal.get(java.util.Calendar.MONTH) + 1,
@@ -355,8 +356,8 @@ object DhikrPrefs {
                 ),
                 today.map { (id, count) -> "$id:$count" }.toSet(),
             )
-            .putInt("dhikr.total", total)
-            .apply()
+            putInt("dhikr.total", total)
+        }
         return DhikrState(today, total)
     }
 }
@@ -383,10 +384,10 @@ object ThemePrefs {
 
     fun save(context: Context, themeName: String, dynamicColor: Boolean) {
         context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-            .edit()
-            .putString("app.themeName", themeName)
-            .putBoolean("app.dynamicColor", dynamicColor)
-            .apply()
+            .edit {
+            putString("app.themeName", themeName)
+            putBoolean("app.dynamicColor", dynamicColor)
+            }
     }
 }
 
@@ -414,9 +415,9 @@ object AudioPrefs {
 
     fun saveSpeed(context: Context, speed: Double) {
         context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-            .edit()
-            .putLong("app.playbackSpeed", java.lang.Double.doubleToRawLongBits(speed))
-            .apply()
+            .edit {
+            putLong("app.playbackSpeed", java.lang.Double.doubleToRawLongBits(speed))
+            }
     }
 }
 
@@ -442,9 +443,9 @@ object MemorizationPrefs {
             next.remove(key)
         }
         context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-            .edit()
-            .putStringSet("memorized.ayahs.v1", next)
-            .apply()
+            .edit {
+            putStringSet("memorized.ayahs.v1", next)
+            }
         return next
     }
 
@@ -506,10 +507,10 @@ object KhatmaPrefs {
                     last.get(java.util.Calendar.DAY_OF_YEAR) == cal.get(java.util.Calendar.DAY_OF_YEAR)
                 if (consecutive) streak(context) + 1 else 1
             }
-            prefs.edit()
-                .putLong("khatma.lastDay", todayMs)
-                .putInt("khatma.streak", state)
-                .apply()
+            prefs.edit {
+                putLong("khatma.lastDay", todayMs)
+                putInt("khatma.streak", state)
+                }
         } catch (_: Exception) {
         }
     }

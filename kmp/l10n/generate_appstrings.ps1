@@ -45,7 +45,10 @@ function Write-AndroidStrings([string] $FolderName, [string] $Locale) {
     $lines = New-Object System.Collections.Generic.List[string]
     $lines.Add('<?xml version="1.0" encoding="utf-8"?>')
     $lines.Add('<!-- Generated from kmp/l10n/oracle/appstrings.json. DO NOT EDIT. -->')
-    $lines.Add('<resources>')
+    # UnusedResources is intentionally muted here: the 224-key set is the
+    # trilingual parity contract with iOS Localizable.xcstrings (verified by
+    # key count), not dead weight — screens adopt keys incrementally.
+    $lines.Add('<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">')
     foreach ($key in $keys) {
         $value = Xml-Escape $strings.$key.$Locale
         $lines.Add("    <string name=`"$key`">$value</string>")

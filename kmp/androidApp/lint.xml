@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lint>
+    <!-- targetSdk 35 is pinned deliberately (same pair the Flutter build uses;
+         see TODO_KMP.md Phase 0); bump deliberately, not by lint nag. -->
+    <issue id="OldTargetApi" severity="ignore" />
+    <!-- MediaSessionService must stay exported so Auto and other controllers
+         can bind; no custom permission required for playback control. -->
+    <issue id="ExportedService" severity="ignore" />
+</lint>
