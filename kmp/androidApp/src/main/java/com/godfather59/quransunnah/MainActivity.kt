@@ -568,7 +568,7 @@ private fun MiniPlayer() {
                         if (isPlaying) {
                             coroutineScope.launch { audioPlayer.pause() }
                         } else {
-                            QuranAudioService.ensureStarted(context)
+                            QuranAudio.ensureStarted(context)
                             coroutineScope.launch { audioPlayer.play() }
                         }
                     }

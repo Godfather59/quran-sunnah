@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.DefaultMediaNotificationProvider
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
@@ -16,12 +17,15 @@ import com.godfather59.quransunnah.audio.SharedExoPlayer
 // Wraps the shared ExoPlayer so the reader UI, MiniPlayer, notification, and
 // lock-screen controls all follow one queue with the verified title/artist
 // metadata already set on each ayah MediaItem.
+// Media3 marks the session/notification APIs unstable; opting in here (the
+// service is internal — nothing else touches these calls).
+@UnstableApi
 class QuranAudioService : MediaSessionService() {
     private var session: MediaSession? = null
 
     override fun onCreate() {
         super.onCreate()
-        ensureChannel(this)
+        QuranAudio.ensureChannel(this)
         val player = SharedExoPlayer.get(this)
         val sessionActivity = PendingIntent.getActivity(
             this,
@@ -34,7 +38,7 @@ class QuranAudioService : MediaSessionService() {
             .build()
         setMediaNotificationProvider(
             DefaultMediaNotificationProvider.Builder(this)
-                .setChannelId(CHANNEL_ID)
+                .setChannelId(QuranAudio.CHANNEL_ID)
                 .setChannelName(R.string.quranAudio)
                 .build(),
         )
@@ -48,32 +52,50 @@ class QuranAudioService : MediaSessionService() {
         session = null
         super.onDestroy()
     }
+}
 
-    companion object {
-        const val CHANNEL_ID = "com.quran_sunnah.audio"
+/**
+ * Stable entry points (channel id, channel creation, service start).
+ * Kept outside the [@UnstableApi] service so UI callers need no opt-in:
+ * none of these touch unstable Media3 APIs.
+ */
+object QuranAudio {
+    const val CHANNEL_ID = "com.quran_sunnah.audio"
 
-        fun ensureChannel(context: Context) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-            val manager = context.getSystemService(NotificationManager::class.java) ?: return
-            if (manager.getNotificationChannel(CHANNEL_ID) == null) {
-                manager.createNotificationChannel(
-                    NotificationChannel(
-                        CHANNEL_ID,
-                        context.getString(R.string.quranAudio),
-                        NotificationManager.IMPORTANCE_LOW,
-                    ),
-                )
-            }
+    fun ensureChannel(context: Context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+        val manager = context.getSystemService(NotificationManager::class.java) ?: return
+        if (manager.getNotificationChannel(CHANNEL_ID) == null) {
+            manager.createNotificationChannel(
+                NotificationChannel(
+                    CHANNEL_ID,
+                    context.getString(R.string.quranAudio),
+                    NotificationManager.IMPORTANCE_LOW,
+                ),
+            )
         }
+    }
 
-        /** Start the service so playback survives backgrounding. */
-        fun ensureStarted(context: Context) {
-            ensureChannel(context)
-            val intent = Intent(context, QuranAudioService::class.java)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    /** Start the service so playback survives backgrounding. */
+    fun ensureStarted(context: Context) {
+        ensureChannel(context)
+        // String component name: referencing QuranAudioService::class here
+        // would pull the @UnstableApi marker into stable callers.
+        val intent = Intent().setClassName(
+            context,
+            "com.godfather59.quransunnah.QuranAudioService",
+        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try {
                 context.startForegroundService(intent)
-            } else {
+            } catch (_: Exception) {
+                // ForegroundServiceStartNotAllowedException on Android 12+
+                // when started from the background: best-effort.
+            }
+        } else {
+            try {
                 context.startService(intent)
+            } catch (_: Exception) {
             }
         }
     }

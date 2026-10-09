@@ -1804,7 +1804,7 @@ private fun AyahActionSheet(
                         try {
                             val player = audioPlayer
                                 ?: throw IllegalStateException("audio unavailable")
-                            QuranAudioService.ensureStarted(context)
+                            QuranAudio.ensureStarted(context)
                             // Local-first: play the downloaded file when the
                             // surah is on disk, otherwise stream the verified
                             // CDN URL for the selected reciter.
