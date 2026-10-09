@@ -28,7 +28,8 @@ jobs:
 
       # No android-actions/setup-android: ubuntu-latest images ship the SDK
       # (ANDROID_HOME + cmdline-tools preinstalled); the pinned action targets
-      # Node 20 and fails fast under the Node 24-only runners.
+      # Node 20 and fails fast under the Node 24-only runners. cmdline-tools
+      # are NOT on PATH by default, so export them here (exit 127 otherwise).
       - uses: gradle/actions/setup-gradle@v4
 
       - run: chmod +x gradlew
@@ -36,6 +37,8 @@ jobs:
       - name: Install Android platform and build-tools
         shell: bash
         run: |
+          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+          which sdkmanager
           yes | sdkmanager --licenses > /dev/null
           sdkmanager "platforms;android-36" "build-tools;36.0.0"
 
@@ -70,6 +73,8 @@ jobs:
       - name: Install Android platform and build-tools
         shell: bash
         run: |
+          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+          which sdkmanager
           yes | sdkmanager --licenses > /dev/null
           sdkmanager "platforms;android-36" "build-tools;36.0.0"
 
