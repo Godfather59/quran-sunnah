@@ -1,0 +1,206 @@
+-- Personal library + search index. Mirrors the Drift schema in
+-- lib/data/database/app_database.dart (table/column names identical).
+-- Timestamps are INTEGER epoch seconds (Dart _seconds semantics).
+-- BookmarkKind is stored as its Kotlin ordinal, which matches Dart
+-- BookmarkKind.index (ayah=0, hadith=1, tafsir=2) — keep in sync.
+
+CREATE TABLE IF NOT EXISTS app_meta(
+  key TEXT NOT NULL PRIMARY KEY,
+  value TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS bookmarks(
+  id TEXT NOT NULL PRIMARY KEY,
+  kind INTEGER NOT NULL,
+  ref_key TEXT NOT NULL,
+  title TEXT NOT NULL,
+  subtitle TEXT NOT NULL,
+  collection_id TEXT,
+  created_at INTEGER NOT NULL
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_bookmarks_ref ON bookmarks(ref_key);
+
+CREATE TABLE IF NOT EXISTS notes(
+  id TEXT NOT NULL PRIMARY KEY,
+  ref_key TEXT NOT NULL,
+  text_value TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_notes_ref ON notes(ref_key);
+
+CREATE TABLE IF NOT EXISTS highlights(
+  id TEXT NOT NULL PRIMARY KEY,
+  ref_key TEXT NOT NULL,
+  color_value INTEGER NOT NULL
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_highlights_ref ON highlights(ref_key);
+
+CREATE TABLE IF NOT EXISTS collections(
+  id TEXT NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS recent_items(
+  ref_key TEXT NOT NULL PRIMARY KEY,
+  title TEXT NOT NULL,
+  subtitle TEXT NOT NULL,
+  kind INTEGER NOT NULL,
+  touched_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS search_documents(
+  id TEXT NOT NULL PRIMARY KEY,
+  kind TEXT NOT NULL,
+  ref_key TEXT NOT NULL,
+  title TEXT NOT NULL,
+  subtitle TEXT NOT NULL,
+  body TEXT NOT NULL,
+  normalized_body TEXT NOT NULL,
+  normalized_title TEXT NOT NULL,
+  surah INTEGER,
+  ayah INTEGER,
+  edition_id TEXT,
+  tafsir_id TEXT,
+  collection_id TEXT,
+  hadith_number TEXT,
+  book TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_search_kind_edition
+ON search_documents(kind, edition_id);
+
+CREATE INDEX IF NOT EXISTS idx_search_kind_tafsir
+ON search_documents(kind, tafsir_id);
+
+CREATE INDEX IF NOT EXISTS idx_search_kind_collection
+ON search_documents(kind, collection_id);
+
+-- NOTE: the search_fts virtual table + sync triggers + MATCH queries are
+-- intentionally NOT declared here. Some framework SQLite builds ship
+-- without the FTS5 module entirely ("no such module: fts5"), which made
+-- Library.Schema.create throw on first open and bricked the app into a
+-- crash loop. They live as raw SQL in LibraryDb.ensureSearchFts (fail-soft)
+-- and SearchIndex raw queries instead; codegen never references search_fts.
+-- search_documents itself is a plain table and always safe to create.
+
+getMeta:
+SELECT value FROM app_meta WHERE key = ? LIMIT 1;
+
+insertMeta:
+INSERT INTO app_meta(key, value) VALUES (?, ?);
+
+updateMetaValue:
+UPDATE app_meta SET value = ? WHERE key = ?;
+
+selectBookmarks:
+SELECT id, kind, ref_key, title, subtitle, collection_id, created_at
+FROM bookmarks ORDER BY created_at DESC, rowid DESC;
+
+countBookmarkByRef:
+SELECT COUNT(*) AS c FROM bookmarks WHERE ref_key = ?;
+
+insertBookmark:
+INSERT INTO bookmarks(id, kind, ref_key, title, subtitle, collection_id, created_at)
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+deleteBookmarkByRef:
+DELETE FROM bookmarks WHERE ref_key = ?;
+
+deleteBookmarkById:
+DELETE FROM bookmarks WHERE id = ?;
+
+updateBookmarkCollection:
+UPDATE bookmarks SET collection_id = ? WHERE ref_key = ?;
+
+selectNotes:
+SELECT id, ref_key, text_value, created_at FROM notes
+ORDER BY created_at DESC, rowid DESC;
+
+noteIdByRef:
+SELECT id FROM notes WHERE ref_key = ? LIMIT 1;
+
+insertNote:
+INSERT INTO notes(id, ref_key, text_value, created_at) VALUES (?, ?, ?, ?);
+
+updateNoteText:
+UPDATE notes SET text_value = ? WHERE ref_key = ?;
+
+deleteNoteByRef:
+DELETE FROM notes WHERE ref_key = ?;
+
+deleteNoteById:
+DELETE FROM notes WHERE id = ?;
+
+selectHighlights:
+SELECT id, ref_key, color_value FROM highlights ORDER BY rowid DESC;
+
+highlightColorByRef:
+SELECT color_value FROM highlights WHERE ref_key = ? LIMIT 1;
+
+insertHighlight:
+INSERT INTO highlights(id, ref_key, color_value) VALUES (?, ?, ?);
+
+updateHighlightColor:
+UPDATE highlights SET color_value = ? WHERE ref_key = ?;
+
+deleteHighlightByRef:
+DELETE FROM highlights WHERE ref_key = ?;
+
+deleteHighlightById:
+DELETE FROM highlights WHERE id = ?;
+
+selectCollections:
+SELECT id, name FROM collections ORDER BY rowid;
+
+countCollections:
+SELECT COUNT(*) AS c FROM collections;
+
+insertCollection:
+INSERT OR IGNORE INTO collections(id, name) VALUES (?, ?);
+
+renameCollection:
+UPDATE collections SET name = ? WHERE id = ?;
+
+detachCollectionBookmarks:
+UPDATE bookmarks SET collection_id = NULL WHERE collection_id = ?;
+
+deleteCollection:
+DELETE FROM collections WHERE id = ?;
+
+selectRecent:
+SELECT ref_key, title, subtitle, kind FROM recent_items
+ORDER BY touched_at DESC LIMIT 50;
+
+countRecentByRef:
+SELECT COUNT(*) AS c FROM recent_items WHERE ref_key = ?;
+
+insertRecentRow:
+INSERT INTO recent_items(ref_key, title, subtitle, kind, touched_at)
+VALUES (?, ?, ?, ?, ?);
+
+updateRecentRow:
+UPDATE recent_items
+SET title = ?, subtitle = ?, kind = ?, touched_at = ?
+WHERE ref_key = ?;
+
+pruneRecent:
+DELETE FROM recent_items WHERE ref_key NOT IN (
+SELECT ref_key FROM recent_items ORDER BY touched_at DESC LIMIT 50);
+
+clearAllBookmarks:
+DELETE FROM bookmarks;
+
+clearAllNotes:
+DELETE FROM notes;
+
+clearAllHighlights:
+DELETE FROM highlights;
+
+clearAllRecent:
+DELETE FROM recent_items;
+
+clearAllCollections:
+DELETE FROM collections;

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Base theme required by AppCompatActivity (per-app locales machinery).
+     All colors come from the Compose MaterialTheme; this only sets the
+     window background behind it. -->
+<resources>
+    <style name="Theme.QuranSunnah" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">?android:attr/colorBackground</item>
+    </style>
+</resources>

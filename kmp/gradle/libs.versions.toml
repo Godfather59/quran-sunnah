@@ -1,0 +1,48 @@
+# Pinned + proven in this environment (AGP/Kotlin match the Flutter build).
+# Phase 1 additions (SQLDelight, Ktor, kotlinx-datetime/serialization/coroutines):
+# verify latest stable versions at that time, then extend this catalog.
+[versions]
+kotlin = "2.4.0"
+agp = "9.1.0"
+junit = "4.13.2"
+serialization = "1.11.0"
+sqldelight = "2.4.1"
+coroutines = "1.11.0"
+mpsettings = "1.3.0"
+media3 = "1.10.1"
+androidxCore = "1.18.0"
+activityCompose = "1.9.3"
+appcompat = "1.7.0"
+compose = "1.7.4"
+composeMaterial3 = "1.3.0"
+
+[libraries]
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+# Tree API only (Json.parseToJsonElement) — no compiler plugin needed.
+serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+mpsettings = { module = "com.russhwolf:multiplatform-settings", version.ref = "mpsettings" }
+mpsettings-test = { module = "com.russhwolf:multiplatform-settings-test", version.ref = "mpsettings" }
+sqldelight-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
+sqldelight-jvm = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
+sqldelight-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
+media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3" }
+media3-session = { module = "androidx.media3:media3-session", version.ref = "media3" }
+androidx-core = { module = "androidx.core:core", version.ref = "androidxCore" }
+activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+compose-ui = { module = "androidx.compose.ui:ui-android", version.ref = "compose" }
+compose-ui-text = { module = "androidx.compose.ui:ui-text-android", version.ref = "compose" }
+compose-foundation = { module = "androidx.compose.foundation:foundation-android", version.ref = "compose" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview-android", version.ref = "compose" }
+compose-material3 = { module = "androidx.compose.material3:material3-android", version.ref = "composeMaterial3" }
+compose-material-icons-core = { module = "androidx.compose.material:material-icons-core-android", version.ref = "compose" }
+compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended-android", version.ref = "compose" }
+
+[plugins]
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+android-application = { id = "com.android.application", version.ref = "agp" }
+sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }

@@ -33,6 +33,6 @@ Generated from full codebase audit (Oct 2026). Verified-only text principle pres
 - [x] Deep-link `parseQuranRef("2:255", "/quran/2/255", "quran://2/255")` + `onGenerateRoute` in `app.dart` (no go_router dependency).
 
 ## Verification
-- [ ] `flutter analyze`
-- [ ] `flutter test`
+- [x] `flutter analyze` — clean (Oct 2026, + stricter lints + HadithFilterScreen restored)
+- [x] `flutter test` — 87 passed (fixed missing HadithFilterScreen + onboarding skip ambiguity)
 - [ ] Manual: tab switch preserves scroll, Baqarah scroll 60fps, share contains text, offline airplane mode, RTL/LTR chevrons.
