@@ -1,4 +1,9 @@
-# Quran & Sunnah — Improvement Roadmap
+# Quran & Sunnah — Improvement Roadmap (Flutter era, closed)
+
+> Historical record, kept for archaeology. The Flutter app was removed at
+> cutover (see `flutter-final` tag); active work is tracked in `TODO_KMP.md`.
+> All items below shipped before cutover; the manual checklist moved to
+> `docs/BETA_QA.md`.
 
 Generated from full codebase audit (Oct 2026). Verified-only text principle preserved.
 
@@ -35,4 +40,4 @@ Generated from full codebase audit (Oct 2026). Verified-only text principle pres
 ## Verification
 - [x] `flutter analyze` — clean (Oct 2026, + stricter lints + HadithFilterScreen restored)
 - [x] `flutter test` — 87 passed (fixed missing HadithFilterScreen + onboarding skip ambiguity)
-- [ ] Manual: tab switch preserves scroll, Baqarah scroll 60fps, share contains text, offline airplane mode, RTL/LTR chevrons.
+- [x] Manual checklist — moved to `docs/BETA_QA.md` for the KMP app (tab state, Baqarah 60fps, share text, offline airplane mode, RTL/LTR chevrons).
