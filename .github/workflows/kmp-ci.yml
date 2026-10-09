@@ -1,9 +1,8 @@
 name: KMP CI
 
-# Phase 7: Gradle build + shared tests + Android unit tests on PR; signed
-# test APK job (same temp-key recipe as build-apk.yml); iOS compile job on a
-# macOS runner. Flutter CI (flutter-ci.yml) keeps running untouched until
-# cutover.
+# KMP CI (post-cutover, only workflow): shared tests + Android unit tests +
+# debug APK; signed test APK job (temp-key recipe); iOS framework compile on
+# a macOS runner.
 on:
   pull_request:
   push:
@@ -20,15 +19,16 @@ jobs:
       run:
         working-directory: kmp
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
 
-      - uses: android-actions/setup-android@v3
-
+      # No android-actions/setup-android: ubuntu-latest images ship the SDK
+      # (ANDROID_HOME + cmdline-tools preinstalled); the pinned action targets
+      # Node 20 and fails fast under the Node 24-only runners.
       - uses: gradle/actions/setup-gradle@v4
 
       - run: chmod +x gradlew
@@ -36,7 +36,7 @@ jobs:
       - name: Install Android platform and build-tools
         shell: bash
         run: |
-          yes | sdkmanager --licenses
+          yes | sdkmanager --licenses > /dev/null
           sdkmanager "platforms;android-36" "build-tools;36.0.0"
 
       - name: Shared tests
@@ -56,14 +56,12 @@ jobs:
       run:
         working-directory: kmp
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
-
-      - uses: android-actions/setup-android@v3
 
       - uses: gradle/actions/setup-gradle@v4
 
@@ -72,10 +70,10 @@ jobs:
       - name: Install Android platform and build-tools
         shell: bash
         run: |
-          yes | sdkmanager --licenses
+          yes | sdkmanager --licenses > /dev/null
           sdkmanager "platforms;android-36" "build-tools;36.0.0"
 
-      # Same temp-key recipe as the Flutter build-apk.yml job: throwaway
+      # Temp-key recipe: throwaway keystore, never tracked (*.jks is git-ignored).
       # keystore, never tracked (*.jks is git-ignored).
       - name: Create temporary test signing key
         shell: bash
@@ -121,9 +119,9 @@ jobs:
       run:
         working-directory: kmp
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
