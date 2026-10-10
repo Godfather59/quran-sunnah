@@ -37,10 +37,15 @@ jobs:
       - name: Install Android platform and build-tools
         shell: bash
         run: |
+          export ANDROID_HOME="${ANDROID_HOME:-$HOME/Android/Sdk}"
           export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
-          which sdkmanager
-          yes | sdkmanager --licenses > /dev/null
-          sdkmanager "platforms;android-36" "build-tools;36.0.0"
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          command -v sdkmanager || { ls "$ANDROID_HOME" || true; exit 1; }
+          if [ ! -d "$ANDROID_HOME/platforms/android-36" ]; then
+            yes | sdkmanager --licenses > /dev/null || true
+            sdkmanager --install "platforms;android-36" "build-tools;36.0.0"
+          fi
+          ls "$ANDROID_HOME/platforms" | tail -5
 
       - name: Shared tests
         run: ./gradlew :shared:jvmTest --no-daemon
@@ -73,10 +78,15 @@ jobs:
       - name: Install Android platform and build-tools
         shell: bash
         run: |
+          export ANDROID_HOME="${ANDROID_HOME:-$HOME/Android/Sdk}"
           export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
-          which sdkmanager
-          yes | sdkmanager --licenses > /dev/null
-          sdkmanager "platforms;android-36" "build-tools;36.0.0"
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          command -v sdkmanager || { ls "$ANDROID_HOME" || true; exit 1; }
+          if [ ! -d "$ANDROID_HOME/platforms/android-36" ]; then
+            yes | sdkmanager --licenses > /dev/null || true
+            sdkmanager --install "platforms;android-36" "build-tools;36.0.0"
+          fi
+          ls "$ANDROID_HOME/platforms" | tail -5
 
       # Temp-key recipe: throwaway keystore, never tracked (*.jks is git-ignored).
       # keystore, never tracked (*.jks is git-ignored).
