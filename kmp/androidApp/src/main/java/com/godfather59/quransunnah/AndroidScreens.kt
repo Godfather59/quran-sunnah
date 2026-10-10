@@ -2,6 +2,10 @@ package com.godfather59.quransunnah
 
 import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.BackHandler
+import androidx.core.content.ContextCompat
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -18,6 +22,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.LazyColumn
@@ -29,7 +34,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -49,6 +56,9 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Tab
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -61,10 +71,28 @@ import androidx.compose.material3.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FindInPage
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.LibraryBooks
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Fingerprint
+import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.material.icons.filled.MusicNote
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.NotificationsOff
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
+import androidx.compose.material.icons.filled.SkipNext
+import androidx.compose.material.icons.filled.SkipPrevious
+import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.Composable
@@ -81,15 +109,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -97,6 +128,8 @@ import androidx.compose.ui.window.DialogProperties
 import com.godfather59.quransunnah.audio.AyahAudioItem
 import com.godfather59.quransunnah.audio.AyahDownload
 import com.godfather59.quransunnah.audio.DownloadCancelledException
+import com.godfather59.quransunnah.audio.PlayerListener
+import com.godfather59.quransunnah.audio.RepeatMode
 import com.godfather59.quransunnah.audio.DownloadControl
 import com.godfather59.quransunnah.audio.DownloadQueue
 import com.godfather59.quransunnah.audio.QueuedSurah
@@ -121,6 +154,7 @@ import com.godfather59.quransunnah.prayer.PrayerCalcMethod
 import com.godfather59.quransunnah.prayer.PrayerTimes
 import com.godfather59.quransunnah.prayer.calculatePrayerTimes
 import com.godfather59.quransunnah.prayer.isMoroccanCity
+import com.godfather59.quransunnah.prayer.localizedCityName
 import com.godfather59.quransunnah.prayer.nextPrayer
 import com.godfather59.quransunnah.prayer.prayerCityPresets
 import com.godfather59.quransunnah.prayer.qiblaBearing
@@ -128,12 +162,14 @@ import com.godfather59.quransunnah.library.CustomCollection
 import com.godfather59.quransunnah.library.Highlight
 import com.godfather59.quransunnah.library.UserNote
 import com.godfather59.quransunnah.text.normalizeArabic
+import com.godfather59.quransunnah.text.parseQuranRef
 import com.godfather59.quransunnah.text.toArabicIndic
 import com.godfather59.quransunnah.data.HadithSection
 import com.godfather59.quransunnah.data.parseHadithIndex
 import com.godfather59.quransunnah.data.parseHadithSection
 import com.godfather59.quransunnah.hadith.Hadith
 import com.godfather59.quransunnah.hadith.HadithCollection
+import com.godfather59.quransunnah.hadith.bookDisplayTitle
 import com.godfather59.quransunnah.hadith.hadithCollections
 import com.godfather59.quransunnah.library.Bookmark
 import com.godfather59.quransunnah.library.BookmarkKind
@@ -210,6 +246,7 @@ private val readerFontOptions = listOf(
 @Composable
 fun HomeScreen(
     onOpenAyahRef: (String) -> Unit = {},
+    onOpenTab: (Int) -> Unit = {},
 ) {
     val context = LocalContext.current
     val language = currentLanguage()
@@ -283,6 +320,10 @@ fun HomeScreen(
     }
 
     selectedSurah?.let { surahNumber ->
+        BackHandler {
+            selectedSurah = null
+            libraryRefreshToken += 1
+        }
         QuranReaderScreen(
             surahNumber = surahNumber,
             onBack = {
@@ -294,11 +335,13 @@ fun HomeScreen(
     }
 
     if (showPrayer) {
+        BackHandler { showPrayer = false }
         PrayerScreen(onBack = { showPrayer = false })
         return
     }
 
     if (showSearch) {
+        BackHandler { showSearch = false }
         SearchScreen(
             onOpenAyahRef = {
                 onOpenAyahRef(it)
@@ -310,11 +353,13 @@ fun HomeScreen(
     }
 
     if (showDhikr) {
+        BackHandler { showDhikr = false }
         DhikrScreen(onBack = { showDhikr = false })
         return
     }
 
     if (showMemorization) {
+        BackHandler { showMemorization = false }
         MemorizationScreen(
             onOpenAyahRef = {
                 onOpenAyahRef(it)
@@ -325,58 +370,97 @@ fun HomeScreen(
         return
     }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        horizontalAlignment = alignment,
-    ) {
-        item {
-            Text(
-                text = stringResource(R.string.appTitle),
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-            )
-        }
-        item {
-            Button(
-                onClick = { showSearch = true },
+    EmeraldScaffold(
+        header = {
+            Row(
                 modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(stringResource(R.string.search))
+                Text(
+                    text = hijriToday(language),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White.copy(alpha = 0.9f),
+                    modifier = Modifier.weight(1f),
+                )
+                IconButton(onClick = { showSearch = true }) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = stringResource(R.string.search),
+                        tint = Color.White,
+                    )
+                }
             }
-        }
-        item {
-            HomeHero(
-                language = language,
-                refreshToken = libraryRefreshToken,
-                onOpenReference = { surah, ayah ->
-                    ReaderPrefs.saveLastPosition(context, surah, ayah)
-                    selectedSurah = surah
-                },
-            )
-        }
-        item {
             val snap = prayerSnap
             if (snap == null) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(72.dp)
+                        .height(96.dp)
                         .background(
-                            MaterialTheme.colorScheme.surfaceContainerHighest,
-                            RoundedCornerShape(12.dp),
+                            Color.White.copy(alpha = 0.18f),
+                            RoundedCornerShape(16.dp),
                         ),
                 )
             } else {
-                PrayerHeroCard(
-                    snap = snap,
-                    language = language,
-                    onClick = { showPrayer = true },
+                val rem = (snap.next.minutes - snap.nowMinutes + 1440) % 1440
+                Text(
+                    text = prayerName(snap.next.key, language),
+                    style = MaterialTheme.typography.displaySmall,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
                 )
+                Text(
+                    text = remainingText(
+                        rem / 60,
+                        rem % 60,
+                        localizedCityName(snap.place.city, language),
+                        language,
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White.copy(alpha = 0.9f),
+                )
+                Surface(
+                    color = Color.White.copy(alpha = 0.2f),
+                    shape = CircleShape,
+                    onClick = { showPrayer = true },
+                ) {
+                    Text(
+                        text = localizedCityName(snap.place.city, language),
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = Color.White,
+                    )
+                }
             }
-        }
+        },
+        body = {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalAlignment = alignment,
+            ) {
+                item {
+                    HomeShortcutGrid(
+                        language = language,
+                        onOpenTab = onOpenTab,
+                        onOpenPrayer = { showPrayer = true },
+                        onOpenSearch = { showSearch = true },
+                        onOpenDhikr = { showDhikr = true },
+                        onOpenMemorization = { showMemorization = true },
+                    )
+                }
+                item {
+                    HomeHero(
+                        language = language,
+                        refreshToken = libraryRefreshToken,
+                        onOpenReference = { surah, ayah ->
+                            ReaderPrefs.saveLastPosition(context, surah, ayah)
+                            selectedSurah = surah
+                        },
+                    )
+                }
         item {
             val dhikr = dhikrState
             if (dhikr == null) {
@@ -526,6 +610,76 @@ fun HomeScreen(
                 )
             }
         }
+            }
+        },
+    )
+}
+
+private data class HomeShortcut(
+    val icon: ImageVector,
+    val label: String,
+    val onClick: () -> Unit,
+)
+
+@Composable
+private fun HomeShortcutGrid(
+    language: String,
+    onOpenTab: (Int) -> Unit,
+    onOpenPrayer: () -> Unit,
+    onOpenSearch: () -> Unit,
+    onOpenDhikr: () -> Unit,
+    onOpenMemorization: () -> Unit,
+) {
+    val tiles = listOf(
+        HomeShortcut(Icons.Default.MenuBook, stringResource(R.string.quran)) { onOpenTab(1) },
+        HomeShortcut(Icons.AutoMirrored.Filled.LibraryBooks, stringResource(R.string.sunnah)) { onOpenTab(2) },
+        HomeShortcut(Icons.Default.Schedule, prayerScreenTitle(language), onOpenPrayer),
+        HomeShortcut(Icons.Default.Search, stringResource(R.string.search), onOpenSearch),
+        HomeShortcut(Icons.Default.Favorite, dhikrTitle(language), onOpenDhikr),
+        HomeShortcut(Icons.Default.School, memorizationTitle(language), onOpenMemorization),
+        HomeShortcut(Icons.Default.Star, stringResource(R.string.library)) { onOpenTab(3) },
+        HomeShortcut(Icons.Default.Download, stringResource(R.string.downloads)) { onOpenTab(4) },
+    )
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        tiles.chunked(4).forEach { row ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                row.forEach { tile ->
+                    Card(
+                        onClick = tile.onClick,
+                        modifier = Modifier.weight(1f),
+                        shape = MaterialTheme.shapes.medium,
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 12.dp, horizontal = 4.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(6.dp),
+                        ) {
+                            Surface(
+                                color = MaterialTheme.colorScheme.primaryContainer,
+                                shape = MaterialTheme.shapes.small,
+                            ) {
+                                Icon(
+                                    imageVector = tile.icon,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    modifier = Modifier.padding(10.dp).size(24.dp),
+                                )
+                            }
+                            Text(
+                                text = tile.label,
+                                style = MaterialTheme.typography.labelSmall,
+                                maxLines = 1,
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -593,6 +747,8 @@ private fun HomeHero(
         LinearProgressIndicator(
             progress = { (global / 6236f).coerceIn(0f, 1f) },
             modifier = Modifier.fillMaxWidth(),
+            color = Color.White,
+            trackColor = Color.White.copy(alpha = 0.3f),
         )
         AssistChip(
             onClick = {},
@@ -603,7 +759,7 @@ private fun HomeHero(
         Text(
             text = stringResource(R.string.verifiedDatasetsInstalled),
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = Color.White.copy(alpha = 0.85f),
         )
     }
 }
@@ -688,24 +844,38 @@ private fun DailyAyahCard(
     }
 }
 
-private fun loadAllBukhari(reader: AndroidAssetReader): List<Hadith> {
-    val raw = reader.readText("assets/hadith/bukhari/index.json") ?: return emptyList()
+/**
+ * Deterministic daily hadith without parsing all 98 Bukhari sections (~7589
+ * rows caused the Home scroll jank). Resolves the day's global ordinal into
+ * its section via the small index.json, then loads that ONE section file.
+ */
+private fun loadDailyBukhari(reader: AndroidAssetReader, dayIndex: Int): Hadith? {
+    val raw = reader.readText("assets/hadith/bukhari/index.json") ?: return null
     val index = try {
         parseHadithIndex(raw)
     } catch (_: Exception) {
-        return emptyList()
+        return null
     }
-    val out = mutableListOf<Hadith>()
-    for (section in index.sections) {
-        if (section.count <= 0) continue
-        val sectionRaw = reader.readText("assets/hadith/bukhari/sections/${section.section}.json")
-            ?: continue
-        try {
-            out.addAll(parseHadithSection("bukhari", section.title, sectionRaw))
-        } catch (_: Exception) {
+    val sections = index.sections.filter { it.count > 0 }
+    val total = sections.sumOf { it.count }
+    if (total <= 0) return null
+    var ordinal = ((dayIndex % total) + total) % total
+    for (section in sections) {
+        if (ordinal < section.count) {
+            val sectionRaw = reader.readText(
+                "assets/hadith/bukhari/sections/${section.section}.json",
+            ) ?: return null
+            return try {
+                val hadiths = parseHadithSection("bukhari", section.title, sectionRaw)
+                    .filter { !it.isPlaceholder }
+                hadiths.getOrNull(ordinal % hadiths.size.coerceAtLeast(1))
+            } catch (_: Exception) {
+                null
+            }
         }
+        ordinal -= section.count
     }
-    return out.filter { !it.isPlaceholder }
+    return null
 }
 
 @Composable
@@ -716,10 +886,8 @@ private fun DailyHadithCard() {
     var hadith by remember { mutableStateOf<Hadith?>(null) }
     var loaded by remember { mutableStateOf(false) }
     LaunchedEffect(reader) {
-        val list = withContext(Dispatchers.IO) { loadAllBukhari(reader) }
-        if (list.isNotEmpty()) {
-            hadith = list[todayDayIndex() % list.size]
-        }
+        val dayIndex = todayDayIndex()
+        hadith = withContext(Dispatchers.IO) { loadDailyBukhari(reader, dayIndex) }
         loaded = true
     }
     Card(Modifier.fillMaxWidth()) {
@@ -786,7 +954,9 @@ fun QuranIndexScreen(
     var mode by rememberSaveable { mutableIntStateOf(0) }
     var selectedSurah by rememberSaveable { mutableStateOf<Int?>(null) }
     var mushafPage by rememberSaveable { mutableStateOf<Int?>(null) }
+    var showSearch by rememberSaveable { mutableStateOf(false) }
     val selected = QuranIndexMode.entries[mode]
+    val language = currentLanguage()
 
     LaunchedEffect(mushafReader) {
         mushafMeta = try {
@@ -821,69 +991,126 @@ fun QuranIndexScreen(
         return
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        Text(
-            text = stringResource(R.string.quran),
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold,
+    if (showSearch) {
+        BackHandler { showSearch = false }
+        SearchScreen(
+            onOpenAyahRef = { raw ->
+                val parsed = parseQuranRef(raw)
+                if (parsed != null) {
+                    val (su, ay) = parsed
+                    if (su in 1..114 && ay >= 1) {
+                        val count = surahMetadata.first { it.number == su }.ayahCount
+                        ReaderPrefs.saveLastPosition(
+                            context,
+                            su,
+                            ay.coerceIn(1, count),
+                        )
+                        selectedSurah = su
+                    }
+                }
+                showSearch = false
+            },
+            onBack = { showSearch = false },
         )
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(QuranIndexMode.entries) { item ->
-                FilterChip(
-                    selected = selected == item,
-                    onClick = { mode = item.ordinal },
-                    label = { Text(item.label()) },
-                )
-            }
-        }
-
-        when (selected) {
-            QuranIndexMode.SURAHS -> SurahList(onSurahSelected = { selectedSurah = it })
-            QuranIndexMode.JUZ -> NumberGrid(
-                1..30,
-                stringResource(R.string.juz),
-                onSelected = { juz ->
-                    val meta = mushafMeta
-                    val start = meta?.juzStarts?.getOrNull(juz - 1)
-                    if (meta != null && start != null) {
-                        mushafPage = meta.pageOf(start.surah, start.ayah)
-                    }
-                },
-            )
-            QuranIndexMode.HIZB -> NumberGrid(
-                1..60,
-                stringResource(R.string.hizb),
-                onSelected = { hizb ->
-                    val meta = mushafMeta
-                    val start = meta?.quarterStarts?.getOrNull((hizb - 1) * 4)
-                    if (meta != null && start != null) {
-                        mushafPage = meta.pageOf(start.surah, start.ayah)
-                    }
-                },
-            )
-            QuranIndexMode.RUB -> NumberGrid(
-                1..240,
-                stringResource(R.string.rub),
-                onSelected = { quarter ->
-                    val meta = mushafMeta
-                    val start = meta?.quarterStarts?.getOrNull(quarter - 1)
-                    if (meta != null && start != null) {
-                        mushafPage = meta.pageOf(start.surah, start.ayah)
-                    }
-                },
-            )
-            QuranIndexMode.PAGE -> NumberGrid(
-                1..604,
-                stringResource(R.string.page),
-                onSelected = { mushafPage = it },
-            )
-        }
+        return
     }
+
+    EmeraldScaffold(
+        header = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = stringResource(R.string.quran),
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    modifier = Modifier.weight(1f),
+                )
+                IconButton(onClick = { showSearch = true }) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = stringResource(R.string.search),
+                        tint = Color.White,
+                    )
+                }
+            }
+        },
+        body = {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                LastReadCard(onOpen = { selectedSurah = it })
+
+                ScrollableTabRow(
+                    selectedTabIndex = mode,
+                    edgePadding = 0.dp,
+                ) {
+                    QuranIndexMode.entries.forEach { item ->
+                        Tab(
+                            selected = selected == item,
+                            onClick = { mode = item.ordinal },
+                            text = { Text(item.label()) },
+                        )
+                    }
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                ) {
+                    when (selected) {
+                        QuranIndexMode.SURAHS -> SurahList(
+                            onSurahSelected = { selectedSurah = it },
+                        )
+                        QuranIndexMode.JUZ -> NumberGrid(
+                            1..30,
+                            stringResource(R.string.juz),
+                            onSelected = { juz ->
+                                val meta = mushafMeta
+                                val start = meta?.juzStarts?.getOrNull(juz - 1)
+                                if (meta != null && start != null) {
+                                    mushafPage = meta.pageOf(start.surah, start.ayah)
+                                }
+                            },
+                        )
+                        QuranIndexMode.HIZB -> NumberGrid(
+                            1..60,
+                            stringResource(R.string.hizb),
+                            onSelected = { hizb ->
+                                val meta = mushafMeta
+                                val start = meta?.quarterStarts?.getOrNull((hizb - 1) * 4)
+                                if (meta != null && start != null) {
+                                    mushafPage = meta.pageOf(start.surah, start.ayah)
+                                }
+                            },
+                        )
+                        QuranIndexMode.RUB -> NumberGrid(
+                            1..240,
+                            stringResource(R.string.rub),
+                            onSelected = { quarter ->
+                                val meta = mushafMeta
+                                val start = meta?.quarterStarts?.getOrNull(quarter - 1)
+                                if (meta != null && start != null) {
+                                    mushafPage = meta.pageOf(start.surah, start.ayah)
+                                }
+                            },
+                        )
+                        QuranIndexMode.PAGE -> NumberGrid(
+                            1..604,
+                            stringResource(R.string.page),
+                            onSelected = { mushafPage = it },
+                        )
+                    }
+                }
+            }
+        },
+    )
 }
 
 @Composable
@@ -898,6 +1125,71 @@ private fun SurahList(onSurahSelected: (Int) -> Unit) {
                 surah = surah,
                 language = language,
                 onClick = { onSurahSelected(surah.number) },
+            )
+        }
+    }
+}
+
+@Composable
+private fun LastReadCard(
+    onOpen: (Int) -> Unit,
+) {
+    val context = LocalContext.current
+    val language = currentLanguage()
+    var lastSurah by remember { mutableStateOf(1) }
+    var lastAyah by remember { mutableStateOf(1) }
+    var ready by remember { mutableStateOf(false) }
+    LaunchedEffect(context) {
+        withContext(Dispatchers.IO) {
+            try {
+                val state = ReaderPrefs.load(context)
+                lastSurah = state.lastSurah.coerceIn(1, 114)
+                lastAyah = state.lastAyah.coerceAtLeast(1)
+            } catch (_: Exception) {
+            }
+            ready = true
+        }
+    }
+    if (!ready) return
+    val surah = surahMetadata[lastSurah - 1]
+    val ayah = lastAyah.coerceIn(1, surah.ayahCount)
+    Card(
+        onClick = { onOpen(lastSurah) },
+        shape = MaterialTheme.shapes.large,
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(18.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Surface(
+                color = MaterialTheme.colorScheme.primaryContainer,
+                shape = MaterialTheme.shapes.medium,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.MenuBook,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.padding(12.dp).size(28.dp),
+                )
+            }
+            Spacer(Modifier.width(14.dp))
+            Column(Modifier.weight(1f)) {
+                Text(
+                    text = stringResource(R.string.continueReading),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    text = "${surah.localizedName(language)} $lastSurah:$ayah",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            Text(
+                text = surah.nameAr,
+                style = MaterialTheme.typography.titleLarge,
             )
         }
     }
@@ -922,12 +1214,13 @@ private fun SurahRow(
         ) {
             Surface(
                 color = MaterialTheme.colorScheme.primaryContainer,
-                shape = MaterialTheme.shapes.small,
+                shape = RoundedCornerShape(14.dp),
             ) {
                 Text(
                     text = surah.number.toString(),
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
             }
@@ -937,17 +1230,19 @@ private fun SurahRow(
                     text = surah.localizedName(language),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
+                    maxLines = 1,
                 )
                 Text(
                     text = "${surah.ayahCount} ${stringResource(R.string.ayat)} · " +
                         stringResource(if (surah.makki) R.string.makki else R.string.madani),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
                 )
             }
             Text(
                 text = surah.nameAr,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.End,
             )
         }
@@ -1050,6 +1345,7 @@ private fun QuranReaderScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .statusBarsPadding()
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -1175,6 +1471,10 @@ private fun QuranReaderScreen(
                         studyAyah = ayah
                     },
                     onDismiss = { selectedAyah = null },
+                    reader = reader,
+                    editionId = editionId,
+                    surahDisplayName = surah.localizedName(language),
+                    surahAyahs = ayahs,
                 )
             }
             tafsirAyah?.let { ayah ->
@@ -1401,7 +1701,9 @@ private fun MushafReaderScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding(),
         verticalArrangement = Arrangement.spacedBy(0.dp),
     ) {
         Row(
@@ -1556,6 +1858,9 @@ private fun MushafReaderScreen(
                 studyAyah = ayah
             },
             onDismiss = { selectedAyah = null },
+            reader = reader,
+            editionId = editionId,
+            surahDisplayName = surahMetadata.first { it.number == ayah.surah }.localizedName(language),
         )
     }
     tafsirAyah?.let { ayah ->
@@ -1744,8 +2049,13 @@ private fun AyahActionSheet(
     onOpenCompare: () -> Unit,
     onOpenStudy: () -> Unit,
     onDismiss: () -> Unit,
+    reader: AndroidAssetReader,
+    editionId: String,
+    surahDisplayName: String,
+    surahAyahs: List<Ayah> = emptyList(),
 ) {
     val context = LocalContext.current
+    val language = currentLanguage()
     val scope = rememberCoroutineScope()
     val audioPlayer = remember(context) {
         try {
@@ -1755,6 +2065,11 @@ private fun AyahActionSheet(
         }
     }
     val refKey = "${ayah.surah}:${ayah.ayah}"
+    // Media/lock-screen controls need POST_NOTIFICATIONS (Android 13+).
+    // Playback works without it; the notification just stays hidden.
+    val notifPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { }
     val audioAlbum = stringResource(R.string.quranAudio)
     var isBookmarked by remember(refKey) { mutableStateOf(false) }
     LaunchedEffect(libraryStore, refKey) {
@@ -1798,45 +2113,85 @@ private fun AyahActionSheet(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
+            var startingPlayback by remember(refKey) { mutableStateOf(false) }
             Button(
                 onClick = {
                     scope.launch {
+                        startingPlayback = true
                         try {
                             val player = audioPlayer
                                 ?: throw IllegalStateException("audio unavailable")
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                                ContextCompat.checkSelfPermission(
+                                    context,
+                                    Manifest.permission.POST_NOTIFICATIONS,
+                                ) != PackageManager.PERMISSION_GRANTED
+                            ) {
+                                notifPermissionLauncher.launch(
+                                    Manifest.permission.POST_NOTIFICATIONS,
+                                )
+                            }
                             QuranAudio.ensureStarted(context)
-                            // Local-first: play the downloaded file when the
-                            // surah is on disk, otherwise stream the verified
-                            // CDN URL for the selected reciter.
-                            val url = AudioFiles.localUrlOrNull(
-                                context,
-                                reciter.identifier,
-                                ayah.surah,
-                                ayah.ayah,
-                            ) ?: reciter.fileUrl(
-                                globalAyahNumber(ayah.surah, ayah.ayah),
-                            )
-                            val audioItem = AyahAudioItem(
-                                url = url,
-                                refKey = refKey,
-                                title = reference,
-                                artist = reciter.nameEn,
-                                album = audioAlbum,
-                            )
-                            player.setAyahSources(listOf(audioItem))
+                            // Continuous surah queue from the tapped ayah to
+                            // the surah end (single surah — recitation flows,
+                            // Next/Prev work, repeat ALL loops the surah).
+                            // Reader passes its list; Mushaf loads on IO.
+                            val list = if (surahAyahs.isNotEmpty()) {
+                                surahAyahs
+                            } else {
+                                withContext(Dispatchers.IO) {
+                                    try {
+                                        loadQuranEdition(reader, editionId = editionId)
+                                            ?.filter { it.surah == ayah.surah }
+                                            .orEmpty()
+                                    } catch (_: Exception) {
+                                        emptyList()
+                                    }
+                                }
+                            }
+                            val startIdx = list
+                                .indexOfFirst { it.surah == ayah.surah && it.ayah == ayah.ayah }
+                                .coerceAtLeast(0)
+                            val queue = list.drop(startIdx).map { a ->
+                                // Local-first per ayah: downloaded file when
+                                // present, otherwise the verified CDN URL.
+                                val url = AudioFiles.localUrlOrNull(
+                                    context,
+                                    reciter.identifier,
+                                    a.surah,
+                                    a.ayah,
+                                ) ?: reciter.fileUrl(
+                                    globalAyahNumber(a.surah, a.ayah),
+                                )
+                                AyahAudioItem(
+                                    url = url,
+                                    refKey = "${a.surah}:${a.ayah}",
+                                    title = "$surahDisplayName ${a.surah}:${a.ayah}",
+                                    artist = reciter.localizedName(language),
+                                    album = audioAlbum,
+                                    editionId = editionId,
+                                )
+                            }
+                            if (queue.isEmpty()) throw IllegalStateException("empty queue")
+                            player.setAyahSources(queue)
                             player.setSpeed(AudioPrefs.speed(context).toFloat())
                             player.play()
+                            NowPlaying.playQueue(queue)
                             onDismiss()
+                            NowPlaying.requestOpen()
                         } catch (_: Exception) {
                             android.widget.Toast.makeText(
                                 context,
                                 context.getString(R.string.downloadFailed),
                                 android.widget.Toast.LENGTH_SHORT,
                             ).show()
+                        } finally {
+                            startingPlayback = false
                         }
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
+                enabled = !startingPlayback,
             ) {
                 Text(stringResource(R.string.play))
             }
@@ -2261,6 +2616,7 @@ fun PlaceholderScreen(titleRes: Int) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .statusBarsPadding()
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -2417,6 +2773,22 @@ private object AppDownloadScope {
     )
 }
 
+// Current audio session: the sheet builds the queue, the full player screen
+// and MiniPlayer observe it. openToken wakes the player screen without
+// prop-drilling callbacks through four composable layers.
+internal object NowPlaying {
+    var items by mutableStateOf<List<AyahAudioItem>>(emptyList())
+    var openToken by mutableIntStateOf(0)
+
+    fun playQueue(queue: List<AyahAudioItem>) {
+        items = queue
+    }
+
+    fun requestOpen() {
+        openToken += 1
+    }
+}
+
 @Composable
 fun DownloadsScreen() {
     val context = LocalContext.current
@@ -2541,6 +2913,7 @@ fun DownloadsScreen() {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
+            .statusBarsPadding()
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -2752,8 +3125,7 @@ fun SunnahHomeScreen() {
     var collectionId by rememberSaveable { mutableStateOf("bukhari") }
     var selectedSection by remember(collectionId) { mutableStateOf<HadithSection?>(null) }
     var selectedHadith by remember { mutableStateOf<Hadith?>(null) }
-    var numberInput by rememberSaveable { mutableStateOf("") }
-    var numberError by remember { mutableStateOf(false) }
+    val isAllMode = collectionId == "all"
     var showFilter by remember { mutableStateOf(false) }
 
     val openHadith: (Hadith, String) -> Unit = { hadith, subtitle ->
@@ -2777,9 +3149,14 @@ fun SunnahHomeScreen() {
             ?: hadithCollections.first()
     }
     // index.json + section JSON parse off Main: Bukhari-scale files blocked tab switch.
+    // Skipped in "All rawis" mode (no single index.json exists for "all").
     var index by remember { mutableStateOf<com.godfather59.quransunnah.data.HadithIndex?>(null) }
     var indexLoading by remember { mutableStateOf(true) }
     LaunchedEffect(reader, collectionId) {
+        if (collectionId == "all") {
+            indexLoading = false
+            return@LaunchedEffect
+        }
         indexLoading = true
         index = withContext(Dispatchers.IO) {
             try {
@@ -2795,9 +3172,89 @@ fun SunnahHomeScreen() {
         index?.sections?.filter { it.count > 0 }.orEmpty()
     }
 
+    // "All rawis" directory: every book of every bundled collection,
+    // loaded once from the small index files (section bodies stay lazy).
+    var allBooks by remember { mutableStateOf<List<CollectionBook>>(emptyList()) }
+    var allBooksLoading by remember { mutableStateOf(false) }
+    LaunchedEffect(reader) {
+        allBooksLoading = true
+        allBooks = withContext(Dispatchers.IO) {
+            try {
+                val out = mutableListOf<CollectionBook>()
+                for (item in hadithCollections) {
+                    val raw = reader.readText("assets/hadith/${item.id}/index.json")
+                        ?: continue
+                    val idx = parseHadithIndex(raw)
+                    for (section in idx.sections) {
+                        if (section.count <= 0) continue
+                        out.add(CollectionBook(item.id, section))
+                    }
+                }
+                out
+            } catch (_: Exception) {
+                emptyList()
+            }
+        }
+        allBooksLoading = false
+    }
+
+    // Warm the shared search index while the user browses books, so the
+    // first word search answers instantly instead of paying the full
+    // Quran+Hadith+Tafsir build on submit. Guarded + singleton: free when
+    // SearchScreen already built it.
+    LaunchedEffect(reader) {
+        try {
+            ensureSearchIndex(reader, engine)
+        } catch (_: Exception) {
+        }
+    }
+
+    // Merged "All rawis" corpus: every hadith of every bundled collection
+    // in one lazy list. Parsed once per process on IO with a spinner;
+    // section bodies stay lazy everywhere else.
+    var mergedHadiths by remember { mutableStateOf<List<Hadith>>(emptyList()) }
+    var mergedLoading by remember { mutableStateOf(false) }
+    val mergedSubtitleByBook = remember(allBooks, language) {
+        allBooks.associate { book ->
+            (book.collectionId + "|" + book.section.title) to (
+                bookDisplayTitle(
+                    book.collectionId,
+                    book.section.section,
+                    book.section.title,
+                    language,
+                    book.section.first,
+                    book.section.last,
+                ) + " · " + (
+                    hadithCollections.firstOrNull { it.id == book.collectionId }
+                        ?.localizedName(language).orEmpty()
+                    )
+                )
+        }
+    }
+    LaunchedEffect(reader, allBooks) {
+        if (allBooks.isEmpty()) return@LaunchedEffect
+        mergedLoading = true
+        mergedHadiths = withContext(Dispatchers.IO) {
+            try {
+                val out = mutableListOf<Hadith>()
+                for (book in allBooks) {
+                    val raw = reader.readText(
+                        "assets/hadith/${book.collectionId}/sections/${book.section.section}.json",
+                    ) ?: continue
+                    out.addAll(parseHadithSection(book.collectionId, book.section.title, raw))
+                }
+                out.filter { !it.isPlaceholder }
+            } catch (_: Exception) {
+                emptyList()
+            }
+        }
+        mergedLoading = false
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .statusBarsPadding()
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -2816,6 +3273,17 @@ fun SunnahHomeScreen() {
             }
         }
         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            item(key = "all") {
+                FilterChip(
+                    selected = isAllMode,
+                    onClick = {
+                        collectionId = "all"
+                        selectedSection = null
+                        selectedHadith = null
+                    },
+                    label = { Text(stringResource(R.string.all)) },
+                )
+            }
             items(hadithCollections, key = { it.id }) { item ->
                 FilterChip(
                     selected = item.id == collectionId,
@@ -2823,14 +3291,38 @@ fun SunnahHomeScreen() {
                         collectionId = item.id
                         selectedSection = null
                         selectedHadith = null
-                        numberError = false
                     },
                     label = { Text(item.localizedName(language)) },
                 )
             }
         }
 
-        if (indexLoading) {
+        if (isAllMode) {
+            if (allBooksLoading || mergedLoading) {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator()
+                }
+            } else {
+                SunnahSearchAndBooks(
+                    reader = reader,
+                    engine = engine,
+                    resetToken = "all",
+                    collectionIds = null,
+                    onOpenHadith = openHadith,
+                    books = emptyList(),
+                    onBookClick = {},
+                    mergedHadiths = mergedHadiths,
+                    mergedLoading = false,
+                    subtitleFor = { hadith ->
+                        mergedSubtitleByBook[hadith.collectionId + "|" + hadith.book]
+                            ?: hadith.book
+                    },
+                )
+            }
+        } else if (indexLoading) {
             Box(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center,
@@ -2856,92 +3348,18 @@ fun SunnahHomeScreen() {
                 }
             }
         } else if (selectedSection == null) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                TextField(
-                    value = numberInput,
-                    onValueChange = {
-                        numberInput = it
-                        numberError = false
-                    },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.weight(1f),
-                    singleLine = true,
-                    label = { Text(stringResource(R.string.hadithNumber)) },
-                    isError = numberError,
-                )
-                var jumping by remember { mutableStateOf(false) }
-                Button(
-                    onClick = {
-                        val number = numberInput.trim().toIntOrNull()
-                        val section = if (number == null) {
-                            null
-                        } else {
-                            books.firstOrNull { number in it.first..it.last }
-                        }
-                        if (section == null) {
-                            numberError = true
-                            return@Button
-                        }
-                        // Section JSON parse off Main.
-                        jumping = true
-                        scope.launch {
-                            val found = withContext(Dispatchers.IO) {
-                                try {
-                                    reader
-                                        .readText("assets/hadith/$collectionId/sections/${section.section}.json")
-                                        ?.let { parseHadithSection(collectionId, section.title, it) }
-                                        .orEmpty()
-                                        .firstOrNull { it.hadithNumber == number.toString() }
-                                } catch (_: Exception) {
-                                    null
-                                }
-                            }
-                            jumping = false
-                            if (found == null) {
-                                numberError = true
-                                return@launch
-                            }
-                            numberError = false
-                            selectedHadith = found
-                            withContext(Dispatchers.IO) {
-                                libraryStore.touchRecent(
-                                    RecentItem(
-                                        refKey = found.id,
-                                        title = "${collection.localizedName(language)} ${found.hadithNumber}",
-                                        subtitle = section.title,
-                                        kind = BookmarkKind.HADITH,
-                                    ),
-                                )
-                            }
-                        }
-                    },
-                    enabled = !jumping,
-                ) {
-                    Text(stringResource(R.string.go))
-                }
+            val singleBooks = remember(books, collectionId) {
+                books.map { CollectionBook(collectionId, it) }
             }
-            if (numberError) {
-                Text(
-                    text = stringResource(R.string.noHadithMatches),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error,
-                )
-            }
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                items(books, key = { it.section }) { book ->
-                    HadithBookRow(
-                        section = book,
-                        onClick = { selectedSection = book },
-                    )
-                }
-            }
+            SunnahSearchAndBooks(
+                reader = reader,
+                engine = engine,
+                resetToken = collectionId,
+                collectionIds = setOf(collectionId),
+                onOpenHadith = openHadith,
+                books = singleBooks,
+                onBookClick = { selectedSection = it.section },
+            )
         } else {
             val section = selectedSection
             if (section == null) {
@@ -2956,7 +3374,14 @@ fun SunnahHomeScreen() {
                     }
                     Spacer(Modifier.width(12.dp))
                     Text(
-                        text = section.title.ifBlank { "${stringResource(R.string.book)} ${section.section}" },
+                        text = bookDisplayTitle(
+                            collectionId,
+                            section.section,
+                            section.title,
+                            language,
+                            section.first,
+                            section.last,
+                        ).ifBlank { "${stringResource(R.string.book)} ${section.section}" },
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         maxLines = 2,
@@ -3021,7 +3446,8 @@ fun SunnahHomeScreen() {
     selectedHadith?.let { hadith ->
         HadithReaderSheet(
             hadith = hadith,
-            collection = collection,
+            collection = hadithCollections.firstOrNull { it.id == hadith.collectionId }
+                ?: collection,
             libraryStore = libraryStore,
             onDismiss = { selectedHadith = null },
         )
@@ -3030,7 +3456,11 @@ fun SunnahHomeScreen() {
     if (showFilter) {
         HadithFilterSheet(
             collectionId = collectionId,
-            books = books,
+            books = if (isAllMode) {
+                allBooks.map { it.section }
+            } else {
+                books
+            },
             onOpenHadith = { openHadith(it, it.book) },
             onDismiss = { showFilter = false },
         )
@@ -3137,7 +3567,11 @@ private fun HadithFilterSheet(
                                 engine.search(
                                     query,
                                     SearchOptions(
-                                        collectionIds = setOf(collectionId),
+                                        collectionIds = if (collectionId == "all") {
+                                            null
+                                        } else {
+                                            setOf(collectionId)
+                                        },
                                         limitPerCategory = 50,
                                     ),
                                 ).hadith
@@ -3197,11 +3631,179 @@ private fun HadithFilterSheet(
     }
 }
 
+/** One book in the "All rawis" directory: which collection it belongs to. */
+private data class CollectionBook(
+    val collectionId: String,
+    val section: HadithSection,
+)
+
+/**
+ * Word search field + Go button + results, shared by the single-collection
+ * view and the "All rawis" directory. [collectionIds] null searches every
+ * bundled collection; [books] + [onBookClick] render the idle book list.
+ */
+@Composable
+private fun SunnahSearchAndBooks(
+    reader: AndroidAssetReader,
+    engine: SearchEngine,
+    resetToken: Any,
+    collectionIds: Set<String>?,
+    onOpenHadith: (Hadith, String) -> Unit,
+    books: List<CollectionBook>,
+    onBookClick: (CollectionBook) -> Unit,
+    mergedHadiths: List<Hadith> = emptyList(),
+    mergedLoading: Boolean = false,
+    subtitleFor: ((Hadith) -> String)? = null,
+) {
+    val scope = rememberCoroutineScope()
+    var wordInput by rememberSaveable(resetToken) { mutableStateOf("") }
+    var wordHits by remember { mutableStateOf<List<Hadith>>(emptyList()) }
+    var wordSearching by remember { mutableStateOf(false) }
+    var wordSearched by remember { mutableStateOf(false) }
+
+    // Single submit path for the Go button AND the keyboard search action.
+    fun submitWordSearch() {
+        val query = wordInput.trim()
+        if (query.isEmpty() || wordSearching) return
+        wordSearching = true
+        scope.launch {
+            try {
+                ensureSearchIndex(reader, engine)
+                val hits = withContext(Dispatchers.Default) {
+                    engine.search(
+                        query,
+                        SearchOptions(
+                            collectionIds = collectionIds,
+                            limitPerCategory = 20,
+                        ),
+                    ).hadith.mapNotNull { it.hadith }
+                }
+                wordHits = hits
+            } catch (_: Exception) {
+                wordHits = emptyList()
+            } finally {
+                wordSearching = false
+                wordSearched = true
+            }
+        }
+    }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        TextField(
+            value = wordInput,
+            onValueChange = {
+                wordInput = it
+                wordSearched = false
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Search,
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = { submitWordSearch() },
+            ),
+            modifier = Modifier.weight(1f),
+            singleLine = true,
+            label = { Text(stringResource(R.string.search)) },
+        )
+        Button(
+            onClick = { submitWordSearch() },
+            enabled = !wordSearching && wordInput.trim().isNotEmpty(),
+        ) {
+            Text(stringResource(R.string.go))
+        }
+    }
+    if (wordSearching) {
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center,
+        ) {
+            CircularProgressIndicator()
+        }
+    } else if (wordSearched) {
+        if (wordHits.isEmpty()) {
+            Text(
+                text = stringResource(R.string.noHadithMatches),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
+            )
+        } else {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                items(wordHits, key = { it.id }) { hadith ->
+                    HadithRow(
+                        hadith = hadith,
+                        onClick = { onOpenHadith(hadith, hadith.book) },
+                    )
+                }
+            }
+        }
+    } else if (mergedLoading) {
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center,
+        ) {
+            CircularProgressIndicator()
+        }
+    } else if (mergedHadiths.isNotEmpty()) {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            items(mergedHadiths, key = { it.id }) { hadith ->
+                HadithRow(
+                    hadith = hadith,
+                    onClick = {
+                        onOpenHadith(hadith, subtitleFor?.invoke(hadith) ?: hadith.book)
+                    },
+                )
+            }
+        }
+    } else {
+        // Collection tag only when mixing rawis; single-collection lists
+        // would repeat the same name on every row.
+        val mixedCollections = remember(books) {
+            books.map { it.collectionId }.toSet().size > 1
+        }
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            items(
+                books,
+                key = { it.collectionId + ":" + it.section.section },
+            ) { book ->
+                HadithBookRow(
+                    section = book.section,
+                    collectionId = book.collectionId,
+                    tag = if (mixedCollections) {
+                        hadithCollections
+                            .firstOrNull { it.id == book.collectionId }
+                            ?.localizedName(currentLanguage())
+                    } else {
+                        null
+                    },
+                    onClick = { onBookClick(book) },
+                )
+            }
+        }
+    }
+}
+
 @Composable
 private fun HadithBookRow(
     section: HadithSection,
+    collectionId: String,
     onClick: () -> Unit,
+    tag: String? = null,
 ) {
+    val language = currentLanguage()
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -3227,7 +3829,14 @@ private fun HadithBookRow(
             Spacer(Modifier.width(12.dp))
             Column(Modifier.weight(1f)) {
                 Text(
-                    text = section.title.ifBlank { "${section.first}–${section.last}" },
+                    text = bookDisplayTitle(
+                        collectionId,
+                        section.section,
+                        section.title,
+                        language,
+                        section.first,
+                        section.last,
+                    ),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 2,
@@ -3237,6 +3846,14 @@ private fun HadithBookRow(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
+                if (tag != null) {
+                    Text(
+                        text = tag,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        maxLines = 1,
+                    )
+                }
             }
         }
     }
@@ -3556,6 +4173,7 @@ fun LibraryScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
+                .statusBarsPadding()
                 .padding(20.dp),
             contentPadding = PaddingValues(bottom = padding.calculateBottomPadding()),
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -3976,7 +4594,7 @@ fun LibraryScreen(
 
 @Composable
 fun SettingsScreen(
-    onThemeChange: (String, Boolean) -> Unit = { _, _ -> },
+    onThemeChange: (String) -> Unit = {},
 ) {
     val context = LocalContext.current
     val language = currentLanguage()
@@ -3989,7 +4607,6 @@ fun SettingsScreen(
     var showTranslation by rememberSaveable { mutableStateOf(prefs.showTranslation) }
     var reciterId by rememberSaveable { mutableStateOf(prefs.reciterId) }
     var themeName by rememberSaveable { mutableStateOf(themePrefs.themeName) }
-    var dynamicColor by rememberSaveable { mutableStateOf(themePrefs.dynamicColor) }
     var speed by rememberSaveable { mutableStateOf(AudioPrefs.speed(context)) }
     var locale by rememberSaveable { mutableStateOf(OnboardingPrefs.locale(context) ?: language) }
     var showLicenses by remember { mutableStateOf(false) }
@@ -4018,6 +4635,7 @@ fun SettingsScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
+            .statusBarsPadding()
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -4230,31 +4848,13 @@ fun SettingsScreen(
                         selected = id == themeName,
                         onClick = {
                             themeName = id
-                            ThemePrefs.save(context, id, dynamicColor)
-                            onThemeChange(id, dynamicColor)
+                            ThemePrefs.save(context, id)
+                            onThemeChange(id)
                         },
                         label = { Text(stringResource(labelRes)) },
                     )
                 }
             }
-        }
-        item {
-            FilterChip(
-                selected = dynamicColor,
-                onClick = {
-                    dynamicColor = !dynamicColor
-                    ThemePrefs.save(context, themeName, dynamicColor)
-                    onThemeChange(themeName, dynamicColor)
-                },
-                label = { Text(stringResource(R.string.dynamicColor)) },
-            )
-        }
-        item {
-            Text(
-                text = stringResource(R.string.dynamicColorHint),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
         }
 
         item { SectionTitle(stringResource(R.string.languageGroup)) }
@@ -4629,65 +5229,106 @@ fun PrayerScreen(onBack: () -> Unit) {
         }
     }
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbar) },
-    ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp),
-            contentPadding = PaddingValues(bottom = padding.calculateBottomPadding()),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Button(onClick = onBack) {
-                        Text(stringResource(R.string.home))
-                    }
-                    Spacer(Modifier.width(12.dp))
+    val todayLine = remember(language) {
+        try {
+            val loc = when (language) {
+                "ar" -> java.util.Locale("ar")
+                "fr" -> java.util.Locale.FRENCH
+                else -> java.util.Locale.ENGLISH
+            }
+            java.text.SimpleDateFormat("dd MMMM, yyyy", loc)
+                .format(java.util.Date())
+        } catch (_: Exception) {
+            ""
+        }
+    }
+
+    EmeraldScaffold(
+        header = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                IconButton(onClick = onBack) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = null,
+                        tint = Color.White,
+                    )
+                }
+                Column(Modifier.weight(1f)) {
                     Text(
                         text = prayerScreenTitle(language),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
+                        color = Color.White,
                     )
-                }
-            }
-            item {
-                Card(
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    ),
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Column(
-                        modifier = Modifier.padding(20.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                    ) {
+                    if (todayLine.isNotEmpty()) {
                         Text(
-                            text = "${prayerName(snap.next.key, language)} · ${snap.times.format(snap.next.minutes)}",
-                            style = MaterialTheme.typography.headlineSmall,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        )
-                        Text(
-                            text = remainingText(
-                                remaining / 60,
-                                remaining % 60,
-                                snap.place.city,
-                                language,
-                            ),
+                            text = todayLine,
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            color = Color.White.copy(alpha = 0.85f),
                         )
                     }
                 }
             }
+        },
+        body = {
+            Scaffold(
+                snackbarHost = { SnackbarHost(snackbar) },
+                containerColor = Color.Transparent,
+            ) { padding ->
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp),
+                contentPadding = PaddingValues(bottom = padding.calculateBottomPadding()),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+            // Shared by the reminder Switch and the per-row bells: one
+            // global setting (per-prayer granularity needs structured
+            // upstream data we don't have, so bells reflect the global).
+            fun togglePrayerNotifications(enabled: Boolean) {
+                if (enabled) {
+                    if (android.os.Build.VERSION.SDK_INT >= 33) {
+                        notificationPermissionLauncher.launch(
+                            Manifest.permission.POST_NOTIFICATIONS,
+                        )
+                    } else {
+                        PrayerPrefs.saveNotificationsEnabled(context, true)
+                        notifEnabled = true
+                        PrayerNotifications.scheduleDaily(context)
+                    }
+                } else {
+                    PrayerPrefs.saveNotificationsEnabled(context, false)
+                    notifEnabled = false
+                    PrayerNotifications.cancelAll(context)
+                }
+            }
+            item {
+                HeroGradientCard(onClick = {}) {
+                    Text(
+                        text = "${prayerName(snap.next.key, language)} · ${snap.times.format(snap.next.minutes)}",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                    )
+                    Text(
+                        text = remainingText(
+                            remaining / 60,
+                            remaining % 60,
+                            localizedCityName(snap.place.city, language),
+                            language,
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White.copy(alpha = 0.85f),
+                    )
+                }
+            }
             item {
                 Card(Modifier.fillMaxWidth()) {
-                    Column {
-                        snap.times.ordered.forEach { (key, minutes) ->
+                    Column(modifier = Modifier.padding(vertical = 4.dp)) {
+                        snap.times.ordered.forEachIndexed { rowIdx, (key, minutes) ->
                             val isNext = key == snap.next.key
                             Row(
                                 modifier = Modifier
@@ -4695,6 +5336,21 @@ fun PrayerScreen(onBack: () -> Unit) {
                                     .padding(horizontal = 16.dp, vertical = 12.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
+                                Surface(
+                                    color = if (isNext) {
+                                        MaterialTheme.colorScheme.primary
+                                    } else {
+                                        MaterialTheme.colorScheme.surfaceContainerHighest
+                                    },
+                                    shape = CircleShape,
+                                ) {
+                                    Spacer(
+                                        Modifier
+                                            .padding(6.dp)
+                                            .size(8.dp),
+                                    )
+                                }
+                                Spacer(Modifier.width(12.dp))
                                 Text(
                                     text = prayerName(key, language),
                                     style = MaterialTheme.typography.titleMedium,
@@ -4715,6 +5371,31 @@ fun PrayerScreen(onBack: () -> Unit) {
                                     } else {
                                         MaterialTheme.colorScheme.onSurfaceVariant
                                     },
+                                )
+                                IconButton(
+                                    onClick = { togglePrayerNotifications(!notifEnabled) },
+                                ) {
+                                    Icon(
+                                        imageVector = if (notifEnabled) {
+                                            Icons.Default.Notifications
+                                        } else {
+                                            Icons.Default.NotificationsOff
+                                        },
+                                        contentDescription = notificationsTitle(language),
+                                        tint = if (notifEnabled && isNext) {
+                                            MaterialTheme.colorScheme.primary
+                                        } else {
+                                            MaterialTheme.colorScheme.onSurfaceVariant
+                                        },
+                                    )
+                                }
+                            }
+                            if (rowIdx < snap.times.ordered.size - 1) {
+                                HorizontalDivider(
+                                    modifier = Modifier.padding(horizontal = 16.dp),
+                                    color = MaterialTheme.colorScheme.outlineVariant.copy(
+                                        alpha = 0.6f,
+                                    ),
                                 )
                             }
                         }
@@ -4813,7 +5494,9 @@ fun PrayerScreen(onBack: () -> Unit) {
                                             PrayerPrefs.saveMethod(context, "morocco")
                                         }
                                     },
-                                    label = { Text(preset.name) },
+                                    label = {
+                                        Text(localizedCityName(preset.name, language))
+                                    },
                                 )
                             }
                         }
@@ -4849,23 +5532,7 @@ fun PrayerScreen(onBack: () -> Unit) {
                             )
                             Switch(
                                 checked = notifEnabled,
-                                onCheckedChange = { enabled ->
-                                    if (enabled) {
-                                        if (android.os.Build.VERSION.SDK_INT >= 33) {
-                                            notificationPermissionLauncher.launch(
-                                                Manifest.permission.POST_NOTIFICATIONS,
-                                            )
-                                        } else {
-                                            PrayerPrefs.saveNotificationsEnabled(context, true)
-                                            notifEnabled = true
-                                            PrayerNotifications.scheduleDaily(context)
-                                        }
-                                    } else {
-                                        PrayerPrefs.saveNotificationsEnabled(context, false)
-                                        notifEnabled = false
-                                        PrayerNotifications.cancelAll(context)
-                                    }
-                                },
+                                onCheckedChange = { togglePrayerNotifications(it) },
                             )
                         }
                         val tzLabel = run {
@@ -4891,7 +5558,9 @@ fun PrayerScreen(onBack: () -> Unit) {
                 }
             }
         }
-    }
+        }
+    },
+    )
 }
 
 @Composable
@@ -4930,27 +5599,6 @@ private fun QiblaDial(
             )
         }
         drawCircle(color = primary, radius = 10f, center = center)
-    }
-}
-
-@Composable
-private fun PrayerHeroCard(
-    snap: PrayerSnapshot,
-    language: String,
-    onClick: () -> Unit,
-) {
-    val remaining = (snap.next.minutes - snap.nowMinutes + 1440) % 1440
-    HeroGradientCard(onClick = onClick) {
-        Text(
-            text = "${prayerName(snap.next.key, language)} · ${snap.times.format(snap.next.minutes)}",
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
-        )
-        Text(
-            text = remainingText(remaining / 60, remaining % 60, snap.place.city, language),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
-        )
     }
 }
 
@@ -5050,6 +5698,7 @@ fun SearchScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .statusBarsPadding()
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -5251,6 +5900,7 @@ fun DhikrScreen(onBack: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .statusBarsPadding()
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -5424,7 +6074,7 @@ private fun DhikrHeroCard(
                 "Dhikr · Today: $todayTotal · Total: $total"
             },
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            color = Color.White,
         )
         Text(
             text = if (language == "ar") {
@@ -5433,7 +6083,7 @@ private fun DhikrHeroCard(
                 "Tap a card to count"
             },
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            color = Color.White.copy(alpha = 0.85f),
         )
     }
 }
@@ -5466,6 +6116,7 @@ fun MemorizationScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .statusBarsPadding()
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -5601,12 +6252,12 @@ private fun MemorizationHeroCard(
                 "${memorizationTitle(language)} · $totalMemorized / 6236"
             },
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            color = Color.White,
         )
         Text(
             text = memorizationHowTo(language),
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            color = Color.White.copy(alpha = 0.85f),
         )
     }
 }
@@ -5637,6 +6288,448 @@ private fun ReaderPrefsState.readerEditionId(): String =
     readerEditions.firstOrNull {
         it.riwayaName == riwayaName && it.scriptName == scriptName
     }?.id ?: readerEditions.first().id
+
+private fun formatPlayerTime(ms: Long): String {
+    if (ms <= 0) return "0:00"
+    val totalSec = ms / 1000
+    return "${totalSec / 60}:${(totalSec % 60).toString().padStart(2, '0')}"
+}
+
+@Composable
+internal fun AudioPlayerScreen(
+    onBack: () -> Unit,
+) {
+    val context = LocalContext.current
+    val language = currentLanguage()
+    val queue = NowPlaying.items
+    val reader = remember(context) { AndroidAssetReader(context) }
+    val audioPlayer = remember(context) {
+        try {
+            AndroidStores.audio(context)
+        } catch (_: Exception) {
+            null
+        }
+    }
+    val scope = rememberCoroutineScope()
+    val prefs = remember(context) { ReaderPrefs.load(context) }
+    val quranFontFamily = remember(context, prefs) {
+        quranFontFamily(context, prefs.fontName)
+    }
+
+    var currentRefKey by remember { mutableStateOf<String?>(null) }
+    var currentItem by remember { mutableStateOf<AyahAudioItem?>(null) }
+    var isPlaying by remember { mutableStateOf(false) }
+    var positionMs by remember { mutableLongStateOf(0L) }
+    var durationMs by remember { mutableLongStateOf(0L) }
+    var sliderOverride by remember { mutableStateOf<Long?>(null) }
+    var repeatMode by remember { mutableStateOf(RepeatMode.OFF) }
+    var speed by remember { mutableStateOf(AudioPrefs.speed(context).toFloat()) }
+    var sleepMinutes by remember { mutableStateOf<Int?>(null) }
+    var texts by remember { mutableStateOf<Map<String, String>>(emptyMap()) }
+    var translationMap by remember { mutableStateOf<Map<String, String>>(emptyMap()) }
+    var textsLoading by remember { mutableStateOf(true) }
+
+    DisposableEffect(audioPlayer) {
+        val listener = object : PlayerListener {
+            override fun onPlayingChanged(playing: Boolean) {
+                isPlaying = playing
+            }
+
+            override fun onCurrentRefKey(refKey: String) {
+                currentRefKey = refKey
+            }
+
+            override fun onCurrentItem(item: AyahAudioItem?) {
+                currentItem = item
+            }
+        }
+        audioPlayer?.setListener(listener)
+        onDispose {
+            audioPlayer?.removeListener(listener)
+        }
+    }
+
+    // Verified texts for the queued surah + translation, off Main.
+    LaunchedEffect(reader, queue) {
+        textsLoading = true
+        val loaded = withContext(Dispatchers.IO) {
+            try {
+                val editionId = queue.firstOrNull()?.editionId
+                    ?.takeIf { it.isNotBlank() } ?: "hafs-an-asim__uthmani"
+                val surah = queue.firstOrNull()?.refKey
+                    ?.substringBefore(':')?.toIntOrNull()
+                val map = loadQuranEdition(reader, editionId = editionId)
+                    ?.filter { surah == null || it.surah == surah }
+                    ?.associate { "${it.surah}:${it.ayah}" to it.text }
+                    .orEmpty()
+                val trPath = translationAssets["en-sahih"]
+                val trRaw = trPath?.let { reader.readText(it) }
+                map to if (trRaw == null) emptyMap() else parsePipeMap(trRaw)
+            } catch (_: Exception) {
+                emptyMap<String, String>() to emptyMap()
+            }
+        }
+        texts = loaded.first
+        translationMap = loaded.second
+        textsLoading = false
+    }
+
+    // Position polling for the seek bar.
+    LaunchedEffect(audioPlayer) {
+        while (true) {
+            positionMs = audioPlayer?.positionMs() ?: 0L
+            durationMs = audioPlayer?.durationMs() ?: 0L
+            delay(500)
+        }
+    }
+
+    if (queue.isEmpty()) {
+    Scaffold(
+        topBar = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                IconButton(onClick = onBack) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = stringResource(R.string.close),
+                    )
+                }
+                Text(
+                    text = stringResource(R.string.audioPlayer),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+        },
+    ) { padding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.contentUnavailable),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            }
+        }
+        return
+    }
+
+    val refKey = currentRefKey ?: queue.first().refKey
+    val refParts = refKey.split(':')
+    val refSurah = refParts.getOrNull(0)?.toIntOrNull() ?: 1
+    val refAyah = refParts.getOrNull(1)?.toIntOrNull() ?: 1
+    val queueIndex = queue.indexOfFirst { it.refKey == refKey }.coerceAtLeast(0)
+    val item = currentItem ?: queue[queueIndex]
+    val arabicText = texts[refKey]
+    val translated = translationMap[refKey]
+    val sliderPos = sliderOverride ?: positionMs
+    val hasDuration = durationMs > 0
+
+    Scaffold(
+        topBar = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                IconButton(onClick = onBack) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = stringResource(R.string.close),
+                    )
+                }
+                Column(Modifier.weight(1f)) {
+                    Text(
+                        text = stringResource(R.string.audioPlayer),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Text(
+                        text = item.artist,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                Text(
+                    text = "${queueIndex + 1} / ${queue.size}",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        },
+    ) { padding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(horizontal = 20.dp)
+                .padding(bottom = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            item {
+            Card(Modifier.fillMaxWidth()) {
+                Column(
+                    modifier = Modifier.padding(18.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Text(
+                        text = item.title,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    if (textsLoading) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(64.dp)
+                                .background(
+                                    MaterialTheme.colorScheme.surfaceContainerHighest,
+                                    RoundedCornerShape(8.dp),
+                                ),
+                        )
+                    } else if (arabicText.isNullOrBlank()) {
+                        Text(
+                            text = stringResource(R.string.contentUnavailable),
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    } else {
+                        Text(
+                            text = arabicText,
+                            modifier = Modifier.fillMaxWidth(),
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontFamily = quranFontFamily,
+                            textAlign = TextAlign.End,
+                        )
+                    }
+                    if (!translated.isNullOrBlank()) {
+                        Text(
+                            text = translated,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                    Text(
+                        text = "${stringResource(R.string.surah)} $refSurah · ${stringResource(R.string.ayahLabel)} $refAyah",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+        }
+        item {
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Slider(
+                    value = sliderPos.toFloat(),
+                    onValueChange = { sliderOverride = it.toLong() },
+                    onValueChangeFinished = {
+                        val target = sliderOverride
+                        sliderOverride = null
+                        if (target != null) {
+                            scope.launch {
+                                try {
+                                    audioPlayer?.seekTo(target)
+                                } catch (_: Exception) {
+                                }
+                            }
+                        }
+                    },
+                    valueRange = 0f..(if (hasDuration) durationMs.toFloat() else 1f),
+                    enabled = hasDuration,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(
+                        text = formatPlayerTime(sliderPos),
+                        style = MaterialTheme.typography.labelMedium,
+                    )
+                    Text(
+                        text = if (hasDuration) formatPlayerTime(durationMs) else "--:--",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+        }
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                IconButton(
+                    onClick = {
+                        scope.launch {
+                            try {
+                                audioPlayer?.previous()
+                            } catch (_: Exception) {
+                            }
+                        }
+                    },
+                    enabled = queueIndex > 0,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.SkipPrevious,
+                        contentDescription = stringResource(R.string.previous),
+                        modifier = Modifier.size(36.dp),
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        scope.launch {
+                            try {
+                                if (isPlaying) audioPlayer?.pause() else audioPlayer?.play()
+                            } catch (_: Exception) {
+                            }
+                        }
+                    },
+                    modifier = Modifier.size(64.dp),
+                ) {
+                    Icon(
+                        imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                        contentDescription = if (isPlaying) {
+                            stringResource(R.string.pause)
+                        } else {
+                            stringResource(R.string.play)
+                        },
+                        modifier = Modifier.size(48.dp),
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        scope.launch {
+                            try {
+                                audioPlayer?.next()
+                            } catch (_: Exception) {
+                            }
+                        }
+                    },
+                    enabled = queueIndex < queue.size - 1,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.SkipNext,
+                        contentDescription = stringResource(R.string.next),
+                        modifier = Modifier.size(36.dp),
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        QuranAudio.stopAll(context)
+                        onBack()
+                    },
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Stop,
+                        contentDescription = stringResource(R.string.stop),
+                        modifier = Modifier.size(32.dp),
+                    )
+                }
+            }
+        }
+        item {
+            Text(
+                text = stringResource(R.string.speed),
+                style = MaterialTheme.typography.labelLarge,
+            )
+        }
+        item {
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                items(listOf(0.75f, 1f, 1.25f, 1.5f, 2f)) { value ->
+                    val label = if (value == 1f) "1×" else "${value}×"
+                    FilterChip(
+                        selected = speed == value,
+                        onClick = {
+                            speed = value
+                            AudioPrefs.saveSpeed(context, value.toDouble())
+                            scope.launch {
+                                try {
+                                    audioPlayer?.setSpeed(value)
+                                } catch (_: Exception) {
+                                }
+                            }
+                        },
+                        label = { Text(label) },
+                    )
+                }
+            }
+        }
+        item {
+            Text(
+                text = stringResource(R.string.repeat),
+                style = MaterialTheme.typography.labelLarge,
+            )
+        }
+        item {
+            val repeatOffLabel = stringResource(R.string.repeatOff)
+            val repeatOneLabel = stringResource(R.string.repeatOne)
+            val repeatAllLabel = stringResource(R.string.repeatAll)
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                val modes = listOf(
+                    RepeatMode.OFF to repeatOffLabel,
+                    RepeatMode.ONE to repeatOneLabel,
+                    RepeatMode.ALL to repeatAllLabel,
+                )
+                items(modes, key = { it.first }) { (mode, label) ->
+                    FilterChip(
+                        selected = repeatMode == mode,
+                        onClick = {
+                            repeatMode = mode
+                            scope.launch {
+                                try {
+                                    audioPlayer?.setRepeatMode(mode)
+                                } catch (_: Exception) {
+                                }
+                            }
+                        },
+                        label = { Text(label) },
+                    )
+                }
+            }
+        }
+        item {
+            Text(
+                text = stringResource(R.string.sleepTimer),
+                style = MaterialTheme.typography.labelLarge,
+            )
+        }
+        item {
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                val options: List<Int?> = listOf(null, 5, 15, 30, 60)
+                items(options, key = { it?.toString() ?: "off" }) { minutes ->
+                    val label = minutes?.toString()
+                        ?: stringResource(R.string.sleepOff)
+                    FilterChip(
+                        selected = sleepMinutes == minutes,
+                        onClick = {
+                            sleepMinutes = minutes
+                            audioPlayer?.sleepTimer(
+                                minutes?.times(60_000L),
+                            )
+                        },
+                        label = { Text(label) },
+                    )
+                }
+            }
+        }
+        item {
+            Spacer(Modifier.height(8.dp))
+        }
+        }
+    }
+}
 
 private fun quranFontFamily(
     context: Context,

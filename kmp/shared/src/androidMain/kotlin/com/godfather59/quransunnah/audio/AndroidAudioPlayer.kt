@@ -3,6 +3,7 @@ package com.godfather59.quransunnah.audio
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
@@ -14,7 +15,7 @@ import androidx.media3.exoplayer.ExoPlayer
 // thread (app-layer convention).
 class AndroidAudioPlayer(context: Context) : AudioPlayer {
     private val player: ExoPlayer = SharedExoPlayer.get(context)
-    private var listener: PlayerListener? = null
+    private val listeners = mutableSetOf<PlayerListener>()
     private val sleepHandler = Handler(Looper.getMainLooper())
     private var sleepRunnable: Runnable? = null
     private var currentItem: AyahAudioItem? = null
@@ -24,7 +25,7 @@ class AndroidAudioPlayer(context: Context) : AudioPlayer {
         player.addListener(
             object : Player.Listener {
                 override fun onIsPlayingChanged(isPlaying: Boolean) {
-                    listener?.onPlayingChanged(isPlaying)
+                    listeners.toList().forEach { it.onPlayingChanged(isPlaying) }
                 }
 
                 override fun onMediaItemTransition(
@@ -34,11 +35,13 @@ class AndroidAudioPlayer(context: Context) : AudioPlayer {
                     val id = mediaItem?.mediaId
                     if (id != null) {
                         currentItem = findItemByRefKey(id)
-                        listener?.onCurrentRefKey(id)
-                        listener?.onCurrentItem(currentItem)
+                        listeners.toList().forEach {
+                            it.onCurrentRefKey(id)
+                            it.onCurrentItem(currentItem)
+                        }
                     } else {
                         currentItem = null
-                        listener?.onCurrentItem(null)
+                        listeners.toList().forEach { it.onCurrentItem(null) }
                     }
                 }
             },
@@ -50,7 +53,15 @@ class AndroidAudioPlayer(context: Context) : AudioPlayer {
     }
 
     override fun setListener(listener: PlayerListener?) {
-        this.listener = listener
+        if (listener == null) {
+            listeners.clear()
+        } else {
+            listeners.add(listener)
+        }
+    }
+
+    override fun removeListener(listener: PlayerListener) {
+        listeners.remove(listener)
     }
 
     override suspend fun setAyahSources(items: List<AyahAudioItem>) {
@@ -83,6 +94,44 @@ class AndroidAudioPlayer(context: Context) : AudioPlayer {
 
     override suspend fun stop() {
         player.stop()
+        // Stopped = nothing current: MiniPlayer hides, player screen resets.
+        currentItem = null
+        listeners.toList().forEach {
+            it.onPlayingChanged(false)
+            it.onCurrentItem(null)
+        }
+    }
+
+    override suspend fun next() {
+        if (player.hasNextMediaItem()) player.seekToNextMediaItem()
+    }
+
+    override suspend fun previous() {
+        if (player.hasPreviousMediaItem()) player.seekToPreviousMediaItem()
+    }
+
+    override suspend fun seekTo(positionMs: Long) {
+        val duration = player.duration
+        if (duration != C.TIME_UNSET && duration > 0) {
+            player.seekTo(positionMs.coerceIn(0, duration))
+        }
+    }
+
+    override fun positionMs(): Long {
+        return try {
+            player.currentPosition.coerceAtLeast(0)
+        } catch (_: Exception) {
+            0L
+        }
+    }
+
+    override fun durationMs(): Long {
+        return try {
+            val d = player.duration
+            if (d == C.TIME_UNSET || d <= 0) 0L else d
+        } catch (_: Exception) {
+            0L
+        }
     }
 
     override suspend fun setSpeed(speed: Float) {

@@ -225,4 +225,16 @@
     <string name="wordMeanings">Word meanings</string>
     <string name="wordMorphology">Word morphology</string>
     <string name="wordMorphologyHint">Word, root and morphology data from the verified source.</string>
+    <string name="stop">Stop</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="speed">Speed</string>
+    <string name="repeatOff">Off</string>
+    <string name="repeatOne">One ayah</string>
+    <string name="repeatAll">Whole surah</string>
+    <string name="sleepOff">Off</string>
+    <string name="close">Close</string>
+    <string name="audioPlayer">Audio player</string>
+    <string name="reciter">Reciter</string>
+    <string name="all">All</string>
 </resources>

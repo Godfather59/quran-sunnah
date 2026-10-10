@@ -225,4 +225,16 @@
     <string name="wordMeanings">معاني الكلمات</string>
     <string name="wordMorphology">تحليل الكلمات</string>
     <string name="wordMorphologyHint">بيانات الكلمات والجذور والصيغ من المصدر الموثق.</string>
+    <string name="stop">إيقاف</string>
+    <string name="next">التالي</string>
+    <string name="previous">السابق</string>
+    <string name="speed">السرعة</string>
+    <string name="repeatOff">إيقاف</string>
+    <string name="repeatOne">آية واحدة</string>
+    <string name="repeatAll">السورة كاملة</string>
+    <string name="sleepOff">بدون مؤقت</string>
+    <string name="close">إغلاق</string>
+    <string name="audioPlayer">مشغل الصوت</string>
+    <string name="reciter">القارئ</string>
+    <string name="all">الكل</string>
 </resources>

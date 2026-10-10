@@ -1,7 +1,7 @@
 {
   "_meta": {
     "generatedFrom": "lib/core/l10n/app_strings.dart",
-    "count": 224
+    "count": 236
   },
   "strings": {
     "appTitle": {
@@ -1123,6 +1123,66 @@
       "ar": "المغرب (الأوقاف)",
       "en": "Morocco (Habous)",
       "fr": "Maroc (Habous)"
+    },
+    "stop": {
+      "ar": "إيقاف",
+      "en": "Stop",
+      "fr": "Arrêter"
+    },
+    "next": {
+      "ar": "التالي",
+      "en": "Next",
+      "fr": "Suivant"
+    },
+    "previous": {
+      "ar": "السابق",
+      "en": "Previous",
+      "fr": "Précédent"
+    },
+    "speed": {
+      "ar": "السرعة",
+      "en": "Speed",
+      "fr": "Vitesse"
+    },
+    "repeatOff": {
+      "ar": "إيقاف",
+      "en": "Off",
+      "fr": "Désactivé"
+    },
+    "repeatOne": {
+      "ar": "آية واحدة",
+      "en": "One ayah",
+      "fr": "Un verset"
+    },
+    "repeatAll": {
+      "ar": "السورة كاملة",
+      "en": "Whole surah",
+      "fr": "Sourate entière"
+    },
+    "sleepOff": {
+      "ar": "بدون مؤقت",
+      "en": "Off",
+      "fr": "Désactivé"
+    },
+    "close": {
+      "ar": "إغلاق",
+      "en": "Close",
+      "fr": "Fermer"
+    },
+    "audioPlayer": {
+      "ar": "مشغل الصوت",
+      "en": "Audio player",
+      "fr": "Lecteur audio"
+    },
+    "reciter": {
+      "ar": "القارئ",
+      "en": "Reciter",
+      "fr": "Récitateur"
+    },
+    "all": {
+      "ar": "الكل",
+      "en": "All",
+      "fr": "Tout"
     }
   }
 }

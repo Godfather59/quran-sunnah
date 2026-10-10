@@ -225,4 +225,16 @@
     <string name="wordMeanings">Sens des mots</string>
     <string name="wordMorphology">Morphologie des mots</string>
     <string name="wordMorphologyHint">Mots, racines et morphologie depuis la source vérifiée.</string>
+    <string name="stop">Arrêter</string>
+    <string name="next">Suivant</string>
+    <string name="previous">Précédent</string>
+    <string name="speed">Vitesse</string>
+    <string name="repeatOff">Désactivé</string>
+    <string name="repeatOne">Un verset</string>
+    <string name="repeatAll">Sourate entière</string>
+    <string name="sleepOff">Désactivé</string>
+    <string name="close">Fermer</string>
+    <string name="audioPlayer">Lecteur audio</string>
+    <string name="reciter">Récitateur</string>
+    <string name="all">Tout</string>
 </resources>

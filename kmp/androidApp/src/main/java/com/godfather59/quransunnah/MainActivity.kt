@@ -4,12 +4,22 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.MusicNote
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -37,9 +47,8 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationRail
@@ -52,6 +61,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -189,6 +199,7 @@ private fun SafeModeScreen(onRetry: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .statusBarsPadding()
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -274,19 +285,14 @@ private fun QuranSunnahApp(
     val context = LocalContext.current
     val savedTheme = remember(context) { ThemePrefs.load(context) }
     var themeName by rememberSaveable { mutableStateOf(savedTheme.themeName) }
-    var dynamicColor by rememberSaveable { mutableStateOf(savedTheme.dynamicColor) }
     val dark = when (themeName) {
         "light" -> false
         "dark" -> true
         else -> isSystemInDarkTheme()
     }
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            if (dark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-        dark -> appDarkScheme()
-        else -> appLightScheme()
-    }
+    // Fixed brand emerald: dynamic wallpaper colors are deliberately not
+    // offered (they served purple schemes over the brand).
+    val colorScheme = if (dark) appDarkScheme() else appLightScheme()
     MaterialTheme(colorScheme = colorScheme, shapes = appShapes()) {
         Surface(color = MaterialTheme.colorScheme.background) {
             Box(
@@ -299,9 +305,8 @@ private fun QuranSunnahApp(
                     deepLinkToken = deepLinkToken,
                     onDeepLinkConsumed = onDeepLinkConsumed,
                     onOpenRef = onOpenRef,
-                    onThemeChange = { name, dynamic ->
+                    onThemeChange = { name ->
                         themeName = name
-                        dynamicColor = dynamic
                     },
                 )
             }
@@ -315,7 +320,7 @@ private fun AppStart(
     deepLinkToken: Int = 0,
     onDeepLinkConsumed: () -> Unit = {},
     onOpenRef: (String) -> Unit = {},
-    onThemeChange: (String, Boolean) -> Unit = { _, _ -> },
+    onThemeChange: (String) -> Unit = {},
 ) {
     val context = LocalContext.current
     var phase by rememberSaveable {
@@ -362,13 +367,21 @@ private fun AdaptiveAppScaffold(
     deepLinkToken: Int = 0,
     onDeepLinkConsumed: () -> Unit = {},
     onOpenRef: (String) -> Unit = {},
-    onThemeChange: (String, Boolean) -> Unit = { _, _ -> },
+    onThemeChange: (String) -> Unit = {},
 ) {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
     var deepLinkSurah by rememberSaveable { mutableStateOf<Int?>(null) }
     var deepLinkSurahToken by rememberSaveable { mutableIntStateOf(0) }
+    var showAudioPlayer by rememberSaveable { mutableStateOf(false) }
     val stateHolder = rememberSaveableStateHolder()
     val context = LocalContext.current
+
+    // Full player screen: opened from Play taps and MiniPlayer taps via
+    // the NowPlaying token (no callback plumbing through tab screens).
+    val audioOpenToken = NowPlaying.openToken
+    LaunchedEffect(audioOpenToken) {
+        if (audioOpenToken > 0) showAudioPlayer = true
+    }
 
     // Cold-start and warm `quran://s/a` links: persist the position (the
     // reader picks its initial ayah up from prefs), switch to the Quran
@@ -386,6 +399,12 @@ private fun AdaptiveAppScaffold(
         deepLinkSurah = su
         deepLinkSurahToken += 1
         selectedIndex = 1
+    }
+
+    if (showAudioPlayer) {
+        BackHandler { showAudioPlayer = false }
+        AudioPlayerScreen(onBack = { showAudioPlayer = false })
+        return
     }
 
     BoxWithConstraints(Modifier.fillMaxSize()) {
@@ -407,6 +426,7 @@ private fun AdaptiveAppScaffold(
                     deepLinkSurahToken = deepLinkSurahToken,
                     onOpenRef = onOpenRef,
                     onThemeChange = onThemeChange,
+                    onOpenTab = { selectedIndex = it },
                 )
             }
         } else {
@@ -419,6 +439,7 @@ private fun AdaptiveAppScaffold(
                             deepLinkSurahToken = deepLinkSurahToken,
                             onOpenRef = onOpenRef,
                             onThemeChange = onThemeChange,
+                            onOpenTab = { selectedIndex = it },
                         )
                     }
                 }
@@ -466,7 +487,8 @@ private fun MainPane(
     deepLinkSurah: Int? = null,
     deepLinkSurahToken: Int = 0,
     onOpenRef: (String) -> Unit = {},
-    onThemeChange: (String, Boolean) -> Unit = { _, _ -> },
+    onThemeChange: (String) -> Unit = {},
+    onOpenTab: (Int) -> Unit = {},
 ) {
     val stateHolder = rememberSaveableStateHolder()
     Column(Modifier.fillMaxSize()) {
@@ -478,6 +500,7 @@ private fun MainPane(
                     deepLinkSurahToken = deepLinkSurahToken,
                     onOpenRef = onOpenRef,
                     onThemeChange = onThemeChange,
+                    onOpenTab = onOpenTab,
                 )
             }
         }
@@ -491,10 +514,11 @@ private fun DestinationScreen(
     deepLinkSurah: Int? = null,
     deepLinkSurahToken: Int = 0,
     onOpenRef: (String) -> Unit = {},
-    onThemeChange: (String, Boolean) -> Unit = { _, _ -> },
+    onThemeChange: (String) -> Unit = {},
+    onOpenTab: (Int) -> Unit = {},
 ) {
     when (selectedIndex) {
-        0 -> HomeScreen(onOpenAyahRef = onOpenRef)
+        0 -> HomeScreen(onOpenAyahRef = onOpenRef, onOpenTab = onOpenTab)
         1 -> QuranIndexScreen(
             deepLinkSurah = deepLinkSurah,
             deepLinkSurahToken = deepLinkSurahToken,
@@ -538,7 +562,7 @@ private fun MiniPlayer() {
         }
         audioPlayer.setListener(listener)
         onDispose {
-            audioPlayer.setListener(null)
+            audioPlayer.removeListener(listener)
         }
     }
 
@@ -547,62 +571,111 @@ private fun MiniPlayer() {
         return@MiniPlayer
     }
 
+    // Thin progress readout (1s poll, only while visible).
+    var positionMs by remember { mutableLongStateOf(0L) }
+    var durationMs by remember { mutableLongStateOf(0L) }
+    LaunchedEffect(audioPlayer) {
+        while (true) {
+            try {
+                positionMs = audioPlayer.positionMs()
+                durationMs = audioPlayer.durationMs()
+            } catch (_: Exception) {
+            }
+            delay(1000)
+        }
+    }
+    val progress = if (durationMs > 0) {
+        (positionMs.toFloat() / durationMs).coerceIn(0f, 1f)
+    } else {
+        0f
+    }
+
     Surface(
-        tonalElevation = 3.dp,
+        onClick = { NowPlaying.requestOpen() },
+        tonalElevation = 4.dp,
+        shape = RoundedCornerShape(16.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 56.dp),
+            .padding(horizontal = 12.dp, vertical = 8.dp),
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(
-                imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
-                contentDescription = if (isPlaying) stringResource(R.string.pause) else stringResource(R.string.play),
+        Column {
+            Row(
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .clickable {
-                        if (isPlaying) {
-                            coroutineScope.launch { audioPlayer.pause() }
-                        } else {
-                            QuranAudio.ensureStarted(context)
-                            coroutineScope.launch { audioPlayer.play() }
-                        }
-                    }
-                    .padding(end = 12.dp),
-            )
-            currentItem?.let { item ->
-                Column(
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Box(
                     modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.Start,
+                        .size(48.dp)
+                        .background(
+                            MaterialTheme.colorScheme.primaryContainer,
+                            RoundedCornerShape(12.dp),
+                        ),
+                    contentAlignment = Alignment.Center,
                 ) {
+                    Icon(
+                        imageVector = Icons.Filled.MusicNote,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                }
+                Spacer(Modifier.width(12.dp))
+                Column(Modifier.weight(1f)) {
                     Text(
-                        text = item.title,
+                        text = currentItem?.title.orEmpty(),
                         style = MaterialTheme.typography.titleSmall,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
                     Text(
-                        text = item.artist,
+                        text = currentItem?.artist.orEmpty(),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
                 }
+                IconButton(onClick = {
+                    if (isPlaying) {
+                        coroutineScope.launch { audioPlayer.pause() }
+                    } else {
+                        QuranAudio.ensureStarted(context)
+                        coroutineScope.launch { audioPlayer.play() }
+                    }
+                }) {
+                    Icon(
+                        imageVector = if (isPlaying) {
+                            Icons.Filled.Pause
+                        } else {
+                            Icons.Filled.PlayArrow
+                        },
+                        contentDescription = if (isPlaying) {
+                            stringResource(R.string.pause)
+                        } else {
+                            stringResource(R.string.play)
+                        },
+                        modifier = Modifier.size(32.dp),
+                    )
+                }
+                IconButton(onClick = {
+                    QuranAudio.stopAll(context)
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = stringResource(R.string.stop),
+                        modifier = Modifier.size(24.dp),
+                    )
+                }
             }
-            Spacer(Modifier.weight(1f))
-            Text(
-                text = if (isPlaying) stringResource(R.string.playingFrom) else stringResource(R.string.off),
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+            if (durationMs > 0) {
+                LinearProgressIndicator(
+                    progress = { progress },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(2.dp),
+                )
+            }
         }
     }
 }

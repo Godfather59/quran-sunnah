@@ -14,6 +14,8 @@ data class AyahAudioItem(
     val title: String,
     val artist: String,
     val album: String,
+    /** Verified Quran edition id (for loading display text in UI). */
+    val editionId: String = "",
 )
 
 interface PlayerListener {
@@ -23,11 +25,23 @@ interface PlayerListener {
 }
 
 interface AudioPlayer {
+    /** Adds a listener (null clears all — prefer [removeListener]). */
     fun setListener(listener: PlayerListener?)
+
+    /** Removes a previously added listener. */
+    fun removeListener(listener: PlayerListener)
     suspend fun setAyahSources(items: List<AyahAudioItem>)
     suspend fun play()
     suspend fun pause()
     suspend fun stop()
+    suspend fun next()
+    suspend fun previous()
+    /** Seek within the current ayah. No-op when duration is unknown. */
+    suspend fun seekTo(positionMs: Long)
+    /** Current position in ms, or 0 when unknown. Main-thread safe. */
+    fun positionMs(): Long
+    /** Current ayah duration in ms, or 0 when unknown. Main-thread safe. */
+    fun durationMs(): Long
     suspend fun setSpeed(speed: Float)
     suspend fun setRepeatMode(mode: RepeatMode)
     /** Null duration cancels the timer. */

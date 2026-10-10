@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -364,29 +365,24 @@ object DhikrPrefs {
 
 data class ThemePrefsState(
     val themeName: String = "system",
-    val dynamicColor: Boolean = false,
 )
 
-/** Appearance prefs with exact Flutter keys (`app.themeName` holds the
- * Dart enum name, `app.dynamicColor` a bool). */
+/** Appearance prefs. The brand emerald scheme is fixed: any legacy
+ * `app.dynamicColor` value left by older builds is ignored (dynamic
+ * wallpaper colors clashed with the brand and served purple schemes). */
 object ThemePrefs {
     fun load(context: Context): ThemePrefsState {
         val prefs = context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
         return ThemePrefsState(
             themeName = prefs.getString("app.themeName", null) ?: "system",
-            dynamicColor = try {
-                prefs.getBoolean("app.dynamicColor", false)
-            } catch (_: Exception) {
-                false
-            },
         )
     }
 
-    fun save(context: Context, themeName: String, dynamicColor: Boolean) {
+    fun save(context: Context, themeName: String) {
         context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
             .edit {
             putString("app.themeName", themeName)
-            putBoolean("app.dynamicColor", dynamicColor)
+            remove("app.dynamicColor")
             }
     }
 }
@@ -522,6 +518,7 @@ fun SplashScreen() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .statusBarsPadding()
                 .padding(32.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -563,6 +560,7 @@ fun OnboardingFlow(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .statusBarsPadding()
             .padding(24.dp),
     ) {
         LinearProgressIndicator(

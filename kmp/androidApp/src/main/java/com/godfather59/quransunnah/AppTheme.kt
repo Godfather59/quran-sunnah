@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -21,101 +24,99 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-// Calm brand identity ported from Flutter's AppTheme (no default Material
-// purple anywhere): deep green-ink + muted teal + warm bronze over warm
-// paper (light) / night ink (dark).
-//
-// Glass treatment: `surface`/`background` are transparent so one subtle
-// backdrop gradient shows through everywhere, while the container roles
-// stay nearly opaque (0.78–0.92) so sacred text keeps full legibility and
-// only spacing reads as frosted glass.
+// Emerald brand identity (no default Material purple anywhere): deep
+// emerald + pine on a clean mint-white background (light) / pine night
+// (dark). Solid, opaque roles — no frosted-glass translucency (translucent
+// tints over the dark window background rendered as murky gray-green).
+// Cards are pure white with generous 16–28dp radii.
 
-private val Ink = Color(0xFF1A2E2A)
-private val Teal = Color(0xFF0F6A5F)
-private val Bronze = Color(0xFF9A7B4F)
-private val Paper = Color(0xFFF7F3EA)
-private val Sand = Color(0xFFEDE6D6)
-private val Night = Color(0xFF0E1513)
-private val NightSurface = Color(0xFF182220)
-private val TealLight = Color(0xFF8FD0C2)
-private val BronzeLight = Color(0xFFD3B98C)
+private val Ink = Color(0xFF10201C)
+private val Emerald = Color(0xFF0AA97B)
+private val Pine = Color(0xFF0B5C46)
+private val Mint = Color(0xFFF2FAF6)
+private val MintCard = Color(0xFFFFFFFF)
+private val MintLine = Color(0xFFDCEBE3)
+private val Night = Color(0xFF0B1512)
+private val NightSurface = Color(0xFF14201C)
+private val EmeraldLight = Color(0xFF7BDFC0)
+private val Gold = Color(0xFF9A7B4F)
 
 fun appLightScheme() = lightColorScheme(
-    primary = Teal,
+    primary = Color(0xFF0A9E6C),
     onPrimary = Color.White,
-    primaryContainer = Color(0xFFD5EAE4),
-    onPrimaryContainer = Ink,
-    secondary = Bronze,
+    primaryContainer = Color(0xFFC9F2E2),
+    onPrimaryContainer = Color(0xFF07372A),
+    secondary = Pine,
     onSecondary = Color.White,
-    secondaryContainer = Sand,
-    onSecondaryContainer = Color(0xFF4A3F2C),
-    tertiary = Color(0xFF5B7A6E),
+    secondaryContainer = Color(0xFFDCEBE3),
+    onSecondaryContainer = Color(0xFF1E3A31),
+    tertiary = Gold,
     onTertiary = Color.White,
-    tertiaryContainer = Color(0xFFE3EDE7),
-    onTertiaryContainer = Ink,
+    tertiaryContainer = Color(0xFFF1E8D5),
+    onTertiaryContainer = Color(0xFF4A3F2C),
     error = Color(0xFFA63A2E),
     onError = Color.White,
     errorContainer = Color(0xFFF3DAD4),
     onErrorContainer = Color(0xFF4A1D17),
-    background = Color.Transparent,
+    background = Color(0xFFF2F7F4),
     onBackground = Ink,
-    surface = Color.Transparent,
+    surface = Color(0xFFF2F7F4),
     onSurface = Ink,
-    surfaceVariant = Sand.copy(alpha = 0.85f),
-    onSurfaceVariant = Color(0xFF4E5D58),
-    surfaceTint = Teal,
-    surfaceDim = Sand,
-    surfaceBright = Color.White,
-    surfaceContainerLowest = Color.White.copy(alpha = 0.92f),
-    surfaceContainerLow = Color(0xFFFFFDF7).copy(alpha = 0.88f),
-    surfaceContainer = Color(0xFFFAF6EC).copy(alpha = 0.85f),
-    surfaceContainerHigh = Color(0xFFF3EDDF).copy(alpha = 0.85f),
-    surfaceContainerHighest = Sand.copy(alpha = 0.85f),
-    outline = Color(0xFF7E8D87),
-    outlineVariant = Color(0xFFD8D2C0),
+    surfaceVariant = Color(0xFFE1EEE7),
+    onSurfaceVariant = Color(0xFF47605A),
+    surfaceTint = Emerald,
+    surfaceDim = Color(0xFFD9E7DE),
+    surfaceBright = MintCard,
+    surfaceContainerLowest = MintCard,
+    surfaceContainerLow = MintCard,
+    surfaceContainer = MintCard,
+    surfaceContainerHigh = Color(0xFFEDF4EF),
+    surfaceContainerHighest = Color(0xFFE1EEE7),
+    outline = Color(0xFF7E968D),
+    outlineVariant = MintLine,
     scrim = Color.Black,
     inverseSurface = Ink,
-    inverseOnSurface = Paper,
-    inversePrimary = TealLight,
+    inverseOnSurface = Mint,
+    inversePrimary = EmeraldLight,
 )
 
 fun appDarkScheme() = darkColorScheme(
-    primary = TealLight,
-    onPrimary = Color(0xFF06231F),
-    primaryContainer = Color(0xFF0B3B34),
-    onPrimaryContainer = Color(0xFFD5EAE4),
-    secondary = BronzeLight,
-    onSecondary = Color(0xFF2E2515),
-    secondaryContainer = Color(0xFF3A3423),
-    onSecondaryContainer = Color(0xFFEDE6D6),
-    tertiary = Color(0xFFA9C6BB),
-    onTertiary = Color(0xFF0B2420),
-    tertiaryContainer = Color(0xFF24423B),
-    onTertiaryContainer = Color(0xFFE3EDE7),
+    primary = EmeraldLight,
+    onPrimary = Color(0xFF053527),
+    primaryContainer = Color(0xFF0B4A38),
+    onPrimaryContainer = Color(0xFFC9F2E2),
+    secondary = Color(0xFF9AD1BC),
+    onSecondary = Color(0xFF07332A),
+    secondaryContainer = Color(0xFF173E33),
+    onSecondaryContainer = Color(0xFFDCEBE3),
+    tertiary = Color(0xFFD3B98C),
+    onTertiary = Color(0xFF2E2515),
+    tertiaryContainer = Color(0xFF3A3423),
+    onTertiaryContainer = Color(0xFFF1E8D5),
     error = Color(0xFFE5A396),
     onError = Color(0xFF4A1D17),
     errorContainer = Color(0xFF5E231B),
     onErrorContainer = Color(0xFFF3DAD4),
-    background = Color.Transparent,
-    onBackground = Color(0xFFE9E7DC),
-    surface = Color.Transparent,
-    onSurface = Color(0xFFE9E7DC),
-    surfaceVariant = Color(0xFF243330).copy(alpha = 0.85f),
-    onSurfaceVariant = Color(0xFFB9C6C0),
-    surfaceTint = TealLight,
+    background = Night,
+    onBackground = Color(0xFFE7F0EB),
+    surface = Night,
+    onSurface = Color(0xFFE7F0EB),
+    surfaceVariant = Color(0xFF1B2E28),
+    onSurfaceVariant = Color(0xFFAFC4BB),
+    surfaceTint = EmeraldLight,
     surfaceDim = Night,
-    surfaceBright = Color(0xFF243330),
-    surfaceContainerLowest = Night.copy(alpha = 0.92f),
-    surfaceContainerLow = Color(0xFF131D1A).copy(alpha = 0.88f),
-    surfaceContainer = NightSurface.copy(alpha = 0.85f),
-    surfaceContainerHigh = Color(0xFF1E2C29).copy(alpha = 0.85f),
-    surfaceContainerHighest = Color(0xFF243330).copy(alpha = 0.85f),
-    outline = Color(0xFF84948D),
-    outlineVariant = Color(0xFF33433F),
+    surfaceBright = Color(0xFF1B2E28),
+    surfaceContainerLowest = Color(0xFF0E1A16),
+    surfaceContainerLow = Color(0xFF101D18),
+    surfaceContainer = NightSurface,
+    surfaceContainerHigh = Color(0xFF1B2E28),
+    surfaceContainerHighest = Color(0xFF224036),
+    outline = Color(0xFF84A196),
+    outlineVariant = Color(0xFF2C443B),
     scrim = Color.Black,
-    inverseSurface = Paper,
+    inverseSurface = Mint,
     inverseOnSurface = Ink,
-    inversePrimary = Teal,
+    inversePrimary = Emerald,
 )
 
 fun appShapes() = Shapes(
@@ -140,18 +141,142 @@ fun appBackgroundBrush(): Brush {
 }
 
 /**
- * Diagonal teal→bronze hero card with a hairline glass border. Content
- * keeps the existing onPrimaryContainer/onSurface text colors.
+ * White status-bar icons while an emerald header is on screen. Restores the
+ * theme-appropriate appearance on dispose (screens without emerald headers
+ * manage their own insets).
+ */
+@Composable
+fun EmeraldStatusBar() {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val darkTheme = androidx.compose.foundation.isSystemInDarkTheme()
+    androidx.compose.runtime.DisposableEffect(darkTheme) {
+        val window = (context as? android.app.Activity)?.window
+        val controller = window?.let {
+            androidx.core.view.WindowCompat.getInsetsController(it, it.decorView)
+        }
+        controller?.isAppearanceLightStatusBars = false
+        onDispose {
+            try {
+                controller?.isAppearanceLightStatusBars = !darkTheme
+            } catch (_: Exception) {
+            }
+        }
+    }
+}
+
+private val hijriMonthsAr = listOf(
+    "محرم", "صفر", "ربيع الأول", "ربيع الثاني",
+    "جمادى الأولى", "جمادى الثانية", "رجب", "شعبان",
+    "رمضان", "شوال", "ذو القعدة", "ذو الحجة",
+)
+private val hijriMonthsEn = listOf(
+    "Muharram", "Safar", "Rabi al-Awwal", "Rabi al-Thani",
+    "Jumada al-Ula", "Jumada al-Akhirah", "Rajab", "Shaban",
+    "Ramadan", "Shawwal", "Dhu al-Qadah", "Dhu al-Hijjah",
+)
+private val hijriMonthsFr = listOf(
+    "Mouharram", "Safar", "Rabi al-awwal", "Rabi al-thani",
+    "Joumada al-oula", "Joumada al-akhira", "Rajab", "Chaabane",
+    "Ramadan", "Chawwal", "Dhou al-qada", "Dhou al-hijja",
+)
+
+/** Hijri date line ("9 Muharram 1447") via the platform Islamic calendar. */
+fun hijriToday(language: String): String {
+    return try {
+        val cal = android.icu.util.IslamicCalendar()
+        val day = cal.get(java.util.Calendar.DAY_OF_MONTH)
+        val year = cal.get(java.util.Calendar.YEAR)
+        val monthIdx = cal.get(java.util.Calendar.MONTH).coerceIn(0, 11)
+        val month = when (language) {
+            "ar" -> hijriMonthsAr[monthIdx]
+            "fr" -> hijriMonthsFr[monthIdx]
+            else -> hijriMonthsEn[monthIdx]
+        }
+        "$day $month $year"
+    } catch (_: Exception) {
+        ""
+    }
+}
+
+/**
+ * Mockup-style screen: full-bleed emerald gradient, fixed header (drawn
+ * under the status bar), and a rounded white sheet holding the scrolling
+ * body. Works in light and dark schemes via [emeraldHeaderBrush].
+ */
+@Composable
+fun EmeraldScaffold(
+    header: @Composable androidx.compose.foundation.layout.ColumnScope.() -> Unit,
+    body: @Composable () -> Unit,
+) {
+    val scheme = MaterialTheme.colorScheme
+    EmeraldStatusBar()
+    androidx.compose.foundation.layout.Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(emeraldHeaderBrush()),
+    ) {
+        androidx.compose.foundation.layout.Column(Modifier.fillMaxSize()) {
+            androidx.compose.foundation.layout.Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+                    .padding(horizontal = 20.dp, vertical = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                header()
+            }
+            androidx.compose.foundation.layout.Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f)
+                    .background(
+                        scheme.surfaceContainerLowest,
+                        androidx.compose.foundation.shape.RoundedCornerShape(
+                            topStart = 28.dp,
+                            topEnd = 28.dp,
+                        ),
+                    ),
+            ) {
+                body()
+            }
+        }
+    }
+}
+
+@Composable
+private fun emeraldHeaderBrush(): Brush {
+    val dark = androidx.compose.foundation.isSystemInDarkTheme()
+    return remember(dark) {
+        if (dark) {
+            Brush.linearGradient(
+                colors = listOf(Color(0xFF0E4A3A), Color(0xFF08120E)),
+                start = Offset.Zero,
+                end = Offset.Infinite,
+            )
+        } else {
+            // Deep, calm emerald (not neon): easy on the eyes in daylight.
+            Brush.linearGradient(
+                colors = listOf(Color(0xFF0C9A6C), Color(0xFF095C46)),
+                start = Offset.Zero,
+                end = Offset.Infinite,
+            )
+        }
+    }
+}
+
+/**
+ * Emerald hero card (mockup-style diagonal emerald→pine gradient, white
+ * content) with a hairline glass border. Default text colors follow white;
+ * callers must not set dark scheme colors inside.
  */
 @Composable
 fun HeroGradientCard(
     onClick: () -> Unit,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    val scheme = MaterialTheme.colorScheme
-    val brush = remember(scheme) {
+    val brush = remember {
         Brush.linearGradient(
-            colors = listOf(scheme.primaryContainer, scheme.secondaryContainer),
+            colors = listOf(Color(0xFF0C9A6C), Color(0xFF095C46)),
             start = Offset.Zero,
             end = Offset.Infinite,
         )
@@ -159,7 +284,7 @@ fun HeroGradientCard(
     Card(
         onClick = onClick,
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-        border = BorderStroke(1.dp, scheme.outlineVariant.copy(alpha = 0.5f)),
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.35f)),
         shape = MaterialTheme.shapes.large,
     ) {
         Box(
@@ -167,10 +292,14 @@ fun HeroGradientCard(
                 .background(brush)
                 .padding(20.dp),
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                content = content,
-            )
+            androidx.compose.runtime.CompositionLocalProvider(
+                androidx.compose.material3.LocalContentColor provides Color.White,
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    content = content,
+                )
+            }
         }
     }
 }

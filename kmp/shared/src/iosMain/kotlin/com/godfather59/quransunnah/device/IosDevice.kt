@@ -14,10 +14,16 @@ import com.godfather59.quransunnah.audio.RepeatMode
 // Every method never throws.
 class IosAudioPlayer : AudioPlayer {
     override fun setListener(listener: PlayerListener?) {}
+    override fun removeListener(listener: PlayerListener) {}
     override suspend fun setAyahSources(items: List<AyahAudioItem>) {}
     override suspend fun play() {}
     override suspend fun pause() {}
     override suspend fun stop() {}
+    override suspend fun next() {}
+    override suspend fun previous() {}
+    override suspend fun seekTo(positionMs: Long) {}
+    override fun positionMs(): Long = 0L
+    override fun durationMs(): Long = 0L
     override suspend fun setSpeed(speed: Float) {}
     override suspend fun setRepeatMode(mode: RepeatMode) {}
     override fun sleepTimer(durationMs: Long?) {}

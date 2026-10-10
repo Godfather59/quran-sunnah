@@ -30,3 +30,36 @@ val prayerCityPresets: List<PrayerCity> = listOf(
 
 fun isMoroccanCity(city: String): Boolean =
     city == "Casablanca" || city == "Rabat" || city == "Marrakech"
+
+private val cityNamesAr: Map<String, String> = mapOf(
+    "Mecca" to "مكة",
+    "Medina" to "المدينة",
+    "Cairo" to "القاهرة",
+    "Casablanca" to "الدار البيضاء",
+    "Rabat" to "الرباط",
+    "Marrakech" to "مراكش",
+    "Algiers" to "الجزائر",
+    "Tunis" to "تونس",
+    "Istanbul" to "إسطنبول",
+    "Paris" to "باريس",
+    "London" to "لندن",
+    "New York" to "نيويورك",
+    "Jakarta" to "جاكرتا",
+)
+
+private val cityNamesFr: Map<String, String> = mapOf(
+    "Mecca" to "La Mecque",
+    "Medina" to "Médine",
+    "Cairo" to "Le Caire",
+    "Algiers" to "Alger",
+    "London" to "Londres",
+    "New York" to "New York",
+    "Jakarta" to "Jakarta",
+)
+
+/** Display name for a preset city (GPS "GPS x, y" fixes pass through). */
+fun localizedCityName(name: String, language: String): String = when (language) {
+    "ar" -> cityNamesAr[name] ?: name
+    "fr" -> cityNamesFr[name] ?: name
+    else -> name
+}

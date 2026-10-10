@@ -3,6 +3,7 @@ package com.godfather59.quransunnah
 import com.godfather59.quransunnah.prayer.PrayerCalcMethod
 import com.godfather59.quransunnah.prayer.PrayerTimes
 import com.godfather59.quransunnah.prayer.calculatePrayerTimes
+import com.godfather59.quransunnah.prayer.localizedCityName
 import com.godfather59.quransunnah.prayer.nextPrayer
 import com.godfather59.quransunnah.prayer.prayerMethods
 import com.godfather59.quransunnah.prayer.qiblaBearing
@@ -99,5 +100,14 @@ class PrayerTest {
         val wrapped = nextPrayer(t, 23 * 60 + 59)
         assertEquals("fajr", wrapped.key)
         assertTrue(wrapped.isTomorrow)
+    }
+
+    @Test
+    fun cityNamesLocalized() {
+        assertEquals("مكة", localizedCityName("Mecca", "ar"))
+        assertEquals("الدار البيضاء", localizedCityName("Casablanca", "ar"))
+        assertEquals("La Mecque", localizedCityName("Mecca", "fr"))
+        assertEquals("Mecca", localizedCityName("Mecca", "en"))
+        assertEquals("GPS 1.0, 2.0", localizedCityName("GPS 1.0, 2.0", "ar"))
     }
 }
