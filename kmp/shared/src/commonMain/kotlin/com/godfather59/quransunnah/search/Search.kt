@@ -7,6 +7,7 @@ import com.godfather59.quransunnah.quran.TafsirEntry
 import com.godfather59.quransunnah.quran.surahMetadata
 import com.godfather59.quransunnah.text.normalizeArabic
 import com.godfather59.quransunnah.util.CommonLock
+import com.godfather59.quransunnah.db.SearchDocument
 
 // Global search across verified bundled datasets. Ported from
 // lib/data/services/search_service.dart (+ FTS5 semantics from
@@ -99,27 +100,53 @@ private class Doc(
 
 class SearchEngine {
     private val docs = mutableListOf<Doc>()
+    private var docsSnapshot: List<Doc> = emptyList()
+    private val prefixIndexes = mutableMapOf<SearchKind, Map<String, List<Doc>>>()
+    private val documentCounts = mutableMapOf<SearchKind, Int>()
     // Index built on IO, queried on Main/Default: guard against
     // ConcurrentModificationException (Flutter was single-threaded).
     private val lock = CommonLock()
 
     fun clearQuran() {
-        lock.withLock { docs.removeAll { it.kind == SearchKind.QURAN } }
+        lock.withLock {
+            docs.removeAll { it.kind == SearchKind.QURAN }
+            docsSnapshot = docs.toList()
+            prefixIndexes.remove(SearchKind.QURAN)
+            documentCounts.remove(SearchKind.QURAN)
+        }
     }
 
     fun clearHadith() {
-        lock.withLock { docs.removeAll { it.kind == SearchKind.HADITH } }
+        lock.withLock {
+            docs.removeAll { it.kind == SearchKind.HADITH }
+            docsSnapshot = docs.toList()
+            prefixIndexes.remove(SearchKind.HADITH)
+            documentCounts.remove(SearchKind.HADITH)
+        }
     }
 
     fun clearTafsir() {
-        lock.withLock { docs.removeAll { it.kind == SearchKind.TAFSIR } }
+        lock.withLock {
+            docs.removeAll { it.kind == SearchKind.TAFSIR }
+            docsSnapshot = docs.toList()
+            prefixIndexes.remove(SearchKind.TAFSIR)
+            documentCounts.remove(SearchKind.TAFSIR)
+        }
     }
 
     fun clearAll() {
-        lock.withLock { docs.clear() }
+        lock.withLock {
+            docs.clear()
+            docsSnapshot = emptyList()
+            prefixIndexes.clear()
+            documentCounts.clear()
+        }
     }
 
     fun documentCount(): Int = lock.withLock { docs.size }
+
+    fun hasDocuments(kind: SearchKind): Boolean =
+        lock.withLock { (documentCounts[kind] ?: 0) > 0 }
 
     fun indexQuran(ayahs: List<Ayah>) {
         // Build outside the lock (normalization is CPU-heavy), swap atomically.
@@ -143,9 +170,13 @@ class SearchEngine {
                 ),
             )
         }
+        val prefixes = buildPrefixIndex(fresh)
         lock.withLock {
             docs.removeAll { it.kind == SearchKind.QURAN }
             docs.addAll(fresh)
+            docsSnapshot = docs.toList()
+            prefixIndexes[SearchKind.QURAN] = prefixes
+            documentCounts[SearchKind.QURAN] = fresh.size
         }
     }
 
@@ -173,9 +204,13 @@ class SearchEngine {
                 ),
             )
         }
+        val prefixes = buildPrefixIndex(fresh)
         lock.withLock {
             docs.removeAll { it.kind == SearchKind.HADITH }
             docs.addAll(fresh)
+            docsSnapshot = docs.toList()
+            prefixIndexes[SearchKind.HADITH] = prefixes
+            documentCounts[SearchKind.HADITH] = fresh.size
         }
     }
 
@@ -199,9 +234,78 @@ class SearchEngine {
                 ),
             )
         }
+        val prefixes = buildPrefixIndex(fresh)
         lock.withLock {
             docs.removeAll { it.kind == SearchKind.TAFSIR }
             docs.addAll(fresh)
+            docsSnapshot = docs.toList()
+            prefixIndexes[SearchKind.TAFSIR] = prefixes
+            documentCounts[SearchKind.TAFSIR] = fresh.size
+        }
+    }
+
+    /** Export the current category in a form that can be cached on disk. */
+    fun exportIndexedDocuments(kind: SearchKind): List<SearchDocument> = lock.withLock {
+        docsSnapshot.asSequence()
+            .filter { it.kind == kind }
+            .map { doc ->
+                SearchDocument(
+                    id = "${kind.name.lowercase()}:${doc.refKey}",
+                    kind = kind.name.lowercase(),
+                    refKey = doc.refKey,
+                    title = doc.title,
+                    subtitle = doc.subtitle,
+                    body = doc.body,
+                    surah = doc.surah?.toLong(),
+                    ayah = doc.ayah?.toLong(),
+                    editionId = doc.editionId,
+                    tafsirId = doc.tafsirId,
+                    collectionId = doc.collectionId,
+                    hadithNumber = doc.hadithNumber,
+                    book = doc.book,
+                    hadith = doc.hadith,
+                )
+            }
+            .toList()
+    }
+
+    /** Restore cached documents without reparsing the bundled source files. */
+    fun restoreIndexedDocuments(documents: List<SearchDocument>) {
+        for ((rawKind, rows) in documents.groupBy { it.kind }) {
+            val kind = when (rawKind) {
+                "quran" -> SearchKind.QURAN
+                "hadith" -> SearchKind.HADITH
+                "tafsir" -> SearchKind.TAFSIR
+                else -> continue
+            }
+            val fresh = rows.mapNotNull { row ->
+                val hadith = if (kind == SearchKind.HADITH) row.hadith ?: return@mapNotNull null else null
+                Doc(
+                    kind = kind,
+                    refKey = row.refKey,
+                    title = row.title,
+                    subtitle = row.subtitle,
+                    body = row.body,
+                    bodyWords = wordsOf(row.normalizedBody ?: normalizeForIndex(row.body)),
+                    titleWords = wordsOf(row.normalizedTitle ?: normalizeForIndex(row.title)),
+                    surah = row.surah?.toInt(),
+                    ayah = row.ayah?.toInt(),
+                    collectionId = row.collectionId,
+                    hadithNumber = row.hadithNumber,
+                    book = row.book,
+                    editionId = row.editionId,
+                    tafsirId = row.tafsirId,
+                    hadith = hadith,
+                )
+            }
+            val prefixes = buildPrefixIndex(fresh)
+            lock.withLock {
+                docs.removeAll { it.kind == kind }
+                docs.addAll(fresh)
+                docsSnapshot = docs.toList()
+                prefixIndexes[kind] = prefixes
+                documentCounts[kind] = fresh.size
+            }
         }
     }
 
@@ -239,7 +343,9 @@ class SearchEngine {
         val cappedTokens = tokens.take(10)
 
         // Snapshot under lock: indexers may replace docs mid-search.
-        val snapshot: List<Doc> = lock.withLock { docs.toList() }
+        val (snapshot, prefixSnapshot) = lock.withLock {
+            docsSnapshot to prefixIndexes.toMap()
+        }
         // Direct verse shortcut (bare "2:255" only — display number, like
         // Dart; quran:// URIs parse but are NOT shortcuts).
         var directVerse: SearchHit? = null
@@ -268,10 +374,11 @@ class SearchEngine {
         if (directVerse != null) quranHits.add(directVerse!!)
         var truncated = false
 
-        if (cappedTokens.isNotEmpty()) {
+        if (cappedTokens.isNotEmpty() && cappedTokens.all { it.length >= MIN_INDEXED_PREFIX_LENGTH }) {
             val quranRows = matchDocs(
                 SearchKind.QURAN, cappedTokens, limit + 1,
                 snapshot = snapshot,
+                prefixIndex = prefixSnapshot[SearchKind.QURAN],
             ) { d ->
                 (options.surahScope == null || d.surah == options.surahScope) &&
                     (options.editionId == null || d.editionId == options.editionId) &&
@@ -295,10 +402,11 @@ class SearchEngine {
         }
 
         val hadithHits = mutableListOf<SearchHit>()
-        if (cappedTokens.isNotEmpty()) {
+        if (cappedTokens.isNotEmpty() && cappedTokens.all { it.length >= MIN_INDEXED_PREFIX_LENGTH }) {
             val rows = matchDocs(
                 SearchKind.HADITH, cappedTokens, limit + 1,
                 snapshot = snapshot,
+                prefixIndex = prefixSnapshot[SearchKind.HADITH],
             ) { d ->
                 (options.collectionIds == null || d.collectionId in options.collectionIds!!) &&
                     (options.book.isNullOrEmpty() || d.book == options.book) &&
@@ -325,10 +433,11 @@ class SearchEngine {
         }
 
         val tafsirHits = mutableListOf<SearchHit>()
-        if (cappedTokens.isNotEmpty()) {
+        if (cappedTokens.isNotEmpty() && cappedTokens.all { it.length >= MIN_INDEXED_PREFIX_LENGTH }) {
             val rows = matchDocs(
                 SearchKind.TAFSIR, cappedTokens, limit + 1,
                 snapshot = snapshot,
+                prefixIndex = prefixSnapshot[SearchKind.TAFSIR],
             ) { d ->
                 (options.surahScope == null || d.surah == options.surahScope) &&
                     (options.tafsirId == null || d.tafsirId == options.tafsirId)
@@ -369,10 +478,18 @@ class SearchEngine {
         tokens: List<String>,
         limit: Int,
         snapshot: List<Doc>? = null,
+        prefixIndex: Map<String, List<Doc>>? = null,
         filter: (Doc) -> Boolean,
     ): List<Pair<Doc, List<String>>> {
-        // Default snapshot keeps old call sites safe; search() passes its copy.
-        val rows = snapshot ?: lock.withLock { docs.toList() }
+        val rows = if (tokens.all { it.length >= MIN_INDEXED_PREFIX_LENGTH }) {
+            val candidateLists = tokens.mapNotNull { token ->
+                prefixIndex?.get(token.take(MIN_INDEXED_PREFIX_LENGTH))
+            }
+            if (candidateLists.size != tokens.size) return emptyList()
+            candidateLists.minByOrNull { it.size }.orEmpty()
+        } else {
+            snapshot ?: lock.withLock { docsSnapshot }
+        }
         val scored = mutableListOf<Triple<Doc, Int, List<String>>>()
         for (d in rows) {
             if (d.kind != kind || !filter(d)) continue
@@ -390,15 +507,41 @@ class SearchEngine {
                 score += (if (bodyExact) 3 else 1) + (if (titleExact) 2 else 0)
                 matched.add(t)
             }
-            if (ok) scored.add(Triple(d, score, matched))
+            if (ok) {
+                val candidate = Triple(d, score, matched)
+                val position = scored.indexOfFirst { current ->
+                    candidate.second > current.second ||
+                        (candidate.second == current.second &&
+                            candidate.first.refKey < current.first.refKey)
+                }.let { if (it < 0) scored.size else it }
+                if (position < limit) {
+                    scored.add(position, candidate)
+                    if (scored.size > limit) scored.removeAt(limit)
+                }
+            }
         }
-        return scored
-            .sortedWith(compareByDescending<Triple<Doc, Int, List<String>>> { it.second }.thenBy { it.first.refKey })
-            .take(limit)
-            .map { Pair(it.first, it.third) }
+        return scored.map { Pair(it.first, it.third) }
     }
 
     companion object {
+        private const val MIN_INDEXED_PREFIX_LENGTH = 2
+
+        private fun buildPrefixIndex(docs: List<Doc>): Map<String, List<Doc>> {
+            val index = mutableMapOf<String, MutableList<Doc>>()
+            for (doc in docs) {
+                val prefixes = mutableSetOf<String>()
+                for (word in doc.bodyWords + doc.titleWords) {
+                    if (word.length >= MIN_INDEXED_PREFIX_LENGTH) {
+                        prefixes.add(word.take(MIN_INDEXED_PREFIX_LENGTH))
+                    }
+                }
+                for (prefix in prefixes) {
+                    index.getOrPut(prefix) { mutableListOf() }.add(doc)
+                }
+            }
+            return index
+        }
+
         fun snippet(value: String): String =
             if (value.length > 220) value.substring(0, 220) + "…" else value
 

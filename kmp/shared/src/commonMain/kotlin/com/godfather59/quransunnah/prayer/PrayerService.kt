@@ -100,6 +100,20 @@ fun nextPrayer(times: PrayerTimes, nowMinutes: Int): NextPrayer {
     return NextPrayer("fajr", times.fajr, true)
 }
 
+/**
+ * Shared Flutter pref-name -> method mapping (Android `prayer.method` values).
+ * Used by Android UI and the iOS JSON bridge so both platforms agree.
+ */
+fun prayerMethodFromFlutterName(name: String): PrayerCalcMethod = when (name) {
+    "isna" -> PrayerCalcMethod.ISNA
+    "egypt" -> PrayerCalcMethod.EGYPT
+    "ummAlQura" -> PrayerCalcMethod.UMM_AL_QURA
+    "karachi" -> PrayerCalcMethod.KARACHI
+    "jafari" -> PrayerCalcMethod.JAFARI
+    "morocco", "habous" -> PrayerCalcMethod.MOROCCO
+    else -> PrayerCalcMethod.MUSLIM_WORLD_LEAGUE
+}
+
 /** Qibla bearing from (lat,lng) to Kaaba (21.4225, 39.8262), degrees 0..360. */
 fun qiblaBearing(lat: Double, lng: Double): Double {
     val kaabaLat = toRadians(21.4225)
@@ -194,8 +208,11 @@ private fun equationOfTime(jd: Double): Double {
             cos(toRadians(l)),
         ),
     ) / 15.0
-    val eqt = q / 15 - fixHour(ra)
-    return eqt * 60
+    val eqtHours = q / 15 - fixHour(ra)
+    // Right ascension and mean longitude wrap on different dates around
+    // the March equinox. Use the signed angular difference so that wrap
+    // cannot move every prayer onto the previous or following local day.
+    return (eqtHours - 24 * floor((eqtHours + 12) / 24)) * 60
 }
 
 private fun midday(lng: Double, tz: Double, eqt: Double): Double =

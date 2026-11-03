@@ -1,6 +1,7 @@
 package com.godfather59.quransunnah
 
 import android.content.Context
+import androidx.activity.compose.BackHandler
 import androidx.core.content.edit
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -29,7 +31,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.godfather59.quransunnah.hadith.hadithCollections
@@ -57,8 +63,13 @@ data class ReaderPrefsState(
     val fontName: String = "uthmani",
     val reciterId: String = "ar.alafasy",
     val showTranslation: Boolean = true,
+    val showTajweed: Boolean = false,
     val ayahNumberStyleName: String = "arabicIndic",
     val tafsirId: String = "jalalayn",
+    val quranTextSize: Float = 26f,
+    val translationTextSize: Float = 16f,
+    val lineSpacing: Float = 1.65f,
+    val translationId: String = "en-sahih",
 )
 
 object OnboardingPrefs {
@@ -78,16 +89,17 @@ object OnboardingPrefs {
     }
 
     fun save(context: Context, choices: OnboardingChoices) {
+        val edition = resolveReaderEdition(choices.riwayaName, choices.scriptName)
         context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
             .edit {
             putBoolean("app.onboarded", true)
             putString("app.locale", choices.locale)
-            putString("q.riwayaName", choices.riwayaName)
-            putString("q.scriptName", choices.scriptName)
+            putString("q.riwayaName", edition.riwayaName)
+            putString("q.scriptName", edition.scriptName)
             putString("q.fontName", "uthmani")
             putString("q.modeName", "reading")
             putString("q.ayahNumberStyleName", "arabicIndic")
-            putString("q.translations", listOf("en-sahih").joinToString(LIST_SEP))
+            putString("q.translations", if (choices.locale == "fr") "fr-hamidullah" else "en-sahih")
             putString("q.tafsirId", "jalalayn")
             putBoolean("q.showTr", true)
             putString("app.qari", reciters.first().identifier)
@@ -98,6 +110,9 @@ object OnboardingPrefs {
 }
 
 object ReaderPrefs {
+    var positionRevision by mutableIntStateOf(0)
+        private set
+
     fun load(context: Context): ReaderPrefsState {
         val prefs = context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
         return ReaderPrefsState(
@@ -110,8 +125,22 @@ object ReaderPrefs {
                 ?.takeIf { reciterById(it) != null }
                 ?: reciters.first().identifier,
             showTranslation = prefs.getBoolean("q.showTr", true),
+            showTajweed = try {
+                prefs.getBoolean("q.showTajweed", false)
+            } catch (_: Exception) {
+                false
+            },
             ayahNumberStyleName = prefs.getString("q.ayahNumberStyleName", null) ?: "arabicIndic",
             tafsirId = prefs.getString("q.tafsirId", null) ?: "jalalayn",
+            quranTextSize = runCatching { prefs.getFloat("q.textSize", 26f) }.getOrDefault(26f)
+                .takeIf { it.isFinite() }?.coerceIn(20f, 44f) ?: 26f,
+            translationTextSize = runCatching { prefs.getFloat("q.translationTextSize", 16f) }.getOrDefault(16f)
+                .takeIf { it.isFinite() }?.coerceIn(12f, 28f) ?: 16f,
+            lineSpacing = runCatching { prefs.getFloat("q.lineSpacing", 1.65f) }.getOrDefault(1.65f)
+                .takeIf { it.isFinite() }?.coerceIn(1.3f, 2.2f) ?: 1.65f,
+            translationId = prefs.getString("q.translations", "en-sahih")
+                ?.split(LIST_SEP)?.firstOrNull { it in setOf("en-sahih", "fr-hamidullah") }
+                ?: "en-sahih",
         )
     }
 
@@ -120,11 +149,16 @@ object ReaderPrefs {
         surah: Int,
         ayah: Int,
     ) {
-        context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-            .edit {
-            putInt("q.lastSurah", surah.coerceIn(1, 114))
-            putInt("q.lastAyah", ayah.coerceAtLeast(1))
+        val safeSurah = surah.coerceIn(1, 114)
+        val safeAyah = ayah.coerceAtLeast(1)
+        val prefs = context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
+        val changed = prefs.getInt("q.lastSurah", 1) != safeSurah ||
+            prefs.getInt("q.lastAyah", 1) != safeAyah
+        prefs.edit {
+            putInt("q.lastSurah", safeSurah)
+            putInt("q.lastAyah", safeAyah)
             }
+        if (changed) synchronized(this) { positionRevision += 1 }
     }
 
     fun saveReaderDisplay(
@@ -132,11 +166,27 @@ object ReaderPrefs {
         riwayaName: String,
         scriptName: String,
     ) {
+        val edition = resolveReaderEdition(riwayaName, scriptName)
         context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
             .edit {
-            putString("q.riwayaName", riwayaName)
-            putString("q.scriptName", scriptName)
+            putString("q.riwayaName", edition.riwayaName)
+            putString("q.scriptName", edition.scriptName)
             }
+    }
+
+    fun saveReadingStyle(context: Context, quranTextSize: Float, translationTextSize: Float, lineSpacing: Float) {
+        context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE).edit {
+            putFloat("q.textSize", quranTextSize.takeIf { it.isFinite() }?.coerceIn(20f, 44f) ?: 26f)
+            putFloat("q.translationTextSize", translationTextSize.takeIf { it.isFinite() }?.coerceIn(12f, 28f) ?: 16f)
+            putFloat("q.lineSpacing", lineSpacing.takeIf { it.isFinite() }?.coerceIn(1.3f, 2.2f) ?: 1.65f)
+        }
+    }
+
+    fun saveTranslation(context: Context, translationId: String) {
+        if (translationId !in setOf("en-sahih", "fr-hamidullah")) return
+        context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE).edit {
+            putString("q.translations", translationId)
+        }
     }
 
     fun saveReaderFont(
@@ -170,6 +220,16 @@ object ReaderPrefs {
             }
     }
 
+    fun saveShowTajweed(
+        context: Context,
+        showTajweed: Boolean,
+    ) {
+        context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
+            .edit {
+            putBoolean("q.showTajweed", showTajweed)
+            }
+    }
+
     fun saveAyahNumberStyle(
         context: Context,
         styleName: String,
@@ -198,6 +258,7 @@ data class PrayerPrefsState(
     val longitude: Double? = null,
     val tzOffsetHours: Double? = null,
     val notificationsEnabled: Boolean = false,
+    val timeZoneId: String? = null,
 )
 
 /**
@@ -221,6 +282,13 @@ object PrayerPrefs {
             } catch (_: Exception) {
                 false
             },
+            // Old preset selections acquire their named zone automatically.
+            // Legacy GPS offsets stay fixed until GPS is refreshed: the saved
+            // location may no longer be in the device's current timezone.
+            timeZoneId = prefs.getString("prayer.timeZoneId", null)
+                ?: com.godfather59.quransunnah.prayer.prayerCityPresets
+                    .firstOrNull { it.name == prefs.getString("prayer.city", "Mecca") }
+                    ?.timeZoneId,
         )
     }
 
@@ -242,6 +310,7 @@ object PrayerPrefs {
             .edit {
             putString("prayer.method", methodName)
             }
+        refreshReminders(context)
     }
 
     fun savePresetCity(
@@ -250,6 +319,8 @@ object PrayerPrefs {
         latitude: Double,
         longitude: Double,
         tzOffsetHours: Double,
+        timeZoneId: String? = com.godfather59.quransunnah.prayer.prayerCityPresets
+            .firstOrNull { it.name == city }?.timeZoneId,
     ) {
         context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
             .edit {
@@ -257,7 +328,9 @@ object PrayerPrefs {
             putDoubleCompat("prayer.lat", latitude)
             putDoubleCompat("prayer.lng", longitude)
             putDoubleCompat("prayer.tz", tzOffsetHours)
+            putString("prayer.timeZoneId", timeZoneId)
             }
+        refreshReminders(context)
     }
 
     fun saveGps(
@@ -266,8 +339,15 @@ object PrayerPrefs {
         latitude: Double,
         longitude: Double,
         tzOffsetHours: Double,
+        timeZoneId: String = java.util.TimeZone.getDefault().id,
     ) {
-        savePresetCity(context, city, latitude, longitude, tzOffsetHours)
+        savePresetCity(context, city, latitude, longitude, tzOffsetHours, timeZoneId)
+    }
+
+    private fun refreshReminders(context: Context) {
+        if (load(context).notificationsEnabled) {
+            PrayerNotifications.scheduleDaily(context, force = true)
+        }
     }
 
     private fun android.content.SharedPreferences.getDoubleCompat(key: String): Double? {
@@ -542,30 +622,36 @@ fun SplashScreen() {
 fun OnboardingFlow(
     onComplete: (OnboardingChoices) -> Unit,
 ) {
+    val context = LocalContext.current
     var step by rememberSaveable { mutableIntStateOf(0) }
-    var locale by rememberSaveable { mutableStateOf("ar") }
+    androidx.compose.runtime.LaunchedEffect(Unit) { step = step.coerceIn(0, 1) }
+    var locale by rememberSaveable { mutableStateOf(OnboardingPrefs.locale(context) ?: currentLanguageTag(context)) }
     var riwaya by rememberSaveable { mutableStateOf("hafsAsim") }
     var script by rememberSaveable { mutableStateOf("uthmani") }
-    var sources by rememberSaveable { mutableStateOf(listOf("bukhari", "muslim")) }
-    var downloads by rememberSaveable { mutableStateOf(emptyList<String>()) }
-
     val choices = OnboardingChoices(
         locale = locale,
         riwayaName = riwaya,
         scriptName = script,
-        hadithSources = sources.toSet(),
-        optionalDownloads = downloads.toSet(),
     )
+    BackHandler(enabled = step > 0) { step -= 1 }
+    val stepDescription = stringResource(R.string.onboardingStep, step.coerceIn(0, 1) + 1, 2)
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding()
-            .padding(24.dp),
+            .navigationBarsPadding()
+            .padding(24.dp)
+            .testTag("onboardingFlow"),
     ) {
         LinearProgressIndicator(
-            progress = { (step + 1) / 5f },
-            modifier = Modifier.fillMaxWidth(),
+            progress = { (step.coerceIn(0, 1) + 1) / 2f },
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics {
+                    stateDescription = stepDescription
+                }
+                .testTag("onboardingProgress"),
         )
         Spacer(Modifier.height(24.dp))
         Text(
@@ -575,12 +661,44 @@ fun OnboardingFlow(
         )
         Spacer(Modifier.height(16.dp))
 
-        when (step) {
-            0 -> LanguagePage(locale) { locale = it }
-            1 -> RiwayaPage(locale, riwaya) { riwaya = it }
-            2 -> ScriptPage(script) { script = it }
-            3 -> SourcesPage(locale, sources.toSet()) { sources = it.sorted() }
-            else -> DownloadsPage(downloads.toSet()) { downloads = it.sorted() }
+        LazyColumn(
+            modifier = Modifier.weight(1f).fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            if (step == 0) {
+                item {
+                    LanguagePage(locale) { selected ->
+                        locale = selected
+                        OnboardingPrefs.saveLocale(context, selected)
+                        applyAppLocale(selected)
+                    }
+                }
+            } else {
+                item {
+                    Text(stringResource(R.string.obRiwaya), style = MaterialTheme.typography.titleLarge)
+                    Text(
+                        stringResource(R.string.editionSetupHint),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                items(readerEditions, key = { it.id }) { edition ->
+                    val riwayaLabel = riwayatCatalog.first { it.id.storageName == edition.riwayaName }.riwayaLabel(locale)
+                    val scriptLabel = stringResource(when (edition.scriptName) {
+                        "imlai" -> R.string.imlai
+                        "indopak" -> R.string.indopak
+                        else -> R.string.uthmani
+                    })
+                    ChoiceButton(
+                        label = "$riwayaLabel · $scriptLabel",
+                        selected = riwaya == edition.riwayaName && script == edition.scriptName,
+                        testTag = "onboardingEdition_${edition.id}",
+                    ) {
+                        riwaya = edition.riwayaName
+                        script = edition.scriptName
+                    }
+                }
+            }
         }
 
         Spacer(Modifier.height(16.dp))
@@ -589,23 +707,33 @@ fun OnboardingFlow(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            TextButton(onClick = { onComplete(OnboardingChoices()) }) {
+            TextButton(
+                onClick = { onComplete(choices) },
+                modifier = Modifier.testTag("onboardingSkip"),
+            ) {
                 Text(stringResource(R.string.skip))
+            }
+            if (step > 0) {
+                TextButton(onClick = { step -= 1 }) { Text(stringResource(R.string.back)) }
             }
             Button(
                 onClick = {
-                    if (step == 4) {
+                    if (step >= 1) {
                         onComplete(choices)
                     } else {
                         step += 1
                     }
                 },
+                modifier = Modifier.testTag("onboardingNext"),
             ) {
-                Text(stringResource(if (step == 4) R.string.obDone else R.string.obNext))
+                Text(stringResource(if (step >= 1) R.string.startReading else R.string.obNext))
             }
         }
     }
 }
+
+private fun currentLanguageTag(context: Context): String =
+    context.resources.configuration.locales[0].language.takeIf { it in setOf("ar", "en", "fr") } ?: "ar"
 
 @Composable
 private fun LanguagePage(
@@ -752,6 +880,7 @@ private fun ChoiceButton(
     label: String,
     selected: Boolean,
     supporting: String? = null,
+    testTag: String = "choice_$label",
     onClick: () -> Unit,
 ) {
     // Supporting text must follow the button surface: onSurfaceVariant is
@@ -778,11 +907,21 @@ private fun ChoiceButton(
         }
     }
     if (selected) {
-        Button(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
+        Button(
+            onClick = onClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(testTag),
+        ) {
             content()
         }
     } else {
-        OutlinedButton(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
+        OutlinedButton(
+            onClick = onClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(testTag),
+        ) {
             content()
         }
     }

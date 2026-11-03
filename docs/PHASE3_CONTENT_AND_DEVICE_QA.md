@@ -4,39 +4,32 @@
 
 No new sacred-text dataset is registered directly in the UI.
 
-### Quran / translation validation
+### Current native validation
 
 ```sh
-dart run tool/content_pipeline.dart quran INPUT.txt PROVENANCE.txt edition-id
+cd kmp
+./gradlew :shared:jvmTest :androidApp:testDebugUnitTest
 ```
 
-The gate requires exactly 6236 unique `surah|ayah|text` rows and the exact
-per-surah verse counts.
+The shared dataset tests validate the bundled editions and metadata. New
+Quran editions must have 6236 unique canonical `surah|ayah|text` rows and
+the verified per-surah counts, with explicit provenance and content terms.
+The old Dart importers were removed at the KMP cutover; their historical
+implementation is available at the `flutter-final` Git tag, not in the
+current toolchain. Do not treat a passing bundled-data test as approval
+for a newly acquired source.
 
 ### Hadith structured package validation
 
-```sh
-dart run tool/content_pipeline.dart hadith INPUT.json PROVENANCE.txt collection-id
-```
-
-A grade is rejected if it has no grading authority. Narrator/topic capability
+Keep a source-backed structured package and add loader/integrity regression
+coverage before registering it. A grade must have a grading authority. Narrator/topic capability
 is detected from the source package rather than inferred.
 
 ### QuranEnc acquisition
 
-The fetcher retains all 114 raw API responses before creating a normalized
-pipe file:
-
-```sh
-dart run tool/quranenc_fetch.dart \
-  english_rwwad 1.0.19 "Rowwad Translation Center" translation work/english-rwwad
-
-dart run tool/quranenc_fetch.dart \
-  french_rashid 1.0.3 "Rachid Maach / QuranEnc" translation work/french-rashid
-
-dart run tool/quranenc_fetch.dart \
-  arabic_saadi 1.0.0 "Abd al-Rahman al-Sa'di / QuranEnc" tafsir work/saadi
-```
+Any replacement acquisition tool must retain all 114 raw API responses
+and metadata before creating a normalized pipe file. There is currently
+no maintained QuranEnc fetch command in this checkout.
 
 Source versions checked 2026-10-04:
 - English Rowwad: V1.0.19, dated 2026-03-12.
@@ -53,34 +46,40 @@ correctly.
 
 The current upstream quran-api tree exposes an additional al-Bazzi edition,
 but the underlying QuranComplex-derived redistribution rights remain
-unresolved in this project. The importer can validate it, but it must not be
+unresolved in this project. Structural validation alone is insufficient; it must not be
 registered as bundled until direct content terms/permission are recorded.
 
 ## Real-device QA
 
-Automated widget tests are not a substitute for a physical-device pass.
+Automated Compose tests complement a physical-device pass.
 
 Run:
 
 ```sh
-flutter test integration_test/device_smoke_test.dart -d <device-id>
-flutter run --profile -d <device-id>
+cd kmp
+./gradlew :androidApp:connectedDebugAndroidTest
+./gradlew :androidApp:assembleDebug
 ```
 
-Record the printed:
-- `startup_ui_ms`
-- `hafs_asset_load_ms`
-- `first_fts_search_ms`
-- `repeat_fts_search_ms`
+Use `gradlew.bat` on Windows. The connected task requires a running Android
+emulator/device. For a focused large-text reader pass, select
+`com.godfather59.quransunnah.ReaderLayoutTest` with the Android instrumentation
+runner's `class` argument. Follow `docs/BETA_QA.md` for the device/locale matrix
+and `docs/TAB_SWIPE_BENCHMARK.md` for repeatable swipe measurements.
 
-Then inspect Flutter DevTools for:
-- frame build/raster spikes while scrolling Quran and Hadith lists;
+Capture Android Studio system traces/profiler output for:
+- main-thread/frame stalls while scrolling Quran and Hadith lists;
 - memory after first FTS index build;
 - memory after repeated searches;
 - background/resume behavior during audio playback;
 - download queue pause/resume/cancel/retry;
 - airplane-mode access to bundled Quran/Hadith/Tafsir/fonts;
 - upgrade migration from the previous SharedPreferences library.
+
+Also verify source selection across Warsh/Qalun and Mushaf, system Back,
+long verses at 200% text, search result context, and reminder renewal across
+midnight and selected-city timezone changes. Validate the SwiftUI app with
+the Xcode scheme on macOS, including Dynamic Type and VoiceOver.
 
 Do not create arbitrary pass/fail millisecond thresholds in CI: device class,
 thermal state and first-run SQLite work materially change these numbers. Track

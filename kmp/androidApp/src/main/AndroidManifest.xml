@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
-        android:label="Quran &amp; Sunnah KMP"
+        android:label="@string/appTitle"
         android:icon="@mipmap/ic_launcher"
         android:theme="@style/Theme.QuranSunnah"
         android:supportsRtl="true">
@@ -53,17 +53,8 @@
                 <action android:name="android.intent.action.TIME_SET" />
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" />
             </intent-filter>
         </receiver>
-        <!-- Library backup export shares a cache file with the sheet. -->
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.godfather59.quransunnah.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths" />
-        </provider>
     </application>
 </manifest>

@@ -1,7 +1,7 @@
 {
   "_meta": {
     "generatedFrom": "lib/core/l10n/app_strings.dart",
-    "count": 236
+    "count": 315
   },
   "strings": {
     "appTitle": {
@@ -23,11 +23,6 @@
       "ar": "السنة",
       "en": "Sunnah",
       "fr": "Sunna"
-    },
-    "library": {
-      "ar": "المكتبة",
-      "en": "Library",
-      "fr": "Bibliothèque"
     },
     "settings": {
       "ar": "الإعدادات",
@@ -64,20 +59,10 @@
       "en": "Audio",
       "fr": "Audio"
     },
-    "statBookmarks": {
-      "ar": "العلامات",
-      "en": "Bookmarks",
-      "fr": "Favoris"
-    },
     "statDownloaded": {
       "ar": "المحمّل",
       "en": "Downloaded",
       "fr": "Téléchargés"
-    },
-    "statCollections": {
-      "ar": "المجموعات",
-      "en": "Collections",
-      "fr": "Collections"
     },
     "atAGlance": {
       "ar": "لمحة",
@@ -93,11 +78,6 @@
       "ar": "اسحب للترتيب · العين للإخفاء. يُحفظ الترتيب.",
       "en": "Drag to reorder · eye to hide. Order is saved.",
       "fr": "Glisser pour réordonner · œil pour masquer. Ordre enregistré."
-    },
-    "noBookmarksYet": {
-      "ar": "لا علامات بعد — انقر أي آية أو حديث لحفظه هنا.",
-      "en": "No bookmarks yet — tap any ayah or hadith to save it here.",
-      "fr": "Aucun favori — touchez un verset ou hadith pour l’enregistrer ici."
     },
     "search": {
       "ar": "بحث",
@@ -164,21 +144,6 @@
       "en": "Word meanings",
       "fr": "Sens des mots"
     },
-    "bookmark": {
-      "ar": "علامة",
-      "en": "Bookmark",
-      "fr": "Favori"
-    },
-    "highlight": {
-      "ar": "تظليل",
-      "en": "Highlight",
-      "fr": "Surligner"
-    },
-    "addToCollection": {
-      "ar": "إضافة لمجموعة",
-      "en": "Add to collection",
-      "fr": "Ajouter à une collection"
-    },
     "copy": {
       "ar": "نسخ",
       "en": "Copy",
@@ -188,11 +153,6 @@
       "ar": "مشاركة",
       "en": "Share",
       "fr": "Partager"
-    },
-    "notes": {
-      "ar": "ملاحظات",
-      "en": "Notes",
-      "fr": "Notes"
     },
     "quranAudio": {
       "ar": "الصوت القرآني",
@@ -253,26 +213,6 @@
       "ar": "الكتب الستة",
       "en": "Kutub al-Sittah",
       "fr": "Les six livres"
-    },
-    "bookmarks": {
-      "ar": "العلامات",
-      "en": "Bookmarks",
-      "fr": "Favoris"
-    },
-    "customCollections": {
-      "ar": "مجموعات مخصصة",
-      "en": "Custom collections",
-      "fr": "Collections personnalisées"
-    },
-    "newCollection": {
-      "ar": "مجموعة جديدة",
-      "en": "New collection",
-      "fr": "Nouvelle collection"
-    },
-    "noteLabel": {
-      "ar": "ملاحظات",
-      "en": "Notes",
-      "fr": "Notes"
     },
     "recentlyViewed": {
       "ar": "شوهد مؤخرًا",
@@ -475,9 +415,9 @@
       "fr": "Gestionnaire de téléchargements"
     },
     "privacyNote": {
-      "ar": "الخصوصية: القراءة تعمل دون حساب. العلامات والملاحظات تبقى على جهازك.",
-      "en": "Privacy: reading works without any account. Bookmarks & notes stay on your device.",
-      "fr": "Confidentialité : la lecture fonctionne sans compte. Favoris et notes restent sur votre appareil."
+      "ar": "الخصوصية: يمكنك القراءة دون حساب. تبقى إعداداتك على هذا الجهاز.",
+      "en": "Privacy: read without an account. Your settings stay on this device.",
+      "fr": "Confidentialité : lisez sans compte. Vos réglages restent sur cet appareil."
     },
     "page": {
       "ar": "صفحة",
@@ -614,35 +554,10 @@
       "en": "Verified dataset is not bundled yet.",
       "fr": "Le jeu de données vérifié n’est pas encore inclus."
     },
-    "exportBackup": {
-      "ar": "تصدير نسخة احتياطية",
-      "en": "Export backup",
-      "fr": "Exporter la sauvegarde"
-    },
-    "importBackup": {
-      "ar": "استيراد نسخة احتياطية",
-      "en": "Import backup",
-      "fr": "Importer la sauvegarde"
-    },
-    "backupRestored": {
-      "ar": "تمت استعادة النسخة الاحتياطية.",
-      "en": "Backup restored.",
-      "fr": "Sauvegarde restaurée."
-    },
-    "invalidBackup": {
-      "ar": "ملف النسخة الاحتياطية غير صالح.",
-      "en": "Invalid backup file.",
-      "fr": "Fichier de sauvegarde invalide."
-    },
-    "searchLibrary": {
-      "ar": "البحث في المكتبة",
-      "en": "Search library",
-      "fr": "Rechercher dans la bibliothèque"
-    },
-    "noLibraryResults": {
-      "ar": "لا توجد نتائج في المكتبة.",
-      "en": "No library results.",
-      "fr": "Aucun résultat dans la bibliothèque."
+    "downloadScanFailed": {
+      "ar": "تعذر فحص ملفات التلاوة المحفوظة. حاول مرة أخرى.",
+      "en": "Saved recitations could not be checked. Try again.",
+      "fr": "Impossible de vérifier les récitations enregistrées. Réessayez."
     },
     "dataSourcesLicenses": {
       "ar": "مصادر البيانات والتراخيص",
@@ -693,6 +608,11 @@
       "ar": "جارٍ التنزيل",
       "en": "Downloading",
       "fr": "Téléchargement"
+    },
+    "scanningDownloads": {
+      "ar": "جارٍ فحص التنزيلات المحفوظة…",
+      "en": "Checking saved downloads…",
+      "fr": "Vérification des téléchargements enregistrés…"
     },
     "retry": {
       "ar": "إعادة المحاولة",
@@ -964,11 +884,6 @@
       "en": "Content unavailable for this source.",
       "fr": "Contenu indisponible pour cette source."
     },
-    "userNoteLabel": {
-      "ar": "ملاحظة شخصية (ليست من النص المقدس)",
-      "en": "Personal note (not sacred text)",
-      "fr": "Note personnelle (pas un texte sacré)"
-    },
     "translationLabel": {
       "ar": "الترجمة (ليست قرآنًا)",
       "en": "Translation (not Quran)",
@@ -1169,6 +1084,11 @@
       "en": "Close",
       "fr": "Fermer"
     },
+    "clearSearch": {
+      "ar": "مسح البحث",
+      "en": "Clear search",
+      "fr": "Effacer la recherche"
+    },
     "audioPlayer": {
       "ar": "مشغل الصوت",
       "en": "Audio player",
@@ -1183,6 +1103,325 @@
       "ar": "الكل",
       "en": "All",
       "fr": "Tout"
+    },
+    "back": {
+      "fr": "Retour",
+      "en": "Back",
+      "ar": "رجوع"
+    },
+    "more": {
+      "fr": "Plus",
+      "en": "More",
+      "ar": "المزيد"
+    },
+    "noSearchResults": {
+      "ar": "لا توجد نتائج.",
+      "en": "No results found.",
+      "fr": "Aucun résultat."
+    },
+    "howItWorks": {
+      "ar": "كيف يعمل؟",
+      "en": "How it works?",
+      "fr": "Comment ça marche ?"
+    },
+    "dhikrHelpText": {
+      "ar": "اضغط مطولًا لإعادة التصفير. العد يومي ويُحفظ على جهازك.",
+      "en": "Long-press to reset. Counts are daily, stored on-device.",
+      "fr": "Appui long pour réinitialiser. Compteurs quotidiens, stockés sur l’appareil."
+    },
+    "okButton": {
+      "ar": "حسنًا",
+      "en": "OK",
+      "fr": "OK"
+    },
+    "dhikrTodayTotal": {
+      "ar": "اليوم: %1$d · الكل: %2$d",
+      "en": "Today: %1$d · Total: %2$d",
+      "fr": "Aujourd’hui : %1$d · Total : %2$d"
+    },
+    "tapToCount": {
+      "ar": "اضغط على البطاقة للعد",
+      "en": "Tap a card to count",
+      "fr": "Touchez une carte pour compter"
+    },
+    "dhikrHeroLine": {
+      "ar": "%1$s · اليوم: %2$d · الكل: %3$d",
+      "en": "%1$s · Today: %2$d · Total: %3$d",
+      "fr": "%1$s · Aujourd’hui : %2$d · Total : %3$d"
+    },
+    "memorizedCountLabel": {
+      "ar": "محفوظ: %1$d / 6236",
+      "en": "%1$d / 6236",
+      "fr": "%1$d / 6236"
+    },
+    "memorizationHeroLine": {
+      "ar": "%1$s · محفوظ: %2$d / 6236",
+      "en": "%1$s · %2$d / 6236",
+      "fr": "%1$s · %2$d / 6236"
+    },
+    "prayerChannelName": {
+      "ar": "مواقيت الصلاة",
+      "en": "Prayer times",
+      "fr": "Heures de prière"
+    },
+    "prayerTimeTitle": {
+      "ar": "حان وقت الصلاة",
+      "en": "Prayer time",
+      "fr": "Heure de la prière"
+    },
+    "prayerNameFajr": {
+      "ar": "الفجر",
+      "en": "Fajr",
+      "fr": "Fajr"
+    },
+    "prayerNameSunrise": {
+      "ar": "الشروق",
+      "en": "Sunrise",
+      "fr": "Lever du soleil"
+    },
+    "prayerNameDhuhr": {
+      "ar": "الظهر",
+      "en": "Dhuhr",
+      "fr": "Dhuhr"
+    },
+    "prayerNameAsr": {
+      "ar": "العصر",
+      "en": "Asr",
+      "fr": "Asr"
+    },
+    "prayerNameMaghrib": {
+      "ar": "المغرب",
+      "en": "Maghrib",
+      "fr": "Maghrib"
+    },
+    "prayerNameIsha": {
+      "ar": "العشاء",
+      "en": "Isha",
+      "fr": "Isha"
+    },
+    "prayerScreenTitle": {
+      "ar": "الصلاة والقبلة",
+      "en": "Prayer & Qibla",
+      "fr": "Prière & Qibla"
+    },
+    "qiblaHint": {
+      "ar": "اتجه %1$s° من الشمال الحقيقي نحو الكعبة. تحقق مع مسجدك المحلي.",
+      "en": "Face %1$s° from true north toward the Kaaba. Confirm with your local mosque.",
+      "fr": "Dirigez-vous à %1$s° du nord vrai vers la Kaaba. Vérifiez avec votre mosquée."
+    },
+    "remainingText": {
+      "ar": "المتبقي %1$d س %2$d د · %3$s",
+      "en": "In %1$dh %2$dm · %3$s",
+      "fr": "Reste %1$dh %2$dm · %3$s"
+    },
+    "countdownLabel": {
+      "ar": "خلال %1$02d:%2$02d",
+      "en": "IN %1$02d:%2$02d",
+      "fr": "Dans %1$02d h %2$02d min"
+    },
+    "nextPrayerLabel": {
+      "ar": "الصلاة القادمة",
+      "en": "NEXT PRAYER",
+      "fr": "Prochaine prière"
+    },
+    "prayerScheduleLabel": {
+      "ar": "مواقيت اليوم",
+      "en": "Today's prayers",
+      "fr": "Horaires du jour"
+    },
+    "changeLabel": {
+      "ar": "تغيير",
+      "en": "Change",
+      "fr": "Modifier"
+    },
+    "locationMethodTitle": {
+      "ar": "الموقع وطريقة الحساب",
+      "en": "Location & method",
+      "fr": "Lieu et méthode de calcul"
+    },
+    "methodLabel": {
+      "ar": "الطريقة",
+      "en": "Method",
+      "fr": "Méthode"
+    },
+    "cityLabel": {
+      "ar": "المدينة",
+      "en": "City",
+      "fr": "Ville"
+    },
+    "useGpsLabel": {
+      "ar": "استخدام GPS",
+      "en": "Use GPS",
+      "fr": "Utiliser le GPS"
+    },
+    "gpsUnavailableText": {
+      "ar": "تعذر تحديد الموقع — أدخل المدينة يدويًا",
+      "en": "GPS unavailable — pick a city manually",
+      "fr": "Position indisponible — choisissez une ville"
+    },
+    "prayerDisclaimer": {
+      "ar": "حساب فلكي دون اتصال (±2 دقيقة). اعتمد مسجدك للأذان.",
+      "en": "Offline astronomical calc (±2 min). Follow your mosque for adhan.",
+      "fr": "Calcul astronomique hors ligne (±2 min). Suivez les horaires de votre mosquée."
+    },
+    "notificationsTitle": {
+      "ar": "تنبيهات الصلاة",
+      "en": "Prayer notifications",
+      "fr": "Notifications de prière"
+    },
+    "notificationDeniedText": {
+      "ar": "تم رفض إذن التنبيهات",
+      "en": "Notification permission denied",
+      "fr": "Autorisation de notifications refusée"
+    },
+    "nextBadge": {
+      "ar": "القادمة",
+      "en": "NEXT",
+      "fr": "À venir"
+    },
+    "readerModeRead": {
+      "ar": "قراءة",
+      "en": "Read",
+      "fr": "Lire"
+    },
+    "readerModeStudy": {
+      "ar": "دراسة",
+      "en": "Study",
+      "fr": "Étudier"
+    },
+    "readerModeMemorize": {
+      "ar": "حفظ",
+      "en": "Memorize",
+      "fr": "Mémoriser"
+    },
+    "readerModeListen": {
+      "ar": "استماع",
+      "en": "Listen",
+      "fr": "Écouter"
+    },
+    "readerModeHintRead": {
+      "ar": "واجهة هادئة للقراءة مع الخط والترجمة والمصحف.",
+      "en": "A calm reading surface with font, translation, and Mushaf controls.",
+      "fr": "Lecture calme avec police, traduction et Mushaf."
+    },
+    "readerModeHintStudy": {
+      "ar": "اضغط على أي آية للوصول إلى التفسير والمقارنة ودراسة الكلمات.",
+      "en": "Tap an ayah for tafsir, riwayat comparison, and word study.",
+      "fr": "Touchez un verset pour tafsir, comparaison et étude des mots."
+    },
+    "readerModeHintMemorize": {
+      "ar": "النص مخفي حتى تضغط على الآية، ثم علّمها عند الحفظ.",
+      "en": "Ayah text stays hidden until you tap, then mark it when learned.",
+      "fr": "Le texte reste caché; touchez un verset pour le révéler puis validez."
+    },
+    "readerModeHintListen": {
+      "ar": "اختر القارئ، ثم اضغط على آية لتشغيلها أو تنزيلها.",
+      "en": "Choose a reciter, then tap an ayah to play or download.",
+      "fr": "Choisissez un récitateur, puis touchez un verset pour écouter ou télécharger."
+    },
+    "searchSubtitle": {
+      "ar": "القرآن والسنة والتفسير",
+      "en": "Quran, Sunnah and tafsir",
+      "fr": "Coran, Sunna et tafsir"
+    },
+    "noResultsInCategory": {
+      "ar": "لا توجد نتائج في هذا القسم.",
+      "en": "No results in this category.",
+      "fr": "Aucun résultat dans cette catégorie."
+    },
+    "searchExploreSources": {
+      "ar": "ابحث في المصادر",
+      "en": "Explore the sources",
+      "fr": "Explorer les sources"
+    },
+    "searchExploreHint": {
+      "ar": "ابحث بالكلمات أو انتقل مباشرة إلى آية أو سورة.",
+      "en": "Search by word, or jump straight to a verse or surah.",
+      "fr": "Recherchez des mots ou ouvrez directement un verset ou une sourate."
+    },
+    "searchCatAll": {
+      "ar": "الكل",
+      "en": "All",
+      "fr": "Tout"
+    },
+    "searchCatQuran": {
+      "ar": "القرآن",
+      "en": "Quran",
+      "fr": "Coran"
+    },
+    "searchCatSunnah": {
+      "ar": "السنة",
+      "en": "Sunnah",
+      "fr": "Sunna"
+    },
+    "searchCatTafsir": {
+      "ar": "التفسير",
+      "en": "Tafsir",
+      "fr": "Tafsir"
+    },
+    "searchCatSurahs": {
+      "ar": "السور",
+      "en": "Surahs",
+      "fr": "Sourates"
+    },
+    "dhikrTitle": {
+      "ar": "الأذكار",
+      "en": "Dhikr",
+      "fr": "Dhikr"
+    },
+    "memorizationTitle": {
+      "ar": "الحفظ",
+      "en": "Memorization",
+      "fr": "Mémorisation"
+    },
+    "memorizationHowTo": {
+      "ar": "أخفِ الآيات من زر العين في القارئ، سمّع، ثم اكشف وعلّم ✓",
+      "en": "Hide via the eye in the reader, recite, reveal, check ✓",
+      "fr": "Masquez via l’œil dans le lecteur, récitez, révélez, cochez ✓"
+    },
+    "activeEditionLabel": { "ar": "الرواية والرسم: %1$s", "en": "Edition: %1$s", "fr": "Édition : %1$s" },
+    "mushafEditionTitle": { "ar": "فتح مصحف حفص؟", "en": "Open Hafs Mushaf?", "fr": "Ouvrir le mushaf Hafs ?" },
+    "mushafEditionMessage": { "ar": "عرض الصفحات متاح لحفص بالرسم العثماني. يبقى اختيار القراءة %1$s.", "en": "Page view is available for Hafs · Uthmani. Your reading edition stays %1$s.", "fr": "L’affichage par pages utilise Hafs · Outhmani. Votre édition de lecture reste %1$s." },
+    "openHafsMushaf": { "ar": "فتح مصحف حفص", "en": "Open Hafs Mushaf", "fr": "Ouvrir le mushaf Hafs" },
+    "readerFocusMode": { "ar": "تركيز", "en": "Focus", "fr": "Concentration" },
+    "readerShowControls": { "ar": "إظهار الأدوات", "en": "Show controls", "fr": "Afficher les commandes" },
+    "arabicTextSize": { "ar": "حجم النص العربي", "en": "Arabic text size", "fr": "Taille du texte arabe" },
+    "translationTextSize": { "ar": "حجم نص الترجمة", "en": "Translation text size", "fr": "Taille de la traduction" },
+    "readerLineSpacing": { "ar": "تباعد الأسطر", "en": "Line spacing", "fr": "Interligne" },
+    "readerStylePreview": { "ar": "معاينة القراءة", "en": "Reading preview", "fr": "Aperçu de lecture" },
+    "translationEnglish": { "ar": "الإنجليزية · صحيح إنترناشيونال", "en": "English · Saheeh International", "fr": "Anglais · Saheeh International" },
+    "translationFrench": { "ar": "الفرنسية · حميد الله", "en": "French · Hamidullah", "fr": "Français · Hamidullah" },
+    "revealVerses": { "ar": "كشف الآيات", "en": "Reveal verses", "fr": "Révéler les versets" },
+    "hideVerses": { "ar": "إخفاء الآيات", "en": "Hide verses", "fr": "Masquer les versets" },
+    "markAyahMemorized": { "ar": "تحديد الآية كمحفوظة", "en": "Mark ayah memorized", "fr": "Marquer le verset comme mémorisé" },
+    "unmarkAyahMemorized": { "ar": "إلغاء تحديد الآية كمحفوظة", "en": "Mark ayah as not memorized", "fr": "Marquer le verset comme non mémorisé" },
+    "memorizedState": { "ar": "محفوظة", "en": "Memorized", "fr": "Mémorisé" },
+    "notMemorizedState": { "ar": "غير محفوظة", "en": "Not memorized", "fr": "Non mémorisé" },
+    "ayahReferenceAccessibility": { "ar": "الآية %1$d:%2$d", "en": "Ayah %1$d:%2$d", "fr": "Verset %1$d:%2$d" },
+    "searchResults": { "ar": "نتائج البحث", "en": "Search results", "fr": "Résultats de recherche" },
+    "searching": { "ar": "جارٍ البحث…", "en": "Searching…", "fr": "Recherche en cours…" },
+    "searchFailed": { "ar": "تعذر إكمال البحث. حاول مرة أخرى.", "en": "Search could not be completed. Try again.", "fr": "La recherche a échoué. Réessayez." },
+    "readerSettings": { "ar": "إعدادات القراءة", "en": "Reading settings", "fr": "Réglages de lecture" },
+    "searchNoResultsHint": { "ar": "جرّب كلمة أخرى أو مرجع آية مثل ٢:٢٥٥.", "en": "Try another word or an ayah reference such as 2:255.", "fr": "Essayez un autre mot ou une référence comme 2:255." },
+    "onboardingStep": { "ar": "الخطوة %1$d من %2$d", "en": "Step %1$d of %2$d", "fr": "Étape %1$d sur %2$d" },
+    "editionSetupHint": { "ar": "اختر الرواية والرسم للقراءة. يمكنك تغييرهما لاحقًا من الإعدادات.", "en": "Choose your reading edition and script. You can change them later in Settings.", "fr": "Choisissez votre édition et son écriture. Vous pourrez les modifier dans les paramètres." },
+    "startReading": { "ar": "ابدأ القراءة", "en": "Start reading", "fr": "Commencer la lecture" },
+    "positionInQuran": { "ar": "الموضع في القرآن", "en": "Position in Quran", "fr": "Position dans le Coran" },
+    "readingStreak": { "ar": "أيام القراءة المتتالية: %1$d", "en": "Reading days in a row: %1$d", "fr": "Jours de lecture consécutifs : %1$d" },
+    "showMoreResults": { "ar": "عرض المزيد من النتائج", "en": "Show more results", "fr": "Afficher plus de résultats" },
+    "prayerRemindersOff": { "ar": "تنبيهات الصلاة متوقفة.", "en": "Prayer reminders are off.", "fr": "Les rappels de prière sont désactivés." },
+    "prayerRemindersBlocked": { "ar": "الإشعارات محظورة في إعدادات النظام.", "en": "Notifications are blocked in system settings.", "fr": "Les notifications sont bloquées dans les réglages du système." },
+    "prayerRemindersApproximate": { "ar": "التنبيهات مفعّلة. اسمح بالمنبّهات الدقيقة لوصولها في موعدها.", "en": "Reminders are enabled. Allow precise alarms for on-time delivery.", "fr": "Les rappels sont activés. Autorisez les alarmes exactes pour les recevoir à l’heure." },
+    "prayerRemindersReady": { "ar": "تمت جدولة تنبيهات الصلاة.", "en": "Prayer reminders are scheduled.", "fr": "Les rappels de prière sont programmés." },
+    "prayerRemindersFailed": { "ar": "تعذّرت جدولة التنبيهات. حاول مجددًا.", "en": "Reminders could not be scheduled. Try again.", "fr": "Impossible de programmer les rappels. Réessayez." },
+    "prayerNotificationSettings": { "ar": "إعدادات الإشعارات", "en": "Notification settings", "fr": "Réglages des notifications" },
+    "prayerAllowExactAlarms": { "ar": "السماح بالتنبيهات الدقيقة", "en": "Allow precise reminders", "fr": "Autoriser les rappels précis" },
+    "prayerTimeZoneRefresh": { "ar": "يستخدم هذا الموقع المحفوظ فرقًا ثابتًا عن التوقيت العالمي. حدّث الموقع عبر GPS لمتابعة تغييرات الساعة.", "en": "This saved location uses a fixed UTC offset. Refresh GPS to follow clock changes.", "fr": "Ce lieu enregistré utilise un décalage UTC fixe. Actualisez le GPS pour suivre les changements d’heure." },
+    "openFullReader": { "ar": "فتح شاشة القراءة", "en": "Open reader", "fr": "Ouvrir le lecteur" },
+    "dailyBukhariSource": {
+      "ar": "صحيح البخاري · %1$s %2$s",
+      "en": "Sahih al-Bukhari · %1$s %2$s",
+      "fr": "Sahih al-Boukhari · %1$s %2$s"
     }
   }
 }

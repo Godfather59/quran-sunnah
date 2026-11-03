@@ -1,0 +1,349 @@
+{
+  "schemaVersion": 1,
+  "profile": {
+    "apiLevel": 35,
+    "viewportWidthDp": 360,
+    "viewportHeightDp": 740,
+    "density": 2,
+    "fixtureMillis": 1768478400000,
+    "imageFingerprint": "Android/sdk_phone64_x86_64/emu64x:15/AE3A.240806.019/12368160:userdebug/test-keys"
+  },
+  "captures": [
+    {
+      "file": "home-ar-light-100.png",
+      "screen": "home",
+      "locale": "ar",
+      "theme": "light",
+      "fontScale": 1
+    },
+    {
+      "file": "home-ar-light-200.png",
+      "screen": "home",
+      "locale": "ar",
+      "theme": "light",
+      "fontScale": 2
+    },
+    {
+      "file": "home-ar-dark-100.png",
+      "screen": "home",
+      "locale": "ar",
+      "theme": "dark",
+      "fontScale": 1
+    },
+    {
+      "file": "home-ar-dark-200.png",
+      "screen": "home",
+      "locale": "ar",
+      "theme": "dark",
+      "fontScale": 2
+    },
+    {
+      "file": "home-en-light-100.png",
+      "screen": "home",
+      "locale": "en",
+      "theme": "light",
+      "fontScale": 1
+    },
+    {
+      "file": "home-en-light-200.png",
+      "screen": "home",
+      "locale": "en",
+      "theme": "light",
+      "fontScale": 2
+    },
+    {
+      "file": "home-en-dark-100.png",
+      "screen": "home",
+      "locale": "en",
+      "theme": "dark",
+      "fontScale": 1
+    },
+    {
+      "file": "home-en-dark-200.png",
+      "screen": "home",
+      "locale": "en",
+      "theme": "dark",
+      "fontScale": 2
+    },
+    {
+      "file": "home-fr-light-100.png",
+      "screen": "home",
+      "locale": "fr",
+      "theme": "light",
+      "fontScale": 1
+    },
+    {
+      "file": "home-fr-light-200.png",
+      "screen": "home",
+      "locale": "fr",
+      "theme": "light",
+      "fontScale": 2
+    },
+    {
+      "file": "home-fr-dark-100.png",
+      "screen": "home",
+      "locale": "fr",
+      "theme": "dark",
+      "fontScale": 1
+    },
+    {
+      "file": "home-fr-dark-200.png",
+      "screen": "home",
+      "locale": "fr",
+      "theme": "dark",
+      "fontScale": 2
+    },
+    {
+      "file": "reader-ar-light-100.png",
+      "screen": "reader",
+      "locale": "ar",
+      "theme": "light",
+      "fontScale": 1
+    },
+    {
+      "file": "reader-ar-light-200.png",
+      "screen": "reader",
+      "locale": "ar",
+      "theme": "light",
+      "fontScale": 2
+    },
+    {
+      "file": "reader-ar-dark-100.png",
+      "screen": "reader",
+      "locale": "ar",
+      "theme": "dark",
+      "fontScale": 1
+    },
+    {
+      "file": "reader-ar-dark-200.png",
+      "screen": "reader",
+      "locale": "ar",
+      "theme": "dark",
+      "fontScale": 2
+    },
+    {
+      "file": "reader-en-light-100.png",
+      "screen": "reader",
+      "locale": "en",
+      "theme": "light",
+      "fontScale": 1
+    },
+    {
+      "file": "reader-en-light-200.png",
+      "screen": "reader",
+      "locale": "en",
+      "theme": "light",
+      "fontScale": 2
+    },
+    {
+      "file": "reader-en-dark-100.png",
+      "screen": "reader",
+      "locale": "en",
+      "theme": "dark",
+      "fontScale": 1
+    },
+    {
+      "file": "reader-en-dark-200.png",
+      "screen": "reader",
+      "locale": "en",
+      "theme": "dark",
+      "fontScale": 2
+    },
+    {
+      "file": "reader-fr-light-100.png",
+      "screen": "reader",
+      "locale": "fr",
+      "theme": "light",
+      "fontScale": 1
+    },
+    {
+      "file": "reader-fr-light-200.png",
+      "screen": "reader",
+      "locale": "fr",
+      "theme": "light",
+      "fontScale": 2
+    },
+    {
+      "file": "reader-fr-dark-100.png",
+      "screen": "reader",
+      "locale": "fr",
+      "theme": "dark",
+      "fontScale": 1
+    },
+    {
+      "file": "reader-fr-dark-200.png",
+      "screen": "reader",
+      "locale": "fr",
+      "theme": "dark",
+      "fontScale": 2
+    },
+    {
+      "file": "mushaf-ar-light-100.png",
+      "screen": "mushaf",
+      "locale": "ar",
+      "theme": "light",
+      "fontScale": 1
+    },
+    {
+      "file": "mushaf-ar-light-200.png",
+      "screen": "mushaf",
+      "locale": "ar",
+      "theme": "light",
+      "fontScale": 2
+    },
+    {
+      "file": "mushaf-ar-dark-100.png",
+      "screen": "mushaf",
+      "locale": "ar",
+      "theme": "dark",
+      "fontScale": 1
+    },
+    {
+      "file": "mushaf-ar-dark-200.png",
+      "screen": "mushaf",
+      "locale": "ar",
+      "theme": "dark",
+      "fontScale": 2
+    },
+    {
+      "file": "mushaf-en-light-100.png",
+      "screen": "mushaf",
+      "locale": "en",
+      "theme": "light",
+      "fontScale": 1
+    },
+    {
+      "file": "mushaf-en-light-200.png",
+      "screen": "mushaf",
+      "locale": "en",
+      "theme": "light",
+      "fontScale": 2
+    },
+    {
+      "file": "mushaf-en-dark-100.png",
+      "screen": "mushaf",
+      "locale": "en",
+      "theme": "dark",
+      "fontScale": 1
+    },
+    {
+      "file": "mushaf-en-dark-200.png",
+      "screen": "mushaf",
+      "locale": "en",
+      "theme": "dark",
+      "fontScale": 2
+    },
+    {
+      "file": "mushaf-fr-light-100.png",
+      "screen": "mushaf",
+      "locale": "fr",
+      "theme": "light",
+      "fontScale": 1
+    },
+    {
+      "file": "mushaf-fr-light-200.png",
+      "screen": "mushaf",
+      "locale": "fr",
+      "theme": "light",
+      "fontScale": 2
+    },
+    {
+      "file": "mushaf-fr-dark-100.png",
+      "screen": "mushaf",
+      "locale": "fr",
+      "theme": "dark",
+      "fontScale": 1
+    },
+    {
+      "file": "mushaf-fr-dark-200.png",
+      "screen": "mushaf",
+      "locale": "fr",
+      "theme": "dark",
+      "fontScale": 2
+    },
+    {
+      "file": "settings-ar-light-100.png",
+      "screen": "settings",
+      "locale": "ar",
+      "theme": "light",
+      "fontScale": 1
+    },
+    {
+      "file": "settings-ar-light-200.png",
+      "screen": "settings",
+      "locale": "ar",
+      "theme": "light",
+      "fontScale": 2
+    },
+    {
+      "file": "settings-ar-dark-100.png",
+      "screen": "settings",
+      "locale": "ar",
+      "theme": "dark",
+      "fontScale": 1
+    },
+    {
+      "file": "settings-ar-dark-200.png",
+      "screen": "settings",
+      "locale": "ar",
+      "theme": "dark",
+      "fontScale": 2
+    },
+    {
+      "file": "settings-en-light-100.png",
+      "screen": "settings",
+      "locale": "en",
+      "theme": "light",
+      "fontScale": 1
+    },
+    {
+      "file": "settings-en-light-200.png",
+      "screen": "settings",
+      "locale": "en",
+      "theme": "light",
+      "fontScale": 2
+    },
+    {
+      "file": "settings-en-dark-100.png",
+      "screen": "settings",
+      "locale": "en",
+      "theme": "dark",
+      "fontScale": 1
+    },
+    {
+      "file": "settings-en-dark-200.png",
+      "screen": "settings",
+      "locale": "en",
+      "theme": "dark",
+      "fontScale": 2
+    },
+    {
+      "file": "settings-fr-light-100.png",
+      "screen": "settings",
+      "locale": "fr",
+      "theme": "light",
+      "fontScale": 1
+    },
+    {
+      "file": "settings-fr-light-200.png",
+      "screen": "settings",
+      "locale": "fr",
+      "theme": "light",
+      "fontScale": 2
+    },
+    {
+      "file": "settings-fr-dark-100.png",
+      "screen": "settings",
+      "locale": "fr",
+      "theme": "dark",
+      "fontScale": 1
+    },
+    {
+      "file": "settings-fr-dark-200.png",
+      "screen": "settings",
+      "locale": "fr",
+      "theme": "dark",
+      "fontScale": 2
+    }
+  ]
+}

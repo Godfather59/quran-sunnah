@@ -15,9 +15,15 @@ kotlin {
 
     jvm()
 
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
+    iosX64 {
+        binaries.framework { baseName = "QuranSunnahShared" }
+    }
+    iosArm64 {
+        binaries.framework { baseName = "QuranSunnahShared" }
+    }
+    iosSimulatorArm64 {
+        binaries.framework { baseName = "QuranSunnahShared" }
+    }
 
     sourceSets {
         commonMain.dependencies {
@@ -48,7 +54,7 @@ kotlin {
 
     sqldelight {
         databases {
-            create("Library") {
+            create("Search") {
                 packageName.set("com.godfather59.quransunnah.db")
             }
         }

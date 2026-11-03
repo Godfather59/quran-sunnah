@@ -1,0 +1,47 @@
+-- Persisted Quran, Hadith, and Tafsir search index.
+-- The personal Library feature has been removed; only search documents and
+-- their indexing metadata remain in this database.
+
+CREATE TABLE IF NOT EXISTS app_meta(
+  key TEXT NOT NULL PRIMARY KEY,
+  value TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS search_documents(
+  id TEXT NOT NULL PRIMARY KEY,
+  kind TEXT NOT NULL,
+  ref_key TEXT NOT NULL,
+  title TEXT NOT NULL,
+  subtitle TEXT NOT NULL,
+  body TEXT NOT NULL,
+  normalized_body TEXT NOT NULL,
+  normalized_title TEXT NOT NULL,
+  surah INTEGER,
+  ayah INTEGER,
+  edition_id TEXT,
+  tafsir_id TEXT,
+  collection_id TEXT,
+  hadith_number TEXT,
+  book TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_search_kind_edition
+ON search_documents(kind, edition_id);
+
+CREATE INDEX IF NOT EXISTS idx_search_kind_tafsir
+ON search_documents(kind, tafsir_id);
+
+CREATE INDEX IF NOT EXISTS idx_search_kind_collection
+ON search_documents(kind, collection_id);
+
+-- FTS5 creation and MATCH queries remain raw SQL and fail-soft because some
+-- framework SQLite builds do not include the FTS5 module.
+
+getMeta:
+SELECT value FROM app_meta WHERE key = ? LIMIT 1;
+
+insertMeta:
+INSERT INTO app_meta(key, value) VALUES (?, ?);
+
+updateMetaValue:
+UPDATE app_meta SET value = ? WHERE key = ?;

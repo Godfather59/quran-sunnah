@@ -81,6 +81,17 @@ class SearchTest {
     }
 
     @Test
+    fun prefixIndexRefreshesWhenCategoryIsReplaced() {
+        val engine = SearchEngine()
+        engine.indexQuran(listOf(ayah(1, 1, "alpha beta")))
+        assertEquals(listOf("1:1"), engine.search("al").quran.map { it.refKey })
+
+        engine.indexQuran(listOf(ayah(1, 2, "alpine meadow")))
+        assertTrue(engine.search("alph").quran.isEmpty())
+        assertEquals(listOf("1:2"), engine.search("al").quran.map { it.refKey })
+    }
+
+    @Test
     fun diacriticInsensitiveMatch() {
         val engine = SearchEngine()
         engine.indexQuran(listOf(ayah(1, 2, "ٱلْحَمْدُ لِلَّهِ")))

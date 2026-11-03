@@ -1,6 +1,28 @@
 {
   "sourceLanguage" : "ar",
   "strings" : {
+    "activeEditionLabel" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الرواية والرسم: %1$s"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edition: %1$s"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Édition : %1$s"
+          }
+        }
+      }
+    },
     "additionalContent" : {
       "localizations" : {
         "ar" : {
@@ -45,24 +67,24 @@
         }
       }
     },
-    "addToCollection" : {
+    "all" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "إضافة لمجموعة"
+            "value" : "الكل"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add to collection"
+            "value" : "All"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ajouter à une collection"
+            "value" : "Tout"
           }
         }
       }
@@ -177,6 +199,28 @@
         }
       }
     },
+    "arabicTextSize" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حجم النص العربي"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arabic text size"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taille du texte arabe"
+          }
+        }
+      }
+    },
     "atAGlance" : {
       "localizations" : {
         "ar" : {
@@ -243,6 +287,28 @@
         }
       }
     },
+    "audioPlayer" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مشغل الصوت"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio player"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecteur audio"
+          }
+        }
+      }
+    },
     "ayahLabel" : {
       "localizations" : {
         "ar" : {
@@ -283,6 +349,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Style des numéros de versets"
+          }
+        }
+      }
+    },
+    "ayahReferenceAccessibility" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الآية %1$d:%2$d"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayah %1$d:%2$d"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verset %1$d:%2$d"
           }
         }
       }
@@ -331,24 +419,24 @@
         }
       }
     },
-    "backupRestored" : {
+    "back" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تمت استعادة النسخة الاحتياطية."
+            "value" : "رجوع"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Backup restored."
+            "value" : "Back"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sauvegarde restaurée."
+            "value" : "Retour"
           }
         }
       }
@@ -371,50 +459,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Livre"
-          }
-        }
-      }
-    },
-    "bookmark" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "علامة"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bookmark"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Favori"
-          }
-        }
-      }
-    },
-    "bookmarks" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "العلامات"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bookmarks"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Favoris"
           }
         }
       }
@@ -507,6 +551,28 @@
         }
       }
     },
+    "changeLabel" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تغيير"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modifier"
+          }
+        }
+      }
+    },
     "chooseTafsir" : {
       "localizations" : {
         "ar" : {
@@ -525,6 +591,72 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Choisir le tafsir par défaut"
+          }
+        }
+      }
+    },
+    "cityLabel" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المدينة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "City"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ville"
+          }
+        }
+      }
+    },
+    "clearSearch" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مسح البحث"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear search"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effacer la recherche"
+          }
+        }
+      }
+    },
+    "close" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إغلاق"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fermer"
           }
         }
       }
@@ -661,24 +793,24 @@
         }
       }
     },
-    "customCollections" : {
+    "countdownLabel" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "مجموعات مخصصة"
+            "value" : "خلال %1$02d:%2$02d"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Custom collections"
+            "value" : "IN %1$02d:%2$02d"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Collections personnalisées"
+            "value" : "Dans %1$02d h %2$02d min"
           }
         }
       }
@@ -745,6 +877,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verset du jour"
+          }
+        }
+      }
+    },
+    "dailyBukhariSource" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "صحيح البخاري · %1$s %2$s"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sahih al-Bukhari · %1$s %2$s"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sahih al-Boukhari · %1$s %2$s"
           }
         }
       }
@@ -943,6 +1097,94 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tout désélectionner"
+          }
+        }
+      }
+    },
+    "dhikrHelpText" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اضغط مطولًا لإعادة التصفير. العد يومي ويُحفظ على جهازك."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Long-press to reset. Counts are daily, stored on-device."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appui long pour réinitialiser. Compteurs quotidiens, stockés sur l’appareil."
+          }
+        }
+      }
+    },
+    "dhikrHeroLine" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$s · اليوم: %2$d · الكل: %3$d"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$s · Today: %2$d · Total: %3$d"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$s · Aujourd’hui : %2$d · Total : %3$d"
+          }
+        }
+      }
+    },
+    "dhikrTitle" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الأذكار"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dhikr"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dhikr"
+          }
+        }
+      }
+    },
+    "dhikrTodayTotal" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اليوم: %1$d · الكل: %2$d"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today: %1$d · Total: %2$d"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aujourd’hui : %1$d · Total : %2$d"
           }
         }
       }
@@ -1233,6 +1475,28 @@
         }
       }
     },
+    "downloadScanFailed" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تعذر فحص ملفات التلاوة المحفوظة. حاول مرة أخرى."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved recitations could not be checked. Try again."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de vérifier les récitations enregistrées. Réessayez."
+          }
+        }
+      }
+    },
     "dynamicColor" : {
       "localizations" : {
         "ar" : {
@@ -1277,6 +1541,28 @@
         }
       }
     },
+    "editionSetupHint" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختر الرواية والرسم للقراءة. يمكنك تغييرهما لاحقًا من الإعدادات."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose your reading edition and script. You can change them later in Settings."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisissez votre édition et son écriture. Vous pourrez les modifier dans les paramètres."
+          }
+        }
+      }
+    },
     "end" : {
       "localizations" : {
         "ar" : {
@@ -1295,28 +1581,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fin"
-          }
-        }
-      }
-    },
-    "exportBackup" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "تصدير نسخة احتياطية"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Export backup"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exporter la sauvegarde"
           }
         }
       }
@@ -1449,6 +1713,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aller à la page"
+          }
+        }
+      }
+    },
+    "gpsUnavailableText" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تعذر تحديد الموقع — أدخل المدينة يدويًا"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GPS unavailable — pick a city manually"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Position indisponible — choisissez une ville"
           }
         }
       }
@@ -1607,24 +1893,24 @@
         }
       }
     },
-    "highlight" : {
+    "hideVerses" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تظليل"
+            "value" : "إخفاء الآيات"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Highlight"
+            "value" : "Hide verses"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Surligner"
+            "value" : "Masquer les versets"
           }
         }
       }
@@ -1673,6 +1959,28 @@
         }
       }
     },
+    "howItWorks" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "كيف يعمل؟"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How it works?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comment ça marche ?"
+          }
+        }
+      }
+    },
     "imlai" : {
       "localizations" : {
         "ar" : {
@@ -1713,28 +2021,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Écriture simplifiée adaptée à la lecture et à la recherche."
-          }
-        }
-      }
-    },
-    "importBackup" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "استيراد نسخة احتياطية"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import backup"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Importer la sauvegarde"
           }
         }
       }
@@ -1827,28 +2113,6 @@
         }
       }
     },
-    "invalidBackup" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ملف النسخة الاحتياطية غير صالح."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invalid backup file."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fichier de sauvegarde invalide."
-          }
-        }
-      }
-    },
     "jalalayn" : {
       "localizations" : {
         "ar" : {
@@ -1937,28 +2201,6 @@
         }
       }
     },
-    "library" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "المكتبة"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Library"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bibliothèque"
-          }
-        }
-      }
-    },
     "licenseStatus" : {
       "localizations" : {
         "ar" : {
@@ -2025,6 +2267,28 @@
         }
       }
     },
+    "locationMethodTitle" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الموقع وطريقة الحساب"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location & method"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lieu et méthode de calcul"
+          }
+        }
+      }
+    },
     "madani" : {
       "localizations" : {
         "ar" : {
@@ -2069,6 +2333,182 @@
         }
       }
     },
+    "markAyahMemorized" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تحديد الآية كمحفوظة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mark ayah memorized"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marquer le verset comme mémorisé"
+          }
+        }
+      }
+    },
+    "memorizationHeroLine" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$s · محفوظ: %2$d / 6236"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$s · %2$d / 6236"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$s · %2$d / 6236"
+          }
+        }
+      }
+    },
+    "memorizationHowTo" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أخفِ الآيات من زر العين في القارئ، سمّع، ثم اكشف وعلّم ✓"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide via the eye in the reader, recite, reveal, check ✓"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Masquez via l’œil dans le lecteur, récitez, révélez, cochez ✓"
+          }
+        }
+      }
+    },
+    "memorizationTitle" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الحفظ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memorization"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mémorisation"
+          }
+        }
+      }
+    },
+    "memorizedCountLabel" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "محفوظ: %1$d / 6236"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$d / 6236"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$d / 6236"
+          }
+        }
+      }
+    },
+    "memorizedState" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "محفوظة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memorized"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mémorisé"
+          }
+        }
+      }
+    },
+    "methodLabel" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الطريقة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Method"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Méthode"
+          }
+        }
+      }
+    },
+    "more" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المزيد"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "More"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plus"
+          }
+        }
+      }
+    },
     "mushaf" : {
       "localizations" : {
         "ar" : {
@@ -2087,6 +2527,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Moushaf"
+          }
+        }
+      }
+    },
+    "mushafEditionMessage" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عرض الصفحات متاح لحفص بالرسم العثماني. يبقى اختيار القراءة %1$s."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page view is available for Hafs · Uthmani. Your reading edition stays %1$s."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’affichage par pages utilise Hafs · Outhmani. Votre édition de lecture reste %1$s."
+          }
+        }
+      }
+    },
+    "mushafEditionTitle" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فتح مصحف حفص؟"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Hafs Mushaf?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir le mushaf Hafs ?"
           }
         }
       }
@@ -2179,24 +2663,46 @@
         }
       }
     },
-    "newCollection" : {
+    "next" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "مجموعة جديدة"
+            "value" : "التالي"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "New collection"
+            "value" : "Next"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nouvelle collection"
+            "value" : "Suivant"
+          }
+        }
+      }
+    },
+    "nextBadge" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "القادمة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NEXT"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À venir"
           }
         }
       }
@@ -2223,24 +2729,24 @@
         }
       }
     },
-    "noBookmarksYet" : {
+    "nextPrayerLabel" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "لا علامات بعد — انقر أي آية أو حديث لحفظه هنا."
+            "value" : "الصلاة القادمة"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No bookmarks yet — tap any ayah or hadith to save it here."
+            "value" : "NEXT PRAYER"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aucun favori — touchez un verset ou hadith pour l’enregistrer ici."
+            "value" : "Prochaine prière"
           }
         }
       }
@@ -2267,24 +2773,46 @@
         }
       }
     },
-    "noLibraryResults" : {
+    "noResultsInCategory" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "لا توجد نتائج في المكتبة."
+            "value" : "لا توجد نتائج في هذا القسم."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No library results."
+            "value" : "No results in this category."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aucun résultat dans la bibliothèque."
+            "value" : "Aucun résultat dans cette catégorie."
+          }
+        }
+      }
+    },
+    "noSearchResults" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا توجد نتائج."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No results found."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun résultat."
           }
         }
       }
@@ -2311,46 +2839,68 @@
         }
       }
     },
-    "noteLabel" : {
+    "notificationDeniedText" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ملاحظات"
+            "value" : "تم رفض إذن التنبيهات"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Notes"
+            "value" : "Notification permission denied"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Notes"
+            "value" : "Autorisation de notifications refusée"
           }
         }
       }
     },
-    "notes" : {
+    "notificationsTitle" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ملاحظات"
+            "value" : "تنبيهات الصلاة"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Notes"
+            "value" : "Prayer notifications"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Notes"
+            "value" : "Notifications de prière"
+          }
+        }
+      }
+    },
+    "notMemorizedState" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "غير محفوظة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not memorized"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non mémorisé"
           }
         }
       }
@@ -2619,6 +3169,50 @@
         }
       }
     },
+    "okButton" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حسنًا"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
+    "onboardingStep" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الخطوة %1$d من %2$d"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Step %1$d of %2$d"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Étape %1$d sur %2$d"
+          }
+        }
+      }
+    },
     "onlySahihayn" : {
       "localizations" : {
         "ar" : {
@@ -2637,6 +3231,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seulement les Sahihayn"
+          }
+        }
+      }
+    },
+    "openFullReader" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فتح شاشة القراءة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open reader"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir le lecteur"
+          }
+        }
+      }
+    },
+    "openHafsMushaf" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فتح مصحف حفص"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Hafs Mushaf"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir le mushaf Hafs"
           }
         }
       }
@@ -2795,6 +3433,94 @@
         }
       }
     },
+    "positionInQuran" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الموضع في القرآن"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Position in Quran"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Position dans le Coran"
+          }
+        }
+      }
+    },
+    "prayerAllowExactAlarms" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السماح بالتنبيهات الدقيقة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow precise reminders"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autoriser les rappels précis"
+          }
+        }
+      }
+    },
+    "prayerChannelName" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مواقيت الصلاة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prayer times"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heures de prière"
+          }
+        }
+      }
+    },
+    "prayerDisclaimer" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حساب فلكي دون اتصال (±2 دقيقة). اعتمد مسجدك للأذان."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline astronomical calc (±2 min). Follow your mosque for adhan."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calcul astronomique hors ligne (±2 min). Suivez les horaires de votre mosquée."
+          }
+        }
+      }
+    },
     "prayerMethodEgypt" : {
       "localizations" : {
         "ar" : {
@@ -2949,6 +3675,358 @@
         }
       }
     },
+    "prayerNameAsr" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "العصر"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asr"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asr"
+          }
+        }
+      }
+    },
+    "prayerNameDhuhr" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الظهر"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dhuhr"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dhuhr"
+          }
+        }
+      }
+    },
+    "prayerNameFajr" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الفجر"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fajr"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fajr"
+          }
+        }
+      }
+    },
+    "prayerNameIsha" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "العشاء"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isha"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isha"
+          }
+        }
+      }
+    },
+    "prayerNameMaghrib" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المغرب"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maghrib"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maghrib"
+          }
+        }
+      }
+    },
+    "prayerNameSunrise" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الشروق"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sunrise"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lever du soleil"
+          }
+        }
+      }
+    },
+    "prayerNotificationSettings" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إعدادات الإشعارات"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notification settings"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglages des notifications"
+          }
+        }
+      }
+    },
+    "prayerRemindersApproximate" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "التنبيهات مفعّلة. اسمح بالمنبّهات الدقيقة لوصولها في موعدها."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminders are enabled. Allow precise alarms for on-time delivery."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les rappels sont activés. Autorisez les alarmes exactes pour les recevoir à l’heure."
+          }
+        }
+      }
+    },
+    "prayerRemindersBlocked" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإشعارات محظورة في إعدادات النظام."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications are blocked in system settings."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les notifications sont bloquées dans les réglages du système."
+          }
+        }
+      }
+    },
+    "prayerRemindersFailed" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تعذّرت جدولة التنبيهات. حاول مجددًا."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminders could not be scheduled. Try again."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de programmer les rappels. Réessayez."
+          }
+        }
+      }
+    },
+    "prayerRemindersOff" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنبيهات الصلاة متوقفة."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prayer reminders are off."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les rappels de prière sont désactivés."
+          }
+        }
+      }
+    },
+    "prayerRemindersReady" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تمت جدولة تنبيهات الصلاة."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prayer reminders are scheduled."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les rappels de prière sont programmés."
+          }
+        }
+      }
+    },
+    "prayerScheduleLabel" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مواقيت اليوم"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today's prayers"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Horaires du jour"
+          }
+        }
+      }
+    },
+    "prayerScreenTitle" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الصلاة والقبلة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prayer & Qibla"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prière & Qibla"
+          }
+        }
+      }
+    },
+    "prayerTimeTitle" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حان وقت الصلاة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prayer time"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heure de la prière"
+          }
+        }
+      }
+    },
+    "prayerTimeZoneRefresh" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يستخدم هذا الموقع المحفوظ فرقًا ثابتًا عن التوقيت العالمي. حدّث الموقع عبر GPS لمتابعة تغييرات الساعة."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This saved location uses a fixed UTC offset. Refresh GPS to follow clock changes."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce lieu enregistré utilise un décalage UTC fixe. Actualisez le GPS pour suivre les changements d’heure."
+          }
+        }
+      }
+    },
     "preferredTafsir" : {
       "localizations" : {
         "ar" : {
@@ -2967,6 +4045,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tafsir préféré"
+          }
+        }
+      }
+    },
+    "previous" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السابق"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Précédent"
           }
         }
       }
@@ -2998,19 +4098,19 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "الخصوصية: القراءة تعمل دون حساب. العلامات والملاحظات تبقى على جهازك."
+            "value" : "الخصوصية: يمكنك القراءة دون حساب. تبقى إعداداتك على هذا الجهاز."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Privacy: reading works without any account. Bookmarks & notes stay on your device."
+            "value" : "Privacy: read without an account. Your settings stay on this device."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Confidentialité : la lecture fonctionne sans compte. Favoris et notes restent sur votre appareil."
+            "value" : "Confidentialité : lisez sans compte. Vos réglages restent sur cet appareil."
           }
         }
       }
@@ -3077,6 +4177,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Le texte coranique, les traductions, le tafsir, les hadiths, la morphologie, les annotations de tajwid et les polices ont des provenances et conditions distinctes. Les cas non résolus sont indiqués explicitement."
+          }
+        }
+      }
+    },
+    "qiblaHint" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اتجه %1$s° من الشمال الحقيقي نحو الكعبة. تحقق مع مسجدك المحلي."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Face %1$s° from true north toward the Kaaba. Confirm with your local mosque."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dirigez-vous à %1$s° du nord vrai vers la Kaaba. Vérifiez avec votre mosquée."
           }
         }
       }
@@ -3389,6 +4511,292 @@
         }
       }
     },
+    "readerFocusMode" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تركيز"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Focus"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Concentration"
+          }
+        }
+      }
+    },
+    "readerLineSpacing" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تباعد الأسطر"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Line spacing"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interligne"
+          }
+        }
+      }
+    },
+    "readerModeHintListen" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختر القارئ، ثم اضغط على آية لتشغيلها أو تنزيلها."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a reciter, then tap an ayah to play or download."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisissez un récitateur, puis touchez un verset pour écouter ou télécharger."
+          }
+        }
+      }
+    },
+    "readerModeHintMemorize" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "النص مخفي حتى تضغط على الآية، ثم علّمها عند الحفظ."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayah text stays hidden until you tap, then mark it when learned."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le texte reste caché; touchez un verset pour le révéler puis validez."
+          }
+        }
+      }
+    },
+    "readerModeHintRead" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "واجهة هادئة للقراءة مع الخط والترجمة والمصحف."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A calm reading surface with font, translation, and Mushaf controls."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecture calme avec police, traduction et Mushaf."
+          }
+        }
+      }
+    },
+    "readerModeHintStudy" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اضغط على أي آية للوصول إلى التفسير والمقارنة ودراسة الكلمات."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap an ayah for tafsir, riwayat comparison, and word study."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Touchez un verset pour tafsir, comparaison et étude des mots."
+          }
+        }
+      }
+    },
+    "readerModeListen" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "استماع"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listen"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Écouter"
+          }
+        }
+      }
+    },
+    "readerModeMemorize" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حفظ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memorize"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mémoriser"
+          }
+        }
+      }
+    },
+    "readerModeRead" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "قراءة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lire"
+          }
+        }
+      }
+    },
+    "readerModeStudy" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "دراسة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Study"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Étudier"
+          }
+        }
+      }
+    },
+    "readerSettings" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إعدادات القراءة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reading settings"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglages de lecture"
+          }
+        }
+      }
+    },
+    "readerShowControls" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إظهار الأدوات"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show controls"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher les commandes"
+          }
+        }
+      }
+    },
+    "readerStylePreview" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "معاينة القراءة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reading preview"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aperçu de lecture"
+          }
+        }
+      }
+    },
     "readingMode" : {
       "localizations" : {
         "ar" : {
@@ -3411,6 +4819,28 @@
         }
       }
     },
+    "readingStreak" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أيام القراءة المتتالية: %1$d"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reading days in a row: %1$d"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jours de lecture consécutifs : %1$d"
+          }
+        }
+      }
+    },
     "recentlyViewed" : {
       "localizations" : {
         "ar" : {
@@ -3429,6 +4859,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Récemment consultés"
+          }
+        }
+      }
+    },
+    "reciter" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "القارئ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reciter"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Récitateur"
           }
         }
       }
@@ -3499,6 +4951,28 @@
         }
       }
     },
+    "remainingText" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المتبقي %1$d س %2$d د · %3$s"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In %1$dh %2$dm · %3$s"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reste %1$dh %2$dm · %3$s"
+          }
+        }
+      }
+    },
     "remove" : {
       "localizations" : {
         "ar" : {
@@ -3565,6 +5039,72 @@
         }
       }
     },
+    "repeatAll" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السورة كاملة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Whole surah"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sourate entière"
+          }
+        }
+      }
+    },
+    "repeatOff" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إيقاف"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactivé"
+          }
+        }
+      }
+    },
+    "repeatOne" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "آية واحدة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "One ayah"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un verset"
+          }
+        }
+      }
+    },
     "resume" : {
       "localizations" : {
         "ar" : {
@@ -3605,6 +5145,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réessayer"
+          }
+        }
+      }
+    },
+    "revealVerses" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "كشف الآيات"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reveal verses"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Révéler les versets"
           }
         }
       }
@@ -3719,6 +5281,28 @@
         }
       }
     },
+    "scanningDownloads" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "جارٍ فحص التنزيلات المحفوظة…"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Checking saved downloads…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vérification des téléchargements enregistrés…"
+          }
+        }
+      }
+    },
     "scriptExplanation" : {
       "localizations" : {
         "ar" : {
@@ -3785,6 +5369,182 @@
         }
       }
     },
+    "searchCatAll" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الكل"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout"
+          }
+        }
+      }
+    },
+    "searchCatQuran" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "القرآن"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quran"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coran"
+          }
+        }
+      }
+    },
+    "searchCatSunnah" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السنة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sunnah"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sunna"
+          }
+        }
+      }
+    },
+    "searchCatSurahs" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السور"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Surahs"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sourates"
+          }
+        }
+      }
+    },
+    "searchCatTafsir" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "التفسير"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tafsir"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tafsir"
+          }
+        }
+      }
+    },
+    "searchExploreHint" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ابحث بالكلمات أو انتقل مباشرة إلى آية أو سورة."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search by word, or jump straight to a verse or surah."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recherchez des mots ou ouvrez directement un verset ou une sourate."
+          }
+        }
+      }
+    },
+    "searchExploreSources" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ابحث في المصادر"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Explore the sources"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Explorer les sources"
+          }
+        }
+      }
+    },
+    "searchFailed" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تعذر إكمال البحث. حاول مرة أخرى."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search could not be completed. Try again."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La recherche a échoué. Réessayez."
+          }
+        }
+      }
+    },
     "searchHint" : {
       "localizations" : {
         "ar" : {
@@ -3807,24 +5567,90 @@
         }
       }
     },
-    "searchLibrary" : {
+    "searching" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "البحث في المكتبة"
+            "value" : "جارٍ البحث…"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Search library"
+            "value" : "Searching…"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rechercher dans la bibliothèque"
+            "value" : "Recherche en cours…"
+          }
+        }
+      }
+    },
+    "searchNoResultsHint" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "جرّب كلمة أخرى أو مرجع آية مثل ٢:٢٥٥."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try another word or an ayah reference such as 2:255."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essayez un autre mot ou une référence comme 2:255."
+          }
+        }
+      }
+    },
+    "searchResults" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نتائج البحث"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search results"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Résultats de recherche"
+          }
+        }
+      }
+    },
+    "searchSubtitle" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "القرآن والسنة والتفسير"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quran, Sunnah and tafsir"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coran, Sunna et tafsir"
           }
         }
       }
@@ -3939,6 +5765,28 @@
         }
       }
     },
+    "showMoreResults" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عرض المزيد من النتائج"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show more results"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher plus de résultats"
+          }
+        }
+      }
+    },
     "showTranslation" : {
       "localizations" : {
         "ar" : {
@@ -4001,6 +5849,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Passer"
+          }
+        }
+      }
+    },
+    "sleepOff" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بدون مؤقت"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactivé"
           }
         }
       }
@@ -4115,46 +5985,46 @@
         }
       }
     },
-    "statBookmarks" : {
+    "speed" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "العلامات"
+            "value" : "السرعة"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bookmarks"
+            "value" : "Speed"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Favoris"
+            "value" : "Vitesse"
           }
         }
       }
     },
-    "statCollections" : {
+    "startReading" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "المجموعات"
+            "value" : "ابدأ القراءة"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Collections"
+            "value" : "Start reading"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Collections"
+            "value" : "Commencer la lecture"
           }
         }
       }
@@ -4177,6 +6047,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Téléchargés"
+          }
+        }
+      }
+    },
+    "stop" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إيقاف"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrêter"
           }
         }
       }
@@ -4621,6 +6513,28 @@
         }
       }
     },
+    "tapToCount" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اضغط على البطاقة للعد"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap a card to count"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Touchez une carte pour compter"
+          }
+        }
+      }
+    },
     "themeMode" : {
       "localizations" : {
         "ar" : {
@@ -4687,6 +6601,50 @@
         }
       }
     },
+    "translationEnglish" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإنجليزية · صحيح إنترناشيونال"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "English · Saheeh International"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anglais · Saheeh International"
+          }
+        }
+      }
+    },
+    "translationFrench" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الفرنسية · حميد الله"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "French · Hamidullah"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Français · Hamidullah"
+          }
+        }
+      }
+    },
     "translationLabel" : {
       "localizations" : {
         "ar" : {
@@ -4731,24 +6689,68 @@
         }
       }
     },
-    "userNoteLabel" : {
+    "translationTextSize" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ملاحظة شخصية (ليست من النص المقدس)"
+            "value" : "حجم نص الترجمة"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Personal note (not sacred text)"
+            "value" : "Translation text size"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Note personnelle (pas un texte sacré)"
+            "value" : "Taille de la traduction"
+          }
+        }
+      }
+    },
+    "unmarkAyahMemorized" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إلغاء تحديد الآية كمحفوظة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mark ayah as not memorized"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marquer le verset comme non mémorisé"
+          }
+        }
+      }
+    },
+    "useGpsLabel" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "استخدام GPS"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use GPS"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utiliser le GPS"
           }
         }
       }
@@ -4925,270 +6927,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mots, racines et morphologie depuis la source vérifiée."
-          }
-        }
-      }
-    },
-    "stop" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "إيقاف"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stop"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arrêter"
-          }
-        }
-      }
-    },
-    "next" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "التالي"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Next"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Suivant"
-          }
-        }
-      }
-    },
-    "previous" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "السابق"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Previous"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Précédent"
-          }
-        }
-      }
-    },
-    "speed" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "السرعة"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Speed"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vitesse"
-          }
-        }
-      }
-    },
-    "repeatOff" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "إيقاف"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Off"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Désactivé"
-          }
-        }
-      }
-    },
-    "repeatOne" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "آية واحدة"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "One ayah"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Un verset"
-          }
-        }
-      }
-    },
-    "repeatAll" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "السورة كاملة"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Whole surah"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sourate entière"
-          }
-        }
-      }
-    },
-    "sleepOff" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "بدون مؤقت"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Off"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Désactivé"
-          }
-        }
-      }
-    },
-    "close" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "إغلاق"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Close"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fermer"
-          }
-        }
-      }
-    },
-    "audioPlayer" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "مشغل الصوت"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Audio player"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lecteur audio"
-          }
-        }
-      }
-    },
-    "reciter" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "القارئ"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reciter"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Récitateur"
-          }
-        }
-      }
-    } ,
-    "all" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "الكل"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tout"
           }
         }
       }

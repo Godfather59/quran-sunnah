@@ -1,0 +1,131 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A10000000000000000000001 /* QuranSunnahKMPApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000001 /* QuranSunnahKMPApp.swift */; };
+		A10000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000002 /* ContentView.swift */; };
+		A10000000000000000000003 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000004 /* assets */; };
+		A10000000000000000000004 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000006 /* Localizable.xcstrings */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A20000000000000000000001 /* QuranSunnahKMPApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosApp/QuranSunnahKMPApp.swift; sourceTree = "<group>"; };
+		A20000000000000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosApp/ContentView.swift; sourceTree = "<group>"; };
+		A20000000000000000000003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = iosApp/Info.plist; sourceTree = "<group>"; };
+		A20000000000000000000004 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ../assets; sourceTree = "<group>"; };
+		A20000000000000000000005 /* QuranSunnahKMP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuranSunnahKMP.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A20000000000000000000006 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = iosApp/Localizable.xcstrings; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A30000000000000000000001 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A40000000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000001 /* QuranSunnahKMPApp.swift */,
+				A20000000000000000000002 /* ContentView.swift */,
+				A20000000000000000000003 /* Info.plist */,
+				A20000000000000000000004 /* assets */,
+				A20000000000000000000006 /* Localizable.xcstrings */,
+				A40000000000000000000002 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A40000000000000000000002 /* Products */ = {isa = PBXGroup; children = (A20000000000000000000005 /* QuranSunnahKMP.app */,); name = Products; sourceTree = "<group>"; };
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A50000000000000000000001 /* QuranSunnahKMP */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A80000000000000000000002 /* Build configuration list for PBXNativeTarget "QuranSunnahKMP" */;
+			buildPhases = (
+				A60000000000000000000003 /* Verify content redistribution rights */,
+				A60000000000000000000001 /* Build Kotlin shared framework */,
+				A30000000000000000000001 /* Frameworks */,
+				A70000000000000000000001 /* Resources */,
+				A60000000000000000000002 /* Sources */,
+			);
+			buildRules = ();
+			dependencies = ();
+			name = QuranSunnahKMP;
+			productName = QuranSunnahKMP;
+			productReference = A20000000000000000000005 /* QuranSunnahKMP.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A90000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {LastUpgradeCheck = 1600; TargetAttributes = {A50000000000000000000001 = {CreatedOnToolsVersion = 16.0; }; }; };
+			buildConfigurationList = A80000000000000000000001 /* Build configuration list for PBXProject "QuranSunnahKMP" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = ar;
+			hasScannedForEncodings = 0;
+			knownRegions = (ar, en, fr, Base,);
+			mainGroup = A40000000000000000000001;
+			productRefGroup = A40000000000000000000002 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (A50000000000000000000001 /* QuranSunnahKMP */,);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A70000000000000000000001 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000003 /* assets in Resources */, A10000000000000000000004 /* Localizable.xcstrings in Resources */,); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A60000000000000000000002 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000001 /* QuranSunnahKMPApp.swift in Sources */, A10000000000000000000002 /* ContentView.swift in Sources */,); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A60000000000000000000003 /* Verify content redistribution rights */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			inputFileListPaths = ();
+			inputPaths = ();
+			name = "Verify content redistribution rights";
+			outputFileListPaths = ();
+			outputPaths = ();
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"$CONFIGURATION\" = \"Release\" ] && [ \"$QURAN_SUNNAH_TEST_ARTIFACT\" != \"YES\" ]; then\n  echo \"error: Release packaging is blocked while bundled content rights are unresolved. See docs/DATA_LICENSES.md.\" >&2\n  exit 1\nfi\n";
+		};
+		A60000000000000000000001 /* Build Kotlin shared framework */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			inputFileListPaths = ();
+			inputPaths = ();
+			name = "Build Kotlin shared framework";
+			outputFileListPaths = ();
+			outputPaths = ();
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then exit 0; fi\ncd \"$SRCROOT\"\n./gradlew :shared:embedAndSignAppleFrameworkForXcode\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		AB0000000000000000000001 /* Debug project */ = {isa = XCBuildConfiguration; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; IPHONEOS_DEPLOYMENT_TARGET = 16.0; SDKROOT = iphoneos; SWIFT_VERSION = 5.0; }; name = Debug; };
+		AB0000000000000000000002 /* Release project */ = {isa = XCBuildConfiguration; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; IPHONEOS_DEPLOYMENT_TARGET = 16.0; SDKROOT = iphoneos; SWIFT_VERSION = 5.0; }; name = Release; };
+		AB0000000000000000000003 /* Debug target */ = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_STYLE = Automatic; ENABLE_USER_SCRIPT_SANDBOXING = NO; FRAMEWORK_SEARCH_PATHS = ("$(inherited)", "$(SRCROOT)/shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)", ); GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = iosApp/Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 16.0; LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks"; OTHER_LDFLAGS = ("$(inherited)", "-framework", QuranSunnahShared, ); PRODUCT_BUNDLE_IDENTIFIER = com.godfather59.quransunnah; PRODUCT_NAME = "$(TARGET_NAME)"; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2"; }; name = Debug; };
+		AB0000000000000000000004 /* Release target */ = {isa = XCBuildConfiguration; buildSettings = {CODE_SIGN_STYLE = Automatic; ENABLE_USER_SCRIPT_SANDBOXING = NO; FRAMEWORK_SEARCH_PATHS = ("$(inherited)", "$(SRCROOT)/shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)", ); GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = iosApp/Info.plist; IPHONEOS_DEPLOYMENT_TARGET = 16.0; LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks"; OTHER_LDFLAGS = ("$(inherited)", "-framework", QuranSunnahShared, ); PRODUCT_BUNDLE_IDENTIFIER = com.godfather59.quransunnah; PRODUCT_NAME = "$(TARGET_NAME)"; SWIFT_VERSION = 5.0; TARGETED_DEVICE_FAMILY = "1,2"; }; name = Release; };
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A80000000000000000000001 /* Build configuration list for PBXProject "QuranSunnahKMP" */ = {isa = XCConfigurationList; buildConfigurations = (AB0000000000000000000001 /* Debug project */, AB0000000000000000000002 /* Release project */,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		A80000000000000000000002 /* Build configuration list for PBXNativeTarget "QuranSunnahKMP" */ = {isa = XCConfigurationList; buildConfigurations = (AB0000000000000000000003 /* Debug target */, AB0000000000000000000004 /* Release target */,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+/* End XCConfigurationList section */
+	};
+	rootObject = A90000000000000000000001 /* Project object */;
+}

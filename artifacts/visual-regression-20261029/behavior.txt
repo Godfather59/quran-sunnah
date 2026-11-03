@@ -1,0 +1,13 @@
+
+com.godfather59.quransunnah.DownloadsScreenTest:.
+com.godfather59.quransunnah.ErrorRecoveryRegressionTest:...
+com.godfather59.quransunnah.MoreScreenTest:..
+com.godfather59.quransunnah.OnboardingFlowTest:....
+com.godfather59.quransunnah.ReaderFlowRegressionTest:...
+com.godfather59.quransunnah.ReaderLayoutTest:...
+com.godfather59.quransunnah.SettingsScreenTest:.
+com.godfather59.quransunnah.SunnahHomeTest:.
+
+Time: 53.108
+
+OK (18 tests)

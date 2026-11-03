@@ -3,6 +3,10 @@ name: KMP CI
 # KMP CI (post-cutover, only workflow): shared tests + Android unit tests +
 # debug APK; signed test APK job (temp-key recipe); iOS framework compile on
 # a macOS runner.
+#
+# The two Android jobs share the SDK installer composite action in
+# .github/actions/setup-android-sdk (see that file for why the pinned
+# android-actions/setup-android is not used).
 on:
   pull_request:
   push:
@@ -34,29 +38,9 @@ jobs:
 
       - run: chmod +x gradlew
 
-      # Self-contained SDK: download cmdline-tools instead of depending on
-      # runner-image env (ANDROID_HOME is unset without setup-android, whose
-      # pinned action targets Node 20 and fails on Node 24-only runners).
-      - name: Install Android SDK
-        shell: bash
-        run: |
-          export ANDROID_HOME="$RUNNER_TEMP/android-sdk"
-          mkdir -p "$ANDROID_HOME/cmdline-tools"
-          cd "$RUNNER_TEMP"
-          curl -sS -o cmdtools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-          unzip -q cmdtools.zip -d "$ANDROID_HOME/cmdline-tools"
-          mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
-          rm cmdtools.zip
-          {
-            echo "ANDROID_HOME=$ANDROID_HOME"
-            echo "ANDROID_SDK_ROOT=$ANDROID_HOME"
-            echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
-            echo "$ANDROID_HOME/platform-tools" >> "$GITHUB_PATH"
-          } >> "$GITHUB_ENV"
-          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
-          yes | sdkmanager --licenses > /dev/null || true
-          sdkmanager --install "platform-tools" "platforms;android-36" "build-tools;36.0.0"
-          ls "$ANDROID_HOME/platforms"
+      # Shared SDK installer (same block in the test-apk job): see
+      # .github/actions/setup-android-sdk for why the pinned action isn't used.
+      - uses: ./.github/actions/setup-android-sdk
 
       - name: Shared tests
         run: ./gradlew :shared:jvmTest --no-daemon
@@ -64,8 +48,60 @@ jobs:
       - name: Android unit tests
         run: ./gradlew :androidApp:testDebugUnitTest --no-daemon
 
-      - name: Assemble debug APK
-        run: ./gradlew :androidApp:assembleDebug --no-daemon
+      - name: Android lint
+        run: ./gradlew :androidApp:lintDebug --no-daemon
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: kmp/scripts/requirements-visual-regression.txt
+
+      - name: Install screenshot comparator
+        run: python -m pip install -r scripts/requirements-visual-regression.txt
+
+      - name: Test regression tooling
+        run: python -m unittest discover -s scripts -p 'test_*.py'
+
+      - name: Assemble app and test APKs
+        run: ./gradlew :androidApp:assembleDebug :androidApp:assembleDebugAndroidTest --no-daemon
+
+      - name: Enable emulator acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Offline UI flows and visual captures
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: default
+          arch: x86_64
+          profile: pixel_5
+          emulator-options: -no-window -no-snapshot -no-audio -no-boot-anim -gpu swiftshader -feature -Vulkan -memory 2048 -cores 2
+          disable-animations: true
+          script: cd kmp && python scripts/run_android_regressions.py --suite all
+
+      - name: Compare reviewed screenshot baselines
+        run: >-
+          python scripts/verify_screenshots.py verify
+          --expected androidApp/src/androidTest/screenshots
+          --actual androidApp/build/outputs/visual-regression
+          --report androidApp/build/reports/visual-regression
+
+      - name: Upload regression evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-regression-evidence
+          path: |
+            kmp/androidApp/build/reports/visual-regression/
+            kmp/androidApp/build/outputs/visual-regression/
+            kmp/androidApp/build/outputs/regression-results/
+            kmp/androidApp/build/reports/lint-results-debug.*
+          if-no-files-found: warn
+          retention-days: 14
 
   test-apk:
     runs-on: ubuntu-latest
@@ -86,36 +122,17 @@ jobs:
 
       - run: chmod +x gradlew
 
-      - name: Install Android SDK
-        shell: bash
-        run: |
-          export ANDROID_HOME="$RUNNER_TEMP/android-sdk"
-          mkdir -p "$ANDROID_HOME/cmdline-tools"
-          cd "$RUNNER_TEMP"
-          curl -sS -o cmdtools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-          unzip -q cmdtools.zip -d "$ANDROID_HOME/cmdline-tools"
-          mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
-          rm cmdtools.zip
-          {
-            echo "ANDROID_HOME=$ANDROID_HOME"
-            echo "ANDROID_SDK_ROOT=$ANDROID_HOME"
-            echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
-            echo "$ANDROID_HOME/platform-tools" >> "$GITHUB_PATH"
-          } >> "$GITHUB_ENV"
-          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
-          yes | sdkmanager --licenses > /dev/null || true
-          sdkmanager --install "platform-tools" "platforms;android-36" "build-tools;36.0.0"
-          ls "$ANDROID_HOME/platforms"
+      # Shared SDK installer (same block as the android job).
+      - uses: ./.github/actions/setup-android-sdk
 
       # Temp-key recipe: throwaway keystore, never tracked (*.jks is git-ignored).
-      # keystore, never tracked (*.jks is git-ignored).
       - name: Create temporary test signing key
         shell: bash
         run: |
           keytool -genkeypair -keystore androidApp/test-release.jks -storepass android -keypass android -alias test -keyalg RSA -keysize 2048 -validity 3650 -dname "CN=Quran Sunnah Test,O=Godfather59,C=MA"
 
       - name: Build unsigned release APK
-        run: ./gradlew :androidApp:assembleRelease --no-daemon
+        run: ./gradlew :androidApp:assembleRelease -PtestArtifact=true --no-daemon
 
       - name: Sign test APK
         shell: bash
@@ -145,8 +162,7 @@ jobs:
           retention-days: 14
 
   ios-compile:
-    # No iosApp/.xcodeproj yet (lands on macOS in Phase 6); this compiles
-    # the shared Kotlin/Native targets incl. the iosMain stubs instead.
+    # Build the shared Kotlin frameworks and the native SwiftUI app on macOS.
     runs-on: macos-latest
     timeout-minutes: 40
     defaults:
@@ -166,3 +182,6 @@ jobs:
 
       - name: Compile shared iOS targets
         run: ./gradlew :shared:compileKotlinIosX64 :shared:compileKotlinIosArm64 :shared:compileKotlinIosSimulatorArm64 --no-daemon
+
+      - name: Build iOS app for Simulator
+        run: xcodebuild -project iosApp.xcodeproj -scheme QuranSunnahKMP -configuration Debug -destination "generic/platform=iOS Simulator" CODE_SIGNING_ALLOWED=NO build

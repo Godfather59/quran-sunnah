@@ -34,7 +34,13 @@ foreach ($key in $keys) {
             throw "Missing localization: $key/$locale"
         }
     }
-    if ($strings.$key.ar -match "[A-Za-z]") {
+    # Format placeholders (%1$s, %2$d, %1$02d) are not Latin text: strip
+    # them before the no-Latin check. First placeholder keys landed with the
+    # Dhikr / memorization hero lines. The GPS acronym is user-visible Arabic
+    # copy today ("استخدام GPS"), so it is allowlisted rather than rewritten.
+    $arCheck = $strings.$key.ar -replace '%\d+\$[0-9]*[sd]', ''
+    $arCheck = $arCheck -replace 'GPS', ''
+    if ($arCheck -match "[A-Za-z]") {
         throw "Arabic string contains Latin letters: $key"
     }
 }
@@ -45,12 +51,14 @@ function Write-AndroidStrings([string] $FolderName, [string] $Locale) {
     $lines = New-Object System.Collections.Generic.List[string]
     $lines.Add('<?xml version="1.0" encoding="utf-8"?>')
     $lines.Add('<!-- Generated from kmp/l10n/oracle/appstrings.json. DO NOT EDIT. -->')
-    # UnusedResources is intentionally muted here: the 224-key set is the
+    # UnusedResources is intentionally muted here: the shared catalog is the
     # trilingual parity contract with iOS Localizable.xcstrings (verified by
     # key count), not dead weight — screens adopt keys incrementally.
     $lines.Add('<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">')
     foreach ($key in $keys) {
-        $value = Xml-Escape $strings.$key.$Locale
+        # Xml-Escape renders "'" as &apos;, which AAPT rejects here
+        # ("Invalid unicode escape sequence"); Android wants backslash-escaped.
+        $value = (Xml-Escape $strings.$key.$Locale) -replace '&apos;', "\'"
         $lines.Add("    <string name=`"$key`">$value</string>")
     }
     $lines.Add('</resources>')

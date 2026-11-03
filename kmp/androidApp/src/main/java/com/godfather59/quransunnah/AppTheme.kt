@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.unit.dp
 
 // Emerald brand identity (no default Material purple anywhere): deep
@@ -39,10 +40,10 @@ private val MintLine = Color(0xFFDCEBE3)
 private val Night = Color(0xFF0B1512)
 private val NightSurface = Color(0xFF14201C)
 private val EmeraldLight = Color(0xFF7BDFC0)
-private val Gold = Color(0xFF9A7B4F)
+private val Gold = Color(0xFF80643D)
 
 fun appLightScheme() = lightColorScheme(
-    primary = Color(0xFF0A9E6C),
+    primary = Color(0xFF087F5B),
     onPrimary = Color.White,
     primaryContainer = Color(0xFFC9F2E2),
     onPrimaryContainer = Color(0xFF07372A),
@@ -148,7 +149,7 @@ fun appBackgroundBrush(): Brush {
 @Composable
 fun EmeraldStatusBar() {
     val context = androidx.compose.ui.platform.LocalContext.current
-    val darkTheme = androidx.compose.foundation.isSystemInDarkTheme()
+    val darkTheme = MaterialTheme.colorScheme.background.luminance() < 0.5f
     androidx.compose.runtime.DisposableEffect(darkTheme) {
         val window = (context as? android.app.Activity)?.window
         val controller = window?.let {
@@ -181,9 +182,13 @@ private val hijriMonthsFr = listOf(
 )
 
 /** Hijri date line ("9 Muharram 1447") via the platform Islamic calendar. */
-fun hijriToday(language: String): String {
+fun hijriToday(language: String, atMillis: Long? = null): String {
     return try {
         val cal = android.icu.util.IslamicCalendar()
+        if (atMillis != null) {
+            cal.timeZone = android.icu.util.TimeZone.getTimeZone("UTC")
+            cal.timeInMillis = atMillis
+        }
         val day = cal.get(java.util.Calendar.DAY_OF_MONTH)
         val year = cal.get(java.util.Calendar.YEAR)
         val monthIdx = cal.get(java.util.Calendar.MONTH).coerceIn(0, 11)
@@ -245,7 +250,7 @@ fun EmeraldScaffold(
 
 @Composable
 private fun emeraldHeaderBrush(): Brush {
-    val dark = androidx.compose.foundation.isSystemInDarkTheme()
+    val dark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     return remember(dark) {
         if (dark) {
             Brush.linearGradient(
@@ -256,7 +261,7 @@ private fun emeraldHeaderBrush(): Brush {
         } else {
             // Deep, calm emerald (not neon): easy on the eyes in daylight.
             Brush.linearGradient(
-                colors = listOf(Color(0xFF0C9A6C), Color(0xFF095C46)),
+                colors = listOf(Color(0xFF086C4F), Color(0xFF095C46)),
                 start = Offset.Zero,
                 end = Offset.Infinite,
             )
@@ -271,35 +276,55 @@ private fun emeraldHeaderBrush(): Brush {
  */
 @Composable
 fun HeroGradientCard(
-    onClick: () -> Unit,
+    onClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val brush = remember {
         Brush.linearGradient(
-            colors = listOf(Color(0xFF0C9A6C), Color(0xFF095C46)),
+            colors = listOf(Color(0xFF086C4F), Color(0xFF095C46)),
             start = Offset.Zero,
             end = Offset.Infinite,
         )
     }
-    Card(
-        onClick = onClick,
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.35f)),
-        shape = MaterialTheme.shapes.large,
-    ) {
-        Box(
-            modifier = Modifier
-                .background(brush)
-                .padding(20.dp),
+    val cardColors = CardDefaults.cardColors(containerColor = Color.Transparent)
+    val border = BorderStroke(1.dp, Color.White.copy(alpha = 0.35f))
+    if (onClick == null) {
+        Card(
+            colors = cardColors,
+            border = border,
+            shape = MaterialTheme.shapes.large,
         ) {
-            androidx.compose.runtime.CompositionLocalProvider(
-                androidx.compose.material3.LocalContentColor provides Color.White,
-            ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                    content = content,
-                )
-            }
+            HeroGradientCardContent(brush, content)
+        }
+    } else {
+        Card(
+            onClick = onClick,
+            colors = cardColors,
+            border = border,
+            shape = MaterialTheme.shapes.large,
+        ) {
+            HeroGradientCardContent(brush, content)
+        }
+    }
+}
+
+@Composable
+private fun HeroGradientCardContent(
+    brush: Brush,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .background(brush)
+            .padding(20.dp),
+    ) {
+        androidx.compose.runtime.CompositionLocalProvider(
+            androidx.compose.material3.LocalContentColor provides Color.White,
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                content = content,
+            )
         }
     }
 }
