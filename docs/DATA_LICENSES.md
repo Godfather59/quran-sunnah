@@ -60,3 +60,10 @@ CONDITIONS** only when the repository records:
 The application must continue to distinguish Quran text, translations, tafsir,
 Hadith, morphology, Tajweed annotations, and fonts because they are governed by
 different provenance and licensing terms.
+
+Android release packaging and iOS Xcode Release builds are fail-closed while
+this audit contains unresolved or restricted bundled datasets. The Android CI
+signing job opts in to a temporary test artifact only; that APK is not approved
+for redistribution. iOS Simulator Debug builds remain available for QA. Once
+the audit is cleared, remove the test-only Android override from
+`.github/workflows/kmp-ci.yml` and update this record.

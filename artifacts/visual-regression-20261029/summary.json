@@ -1,0 +1,10 @@
+{
+  "serial": "emulator-5556",
+  "apiLevel": 35,
+  "suite": "all",
+  "status": "passed",
+  "tests": {
+    "behavior": 18,
+    "visual": 48
+  }
+}

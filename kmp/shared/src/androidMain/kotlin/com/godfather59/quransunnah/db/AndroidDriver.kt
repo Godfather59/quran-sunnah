@@ -8,7 +8,7 @@ import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 fun createAndroidDatabase(
     context: Context,
     name: String = "quran_sunnah.db",
-): LibraryDatabase {
-    val driver: SqlDriver = AndroidSqliteDriver(Library.Schema, context, name)
-    return openLibrary(driver)
+): SearchDatabase {
+    val driver: SqlDriver = AndroidSqliteDriver(Search.Schema, context, name)
+    return openSearch(driver)
 }

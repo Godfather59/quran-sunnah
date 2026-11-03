@@ -1,7 +1,8 @@
 # Quran & Sunnah — Kotlin Multiplatform (Android + iOS)
 
-Premium, calm, offline-first Quran + authentic Sunnah app with bundled Arabic fonts. Jetpack Compose (Material 3) on
-Android, SwiftUI with native navigation/gestures/safe-areas on iOS, over one shared Kotlin logic module.
+Premium, calm, offline-first Quran + authentic Sunnah app with bundled Arabic fonts. Android uses Jetpack Compose
+(Material 3) over shared Kotlin logic. The iOS SwiftUI app uses the shared Kotlin framework for the surah catalog,
+verified Hafs/Uthmani verses, Quran search, reading resume, translations, and Tafsir. Broader iOS feature parity remains in progress.
 
 > **Data integrity (highest priority):** this repo ships verified, source-backed
 > Quran and Hadith datasets and never fabricates sacred text. Every sacred-text
@@ -14,15 +15,15 @@ Android, SwiftUI with native navigation/gestures/safe-areas on iOS, over one sha
 ```
 kmp/
   shared/      # commonMain (domain, seed, loaders, integrity, search, prayer,
-               #            library store, prefs, audio/download logic, notifications)
+               #            prefs, audio/download logic, notifications)
                # + androidMain (Media3, HttpURLConnection, GPS, compass, share,
-               #   FileProvider, backup picker) + jvmMain (tests) + iosMain
+               #   share sheet) + jvmMain (tests) + iosMain
                #   (NSDate clock, NSBundle reader, native driver, fail-soft device)
   androidApp/  # Compose UI: home, surah list, reader, mushaf, tafsir/compare/
-               # study sheets, sunnah browser, search, library, downloads,
+               # study sheets, sunnah browser, search, downloads,
                # prayer & qibla, dhikr, memorization, settings, onboarding
-  iosApp/      # SwiftUI shell (framework compiles on any host; .xcodeproj
-               # link + bundle resources need macOS — see kmp/README.md)
+  iosApp/      # SwiftUI Quran browser, reader, and shared-engine search
+  iosApp.xcodeproj/ # Xcode app project; simulator build runs on macOS CI
   gradle/libs.versions.toml  # Kotlin 2.4.0, AGP 9.1.0 (pinned), SQLDelight,
                              # coroutines, multiplatform-settings, Media3
 assets/        # single copy of all verified data (63 MB): Quran editions,
@@ -33,6 +34,9 @@ docs/          # DATA_LICENSES.md, BETA_QA.md, PHASE3_CONTENT_AND_DEVICE_QA.md
 
 History: the Flutter app (`lib/`, `test/`, `tool/`, Flutter `android/`/`ios/` glue) was removed at cutover.
 The last Flutter commit is tagged **`flutter-final`** for archaeology.
+
+Android offline UI checks and the 48-case screenshot gate are documented in
+[the regression guide](kmp/scripts/VISUAL_REGRESSION.md).
 
 ## Key architecture decisions
 
@@ -45,8 +49,7 @@ The last Flutter commit is tagged **`flutter-final`** for archaeology.
   exact=3/prefix=1/title=+2 scoring, per-category limits) over the same normalization as
   the persisted SQLite FTS5 index. Arabic normalization is index-only; display text is never mutated.
 - **Audio** reciters are bound to the Riwaya they actually recite (`reciters`); never mislabel a Hafs recording as Warsh/Qalun.
-- **Personal library** (bookmarks, notes, highlights, collections and recent items) is stored in SQLDelight/SQLite with the same table/column names and pref keys as the Flutter app, so data round-trips. Backup/restore is versioned JSON of personal data only.
-- **Notes** render visually distinct from sacred text.
+- **Search** can use the persisted SQLite FTS5 index and falls back to the in-memory search engine when FTS5 is unavailable.
 - **Translations** use a muted latin-first style, never Quran-styled.
 - **Main-thread discipline:** verified-asset parses, FTS/index builds, prayer math and file scans run on `Dispatchers.IO`; Compose shows skeletons until ready. Shared mutable state (`SearchEngine`, `DownloadQueue`) is guarded by a portable `CommonLock` (JVM `synchronized` / iOS `NSRecursiveLock`).
 
@@ -92,7 +95,7 @@ The last Flutter commit is tagged **`flutter-final`** for archaeology.
 
 ```sh
 cd kmp
-./gradlew :shared:jvmTest                    # shared logic tests (Windows-safe, 115 green)
+./gradlew :shared:jvmTest                    # shared logic tests (Windows-safe)
 ./gradlew :shared:compileKotlinIosX64 \
   :shared:compileKotlinIosArm64 \
   :shared:compileKotlinIosSimulatorArm64     # iOS framework compiles on any host
@@ -109,8 +112,7 @@ Splash · Onboarding(5) · Home · Surah list (Surah/Juz/Hizb/Rub/Page + fast
 selector) · Quran reader · Mushaf reader · Riwaya selector · Script selector
 + font sheet · Ayah bottom sheet · Compare Riwayat · Word study · Audio player · Tafsir ·
 Sunnah home · Collection selector · Book/chapter browser · Hadith reader card · Hadith filters ·
-Global search · Library (bookmarks/notes/collections/recent/downloads)
-· Downloads manager · Prayer & Qibla · Dhikr · Memorization · Settings.
+Global search · Downloads manager · Prayer & Qibla · Dhikr · Memorization · Settings.
 
 ## Accessibility & performance
 
@@ -132,9 +134,9 @@ Global search · Library (bookmarks/notes/collections/recent/downloads)
 `Ayah.canonicalVerseId` is separate from `displayAyahNumber`. Current bundled
 editions map to the same normalized 6236-row coordinates, so both values are
 identical today. The separation is deliberate: a future verified mushaf
-tradition may use edition-specific display numbering while bookmarks,
-cross-edition comparison and internal references remain attached to the same
-canonical verse identity.
+tradition may use edition-specific display numbering while cross-edition
+comparison and internal references remain attached to the same canonical
+verse identity.
 
 ## Data licensing
 

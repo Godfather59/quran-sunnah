@@ -8,9 +8,6 @@ import com.godfather59.quransunnah.quran.dailyAyahRef
 import com.godfather59.quransunnah.hadith.KUTUB_SITTAH
 import com.godfather59.quransunnah.hadith.SAHIHAYN
 import com.godfather59.quransunnah.hadith.hadithCollections
-import com.godfather59.quransunnah.library.BookmarkKind
-import com.godfather59.quransunnah.library.RecentItem
-import com.godfather59.quransunnah.library.defaultCollections
 import com.godfather59.quransunnah.prayer.isMoroccanCity
 import com.godfather59.quransunnah.prayer.prayerCityPresets
 import com.godfather59.quransunnah.quran.RiwayaId
@@ -63,19 +60,6 @@ class SeedDataTest {
             setOf("bukhari", "muslim", "abudawud", "tirmidhi", "nasai", "ibnmajah"),
             KUTUB_SITTAH,
         )
-    }
-
-    @Test
-    fun libraryModels() {
-        assertEquals(3, BookmarkKind.entries.size)
-        assertEquals(3, defaultCollections.size)
-        val recent = RecentItem(
-            refKey = "2:255",
-            title = "t",
-            subtitle = "s",
-            kind = BookmarkKind.AYAH,
-        )
-        assertEquals("2:255", recent.refKey)
     }
 
     @Test

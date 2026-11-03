@@ -8,9 +8,13 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.lifecycleScope
 import androidx.core.os.LocaleListCompat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -35,15 +39,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.automirrored.filled.LibraryBooks
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -65,13 +68,18 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
@@ -85,7 +93,12 @@ import com.godfather59.quransunnah.device.AndroidSharer
 import com.godfather59.quransunnah.quran.surahMetadata
 import com.godfather59.quransunnah.text.parseQuranRef
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import androidx.compose.runtime.snapshotFlow
 
 /** Applies an ar/en/fr app locale process-wide (per-app language). */
 fun applyAppLocale(tag: String) {
@@ -157,6 +170,11 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         handleDeepLink(intent)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        lifecycleScope.launch(Dispatchers.IO) { PrayerNotifications.scheduleDaily(this@MainActivity) }
     }
 
     private fun applySavedLocale() {
@@ -264,9 +282,7 @@ private val destinations = listOf(
     AppDestination(R.string.home, Icons.Filled.Home),
     AppDestination(R.string.quran, Icons.AutoMirrored.Filled.MenuBook),
     AppDestination(R.string.sunnah, Icons.AutoMirrored.Filled.LibraryBooks),
-    AppDestination(R.string.library, Icons.Filled.Star),
-    AppDestination(R.string.downloads, Icons.Filled.Download),
-    AppDestination(R.string.settings, Icons.Filled.Settings),
+    AppDestination(R.string.more, Icons.Filled.MoreHoriz),
 )
 
 private enum class AppPhase {
@@ -283,8 +299,10 @@ private fun QuranSunnahApp(
     onOpenRef: (String) -> Unit = {},
 ) {
     val context = LocalContext.current
-    val savedTheme = remember(context) { ThemePrefs.load(context) }
-    var themeName by rememberSaveable { mutableStateOf(savedTheme.themeName) }
+    var themeName by rememberSaveable { mutableStateOf("system") }
+    LaunchedEffect(context) {
+        themeName = withContext(Dispatchers.IO) { ThemePrefs.load(context).themeName }
+    }
     val dark = when (themeName) {
         "light" -> false
         "dark" -> true
@@ -294,6 +312,15 @@ private fun QuranSunnahApp(
     // offered (they served purple schemes over the brand).
     val colorScheme = if (dark) appDarkScheme() else appLightScheme()
     MaterialTheme(colorScheme = colorScheme, shapes = appShapes()) {
+        DisposableEffect(context, dark) {
+            val activity = context as? android.app.Activity
+            val controller = activity?.window?.let {
+                androidx.core.view.WindowCompat.getInsetsController(it, it.decorView)
+            }
+            controller?.isAppearanceLightStatusBars = !dark
+            controller?.isAppearanceLightNavigationBars = !dark
+            onDispose { }
+        }
         Surface(color = MaterialTheme.colorScheme.background) {
             Box(
                 modifier = Modifier
@@ -374,7 +401,27 @@ private fun AdaptiveAppScaffold(
     var deepLinkSurahToken by rememberSaveable { mutableIntStateOf(0) }
     var showAudioPlayer by rememberSaveable { mutableStateOf(false) }
     val stateHolder = rememberSaveableStateHolder()
+    val pagerState = rememberPagerState(
+        initialPage = selectedIndex.coerceIn(0, destinations.lastIndex),
+        pageCount = { destinations.size },
+    )
     val context = LocalContext.current
+
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.settledPage }
+            .distinctUntilChanged()
+            .collect { page -> selectedIndex = page }
+    }
+    LaunchedEffect(selectedIndex) {
+        val page = selectedIndex.coerceIn(0, destinations.lastIndex)
+        if (page != selectedIndex) selectedIndex = page
+        if (pagerState.currentPage != page || pagerState.isScrollInProgress) {
+            // Bottom navigation is a destination jump, not a second swipe.
+            // Animating across multiple pages (e.g. More -> Quran) keeps the
+            // pager moving while a cold tab composes and starts its loaders.
+            pagerState.scrollToPage(page)
+        }
+    }
 
     // Full player screen: opened from Play taps and MiniPlayer taps via
     // the NowPlaying token (no callback plumbing through tab screens).
@@ -421,7 +468,8 @@ private fun AdaptiveAppScaffold(
                         .width(1.dp),
                 )
                 MainPane(
-                    selectedIndex = selectedIndex,
+                    pagerState = pagerState,
+                    stateHolder = stateHolder,
                     deepLinkSurah = deepLinkSurah,
                     deepLinkSurahToken = deepLinkSurahToken,
                     onOpenRef = onOpenRef,
@@ -432,16 +480,15 @@ private fun AdaptiveAppScaffold(
         } else {
             Column(Modifier.fillMaxSize()) {
                 Box(Modifier.weight(1f)) {
-                    stateHolder.SaveableStateProvider(selectedIndex) {
-                        DestinationScreen(
-                            selectedIndex = selectedIndex,
-                            deepLinkSurah = deepLinkSurah,
-                            deepLinkSurahToken = deepLinkSurahToken,
-                            onOpenRef = onOpenRef,
-                            onThemeChange = onThemeChange,
-                            onOpenTab = { selectedIndex = it },
-                        )
-                    }
+                    MainPager(
+                        pagerState = pagerState,
+                        stateHolder = stateHolder,
+                        deepLinkSurah = deepLinkSurah,
+                        deepLinkSurahToken = deepLinkSurahToken,
+                        onOpenRef = onOpenRef,
+                        onThemeChange = onThemeChange,
+                        onOpenTab = { selectedIndex = it },
+                    )
                 }
                 MiniPlayer()
                 NavigationBar {
@@ -449,6 +496,7 @@ private fun AdaptiveAppScaffold(
                         NavigationBarItem(
                             selected = selectedIndex == index,
                             onClick = { selectedIndex = index },
+                            alwaysShowLabel = true,
                             icon = {
                                 Icon(
                                     destination.icon,
@@ -483,34 +531,82 @@ private fun AppNavigationRail(
 
 @Composable
 private fun MainPane(
-    selectedIndex: Int,
+    pagerState: PagerState,
+    stateHolder: SaveableStateHolder,
     deepLinkSurah: Int? = null,
     deepLinkSurahToken: Int = 0,
     onOpenRef: (String) -> Unit = {},
     onThemeChange: (String) -> Unit = {},
     onOpenTab: (Int) -> Unit = {},
 ) {
-    val stateHolder = rememberSaveableStateHolder()
     Column(Modifier.fillMaxSize()) {
         Box(Modifier.weight(1f)) {
-            stateHolder.SaveableStateProvider(selectedIndex) {
-                DestinationScreen(
-                    selectedIndex = selectedIndex,
-                    deepLinkSurah = deepLinkSurah,
-                    deepLinkSurahToken = deepLinkSurahToken,
-                    onOpenRef = onOpenRef,
-                    onThemeChange = onThemeChange,
-                    onOpenTab = onOpenTab,
-                )
-            }
+            MainPager(
+                pagerState = pagerState,
+                stateHolder = stateHolder,
+                deepLinkSurah = deepLinkSurah,
+                deepLinkSurahToken = deepLinkSurahToken,
+                onOpenRef = onOpenRef,
+                onThemeChange = onThemeChange,
+                onOpenTab = onOpenTab,
+            )
         }
         MiniPlayer()
     }
 }
 
 @Composable
+private fun MainPager(
+    pagerState: PagerState,
+    stateHolder: SaveableStateHolder,
+    deepLinkSurah: Int?,
+    deepLinkSurahToken: Int,
+    onOpenRef: (String) -> Unit,
+    onThemeChange: (String) -> Unit,
+    onOpenTab: (Int) -> Unit,
+) {
+    var adjacentPagesReady by remember(pagerState) { mutableStateOf(false) }
+    LaunchedEffect(pagerState) {
+        // Let the selected destination draw first, then warm only its nearest
+        // neighbors so their first full composition does not land mid-swipe.
+        withFrameNanos { }
+        snapshotFlow { pagerState.isScrollInProgress }
+            .first { isScrolling -> !isScrolling }
+        adjacentPagesReady = true
+    }
+    HorizontalPager(
+        state = pagerState,
+        modifier = Modifier.fillMaxSize(),
+        beyondViewportPageCount = if (adjacentPagesReady) 1 else 0,
+        key = { it },
+    ) { page ->
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+            Box(Modifier.widthIn(max = 1120.dp).fillMaxSize()) {
+                stateHolder.SaveableStateProvider(page) {
+                    DestinationScreen(
+                        selectedIndex = page,
+                        // Keep the outgoing page active for the duration of a
+                        // drag/settle. Tying this to isScrollInProgress toggles
+                        // every screen's effects off at swipe start and back on
+                        // at swipe end, which cancels and restarts tab data work
+                        // in the middle of the transition.
+                        isActive = pagerState.settledPage == page,
+                        deepLinkSurah = deepLinkSurah,
+                        deepLinkSurahToken = deepLinkSurahToken,
+                        onOpenRef = onOpenRef,
+                        onThemeChange = onThemeChange,
+                        onOpenTab = onOpenTab,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun DestinationScreen(
     selectedIndex: Int,
+    isActive: Boolean = true,
     deepLinkSurah: Int? = null,
     deepLinkSurahToken: Int = 0,
     onOpenRef: (String) -> Unit = {},
@@ -518,15 +614,22 @@ private fun DestinationScreen(
     onOpenTab: (Int) -> Unit = {},
 ) {
     when (selectedIndex) {
-        0 -> HomeScreen(onOpenAyahRef = onOpenRef, onOpenTab = onOpenTab)
+        0 -> HomeScreen(
+            onOpenAyahRef = onOpenRef,
+            onOpenTab = onOpenTab,
+            isActive = isActive,
+        )
         1 -> QuranIndexScreen(
             deepLinkSurah = deepLinkSurah,
             deepLinkSurahToken = deepLinkSurahToken,
+            isActive = isActive,
         )
-        2 -> SunnahHomeScreen()
-        3 -> LibraryScreen(onOpenAyahRef = onOpenRef)
-        4 -> DownloadsScreen()
-        5 -> SettingsScreen(onThemeChange = onThemeChange)
+        2 -> SunnahHomeScreen(isActive = isActive)
+        3 -> MoreScreen(
+            onOpenAyahRef = onOpenRef,
+            onThemeChange = onThemeChange,
+            isActive = isActive,
+        )
         else -> PlaceholderScreen(destinations[selectedIndex].titleRes)
     }
 }
@@ -543,52 +646,15 @@ private fun MiniPlayer() {
             null
         }
     } ?: return
-    var isPlaying by remember { mutableStateOf(false) }
-    var currentItem by remember { mutableStateOf<AyahAudioItem?>(null) }
     val coroutineScope = rememberCoroutineScope()
+    val state = rememberPlayerState(audioPlayer, positionPollMs = 1000L)
+    val isPlaying = state.isPlaying
+    val currentItem = state.currentItem
 
-    DisposableEffect(audioPlayer) {
-        val listener = object : PlayerListener {
-            override fun onPlayingChanged(playing: Boolean) {
-                isPlaying = playing
-            }
-
-            override fun onCurrentRefKey(refKey: String) {
-            }
-
-            override fun onCurrentItem(item: AyahAudioItem?) {
-                currentItem = item
-            }
-        }
-        audioPlayer.setListener(listener)
-        onDispose {
-            audioPlayer.removeListener(listener)
-        }
-    }
-
-    val isVisible = isPlaying || currentItem != null
-    if (!isVisible) {
+    if (!state.isVisible) {
         return@MiniPlayer
     }
-
-    // Thin progress readout (1s poll, only while visible).
-    var positionMs by remember { mutableLongStateOf(0L) }
-    var durationMs by remember { mutableLongStateOf(0L) }
-    LaunchedEffect(audioPlayer) {
-        while (true) {
-            try {
-                positionMs = audioPlayer.positionMs()
-                durationMs = audioPlayer.durationMs()
-            } catch (_: Exception) {
-            }
-            delay(1000)
-        }
-    }
-    val progress = if (durationMs > 0) {
-        (positionMs.toFloat() / durationMs).coerceIn(0f, 1f)
-    } else {
-        0f
-    }
+    val progress = state.progress
 
     Surface(
         onClick = { NowPlaying.requestOpen() },
@@ -668,12 +734,17 @@ private fun MiniPlayer() {
                     )
                 }
             }
-            if (durationMs > 0) {
+            if (state.durationMs > 0) {
+                val seekPercent = (progress * 100).toInt().coerceIn(0, 100)
                 LinearProgressIndicator(
                     progress = { progress },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(2.dp),
+                        .height(2.dp)
+                        .semantics {
+                            contentDescription = "Playback position $seekPercent percent"
+                        }
+                        .testTag("miniPlayerProgress"),
                 )
             }
         }

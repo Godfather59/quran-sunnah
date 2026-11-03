@@ -2,7 +2,6 @@ package com.godfather59.quransunnah.device
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.hardware.Sensor
@@ -12,15 +11,12 @@ import android.hardware.SensorManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.core.content.FileProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import java.io.File
 import kotlin.coroutines.resume
 
 // GPS with graceful manual fallback (mirrors requestGpsLocation).
@@ -201,70 +197,4 @@ class AndroidSharer(private val context: Context) : Sharer {
         launchSafely(intent)
     }
 
-    /**
-     * Shares a local file via FileProvider. The host app manifest must
-     * declare it (Phase 5):
-     * `<provider android:name="androidx.core.content.FileProvider"
-     *   android:authorities="com.godfather59.quransunnah.fileprovider" ...>`
-     * with `res/xml/filepaths.xml` granting cache access.
-     */
-    override fun shareFile(path: String, mimeType: String) {
-        try {
-            val uri: Uri = FileProvider.getUriForFile(
-                context,
-                context.packageName + ".fileprovider",
-                File(path),
-            )
-            val intent = Intent(Intent.ACTION_SEND)
-                .setType(mimeType)
-                .putExtra(Intent.EXTRA_STREAM, uri)
-                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            launchSafely(intent)
-        } catch (_: IllegalArgumentException) {
-            // File outside FileProvider roots: never crash the sheet.
-        } catch (_: Exception) {
-        }
-    }
-}
-
-/** Backup import helpers (intent built app-side, bytes read here). */
-object AndroidBackupPicker {
-    fun createPickJsonIntent(): Intent =
-        Intent(Intent.ACTION_OPEN_DOCUMENT)
-            .setType("application/json")
-            .addCategory(Intent.CATEGORY_OPENABLE)
-            .putExtra(
-                Intent.EXTRA_MIME_TYPES,
-                arrayOf("application/json", "text/plain"),
-            )
-
-    /**
-     * Reads picked backup bytes with the 2MB guard (Flutter import parity).
-     * Null when cancelled, oversized, or unreadable.
-     */
-    fun readPickedBytes(
-        resolver: ContentResolver,
-        uri: Uri,
-        maxBytes: Long = 2L * 1024 * 1024,
-    ): ByteArray? {
-        return try {
-            resolver.openInputStream(uri)?.use { input ->
-                // ByteArrayOutputStream avoids boxing ~2M Bytes in a List.
-                val out = java.io.ByteArrayOutputStream(8192)
-                val buffer = ByteArray(8192)
-                var total = 0L
-                while (true) {
-                    val read = input.read(buffer)
-                    if (read < 0) break
-                    if (read == 0) continue
-                    total += read
-                    if (total > maxBytes) return null
-                    out.write(buffer, 0, read)
-                }
-                out.toByteArray()
-            }
-        } catch (_: Exception) {
-            null
-        }
-    }
 }

@@ -4,7 +4,7 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 
 /** In-memory database (tests, desktop). */
-fun createJvmMemoryDatabase(): LibraryDatabase {
+fun createJvmMemoryDatabase(): SearchDatabase {
     val driver: SqlDriver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
-    return openLibrary(driver)
+    return openSearch(driver)
 }

@@ -25,16 +25,8 @@ interface Compass {
 
 interface Sharer {
     fun shareText(text: String, subject: String? = null)
-
-    /** Shares a local file (exported backup, audio). */
-    fun shareFile(path: String, mimeType: String)
 }
 
 interface Clipboard {
     fun copy(text: String)
-}
-
-interface BackupFilePicker {
-    /** Returns picked backup file bytes, or null when cancelled. */
-    suspend fun pickJsonBytes(): ByteArray?
 }

@@ -5,8 +5,10 @@ import com.godfather59.quransunnah.prayer.PrayerTimes
 import com.godfather59.quransunnah.prayer.calculatePrayerTimes
 import com.godfather59.quransunnah.prayer.localizedCityName
 import com.godfather59.quransunnah.prayer.nextPrayer
+import com.godfather59.quransunnah.prayer.prayerMethodFromFlutterName
 import com.godfather59.quransunnah.prayer.prayerMethods
 import com.godfather59.quransunnah.prayer.qiblaBearing
+import kotlin.math.abs
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -54,6 +56,34 @@ class PrayerTest {
             "fajr=04:11,sunrise=05:39,dhuhr=12:22,asr=15:42,maghrib=19:06,isha=20:36",
             t.formatted(),
         )
+    }
+
+    @Test
+    fun rawPrayerTimesStayOnTheirLocalDateAcrossMarchEquinox() {
+        val places = listOf(
+            Triple(21.4225, 39.8262, 3.0), // Mecca
+            Triple(33.5731, -7.5898, 0.0), // Casablanca
+            Triple(40.7128, -74.0060, -4.0), // New York
+        )
+        for (year in 2025..2027) {
+            for ((latitude, longitude, offset) in places) {
+                var previous: PrayerTimes? = null
+                for (day in 20..23) {
+                    val times = calculatePrayerTimes(year, 3, day, latitude, longitude, offset)
+                    val label = "$year-03-$day at $latitude,$longitude"
+                    val minutes = times.ordered.map { it.second }
+                    // format() normalizes +/-1440 and would hide a date error.
+                    assertTrue(minutes.all { it in 0 until 1440 }, "Raw times leave their local date: $label $minutes")
+                    assertEquals(minutes.sorted(), minutes, "Prayer order changed: $label")
+                    assertTrue(times.dhuhr in 11 * 60..15 * 60, "Dhuhr must be near local noon: $label")
+                    previous?.ordered?.zip(times.ordered)?.forEach { (before, after) ->
+                        assertTrue(abs(after.second - before.second) <= 10,
+                            "Daily time discontinuity for ${after.first}: $label")
+                    }
+                    previous = times
+                }
+            }
+        }
     }
 
     @Test
@@ -109,5 +139,19 @@ class PrayerTest {
         assertEquals("La Mecque", localizedCityName("Mecca", "fr"))
         assertEquals("Mecca", localizedCityName("Mecca", "en"))
         assertEquals("GPS 1.0, 2.0", localizedCityName("GPS 1.0, 2.0", "ar"))
+    }
+
+    @Test
+    fun flutterNameMappingMatchesAndroidPrefs() {
+        assertEquals(PrayerCalcMethod.MUSLIM_WORLD_LEAGUE, prayerMethodFromFlutterName("muslimWorldLeague"))
+        assertEquals(PrayerCalcMethod.ISNA, prayerMethodFromFlutterName("isna"))
+        assertEquals(PrayerCalcMethod.EGYPT, prayerMethodFromFlutterName("egypt"))
+        assertEquals(PrayerCalcMethod.UMM_AL_QURA, prayerMethodFromFlutterName("ummAlQura"))
+        assertEquals(PrayerCalcMethod.KARACHI, prayerMethodFromFlutterName("karachi"))
+        assertEquals(PrayerCalcMethod.JAFARI, prayerMethodFromFlutterName("jafari"))
+        assertEquals(PrayerCalcMethod.MOROCCO, prayerMethodFromFlutterName("morocco"))
+        assertEquals(PrayerCalcMethod.MOROCCO, prayerMethodFromFlutterName("habous"))
+        assertEquals(PrayerCalcMethod.MUSLIM_WORLD_LEAGUE, prayerMethodFromFlutterName("bogus"))
+        assertEquals(PrayerCalcMethod.MUSLIM_WORLD_LEAGUE, prayerMethodFromFlutterName(""))
     }
 }

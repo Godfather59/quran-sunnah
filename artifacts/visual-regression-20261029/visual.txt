@@ -1,0 +1,6 @@
+
+com.godfather59.quransunnah.VisualRegressionTest:................................................
+
+Time: 128.87
+
+OK (48 tests)

@@ -1,0 +1,1078 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-02T16:49:55.690489+00:00",
+  "expectedRoot": "C:\\Users\\XPI\\Desktop\\said projects\\quran-sunnah\\kmp\\androidApp\\src\\androidTest\\screenshots",
+  "actualRoot": "C:\\Users\\XPI\\Desktop\\said projects\\quran-sunnah\\kmp\\androidApp\\build\\outputs\\visual-regression",
+  "thresholds": {
+    "color_tolerance": 8,
+    "max_changed_fraction": 0.0001,
+    "max_changed_pixels": 64,
+    "max_component_pixels": 8,
+    "material_delta": 32
+  },
+  "globalErrors": [],
+  "captures": [
+    {
+      "file": "home-ar-dark-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/ccf0da1bbd4910d7/expected.png",
+        "actual": "assets/ccf0da1bbd4910d7/actual.png",
+        "diff": "assets/ccf0da1bbd4910d7/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "home-ar-dark-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/165d3e3aa0128797/expected.png",
+        "actual": "assets/165d3e3aa0128797/actual.png",
+        "diff": "assets/165d3e3aa0128797/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "home-ar-light-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/b96a401bb5ee403f/expected.png",
+        "actual": "assets/b96a401bb5ee403f/actual.png",
+        "diff": "assets/b96a401bb5ee403f/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "home-ar-light-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/3b7b518875b0b028/expected.png",
+        "actual": "assets/3b7b518875b0b028/actual.png",
+        "diff": "assets/3b7b518875b0b028/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "home-en-dark-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/595cf7a875e4589e/expected.png",
+        "actual": "assets/595cf7a875e4589e/actual.png",
+        "diff": "assets/595cf7a875e4589e/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "home-en-dark-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/b47d8e3bede04f26/expected.png",
+        "actual": "assets/b47d8e3bede04f26/actual.png",
+        "diff": "assets/b47d8e3bede04f26/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "home-en-light-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/002db93f8a6143e2/expected.png",
+        "actual": "assets/002db93f8a6143e2/actual.png",
+        "diff": "assets/002db93f8a6143e2/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "home-en-light-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/7775b26101af42e2/expected.png",
+        "actual": "assets/7775b26101af42e2/actual.png",
+        "diff": "assets/7775b26101af42e2/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "home-fr-dark-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/300a689c09521835/expected.png",
+        "actual": "assets/300a689c09521835/actual.png",
+        "diff": "assets/300a689c09521835/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "home-fr-dark-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/4374f763baa21b46/expected.png",
+        "actual": "assets/4374f763baa21b46/actual.png",
+        "diff": "assets/4374f763baa21b46/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "home-fr-light-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/cb24297e51d3b49c/expected.png",
+        "actual": "assets/cb24297e51d3b49c/actual.png",
+        "diff": "assets/cb24297e51d3b49c/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "home-fr-light-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/9aa9f536a9f093c3/expected.png",
+        "actual": "assets/9aa9f536a9f093c3/actual.png",
+        "diff": "assets/9aa9f536a9f093c3/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "mushaf-ar-dark-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/e7cc3fc076b517b8/expected.png",
+        "actual": "assets/e7cc3fc076b517b8/actual.png",
+        "diff": "assets/e7cc3fc076b517b8/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "mushaf-ar-dark-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/67f44a5ebd556c19/expected.png",
+        "actual": "assets/67f44a5ebd556c19/actual.png",
+        "diff": "assets/67f44a5ebd556c19/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "mushaf-ar-light-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/2b033a2feb78d74d/expected.png",
+        "actual": "assets/2b033a2feb78d74d/actual.png",
+        "diff": "assets/2b033a2feb78d74d/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "mushaf-ar-light-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/4046d4166e1ad942/expected.png",
+        "actual": "assets/4046d4166e1ad942/actual.png",
+        "diff": "assets/4046d4166e1ad942/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "mushaf-en-dark-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/a463b26ea9a0ab72/expected.png",
+        "actual": "assets/a463b26ea9a0ab72/actual.png",
+        "diff": "assets/a463b26ea9a0ab72/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "mushaf-en-dark-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/245ce67ff9423bd8/expected.png",
+        "actual": "assets/245ce67ff9423bd8/actual.png",
+        "diff": "assets/245ce67ff9423bd8/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "mushaf-en-light-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/41fe560d05852db5/expected.png",
+        "actual": "assets/41fe560d05852db5/actual.png",
+        "diff": "assets/41fe560d05852db5/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "mushaf-en-light-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/9444830698840daf/expected.png",
+        "actual": "assets/9444830698840daf/actual.png",
+        "diff": "assets/9444830698840daf/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "mushaf-fr-dark-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/7ac9fcf4037c3a41/expected.png",
+        "actual": "assets/7ac9fcf4037c3a41/actual.png",
+        "diff": "assets/7ac9fcf4037c3a41/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "mushaf-fr-dark-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/996b8f1dc310ac3e/expected.png",
+        "actual": "assets/996b8f1dc310ac3e/actual.png",
+        "diff": "assets/996b8f1dc310ac3e/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "mushaf-fr-light-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/d2f5dee37d88e28e/expected.png",
+        "actual": "assets/d2f5dee37d88e28e/actual.png",
+        "diff": "assets/d2f5dee37d88e28e/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "mushaf-fr-light-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/3d35503f193db6f2/expected.png",
+        "actual": "assets/3d35503f193db6f2/actual.png",
+        "diff": "assets/3d35503f193db6f2/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "reader-ar-dark-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/9ea2960c668af27b/expected.png",
+        "actual": "assets/9ea2960c668af27b/actual.png",
+        "diff": "assets/9ea2960c668af27b/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "reader-ar-dark-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/2f01c3dc624a580e/expected.png",
+        "actual": "assets/2f01c3dc624a580e/actual.png",
+        "diff": "assets/2f01c3dc624a580e/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "reader-ar-light-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/302a25c5bb36d0ab/expected.png",
+        "actual": "assets/302a25c5bb36d0ab/actual.png",
+        "diff": "assets/302a25c5bb36d0ab/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "reader-ar-light-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/35e6afef8ef8ff8f/expected.png",
+        "actual": "assets/35e6afef8ef8ff8f/actual.png",
+        "diff": "assets/35e6afef8ef8ff8f/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "reader-en-dark-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/d813075be8df4bbf/expected.png",
+        "actual": "assets/d813075be8df4bbf/actual.png",
+        "diff": "assets/d813075be8df4bbf/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "reader-en-dark-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/f449a19706ea44a0/expected.png",
+        "actual": "assets/f449a19706ea44a0/actual.png",
+        "diff": "assets/f449a19706ea44a0/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "reader-en-light-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/2e7d3caf0a13dfd7/expected.png",
+        "actual": "assets/2e7d3caf0a13dfd7/actual.png",
+        "diff": "assets/2e7d3caf0a13dfd7/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "reader-en-light-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/15d8bd8bbfbb9deb/expected.png",
+        "actual": "assets/15d8bd8bbfbb9deb/actual.png",
+        "diff": "assets/15d8bd8bbfbb9deb/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "reader-fr-dark-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/2a495d5401c1a8a9/expected.png",
+        "actual": "assets/2a495d5401c1a8a9/actual.png",
+        "diff": "assets/2a495d5401c1a8a9/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "reader-fr-dark-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/9c8f00cdc80048ef/expected.png",
+        "actual": "assets/9c8f00cdc80048ef/actual.png",
+        "diff": "assets/9c8f00cdc80048ef/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "reader-fr-light-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/29b637c220acfdb3/expected.png",
+        "actual": "assets/29b637c220acfdb3/actual.png",
+        "diff": "assets/29b637c220acfdb3/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "reader-fr-light-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/575424683b4a1276/expected.png",
+        "actual": "assets/575424683b4a1276/actual.png",
+        "diff": "assets/575424683b4a1276/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "settings-ar-dark-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/8c489f7a6eababa9/expected.png",
+        "actual": "assets/8c489f7a6eababa9/actual.png",
+        "diff": "assets/8c489f7a6eababa9/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "settings-ar-dark-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/4ae2ba5d51196f44/expected.png",
+        "actual": "assets/4ae2ba5d51196f44/actual.png",
+        "diff": "assets/4ae2ba5d51196f44/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "settings-ar-light-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/7e0454ef1e2f0a37/expected.png",
+        "actual": "assets/7e0454ef1e2f0a37/actual.png",
+        "diff": "assets/7e0454ef1e2f0a37/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "settings-ar-light-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/3eb150a2b435155d/expected.png",
+        "actual": "assets/3eb150a2b435155d/actual.png",
+        "diff": "assets/3eb150a2b435155d/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "settings-en-dark-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/28cebc3f27374a85/expected.png",
+        "actual": "assets/28cebc3f27374a85/actual.png",
+        "diff": "assets/28cebc3f27374a85/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "settings-en-dark-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/25f77aeee65bc75a/expected.png",
+        "actual": "assets/25f77aeee65bc75a/actual.png",
+        "diff": "assets/25f77aeee65bc75a/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "settings-en-light-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/6a8b6b70a7bc1ff7/expected.png",
+        "actual": "assets/6a8b6b70a7bc1ff7/actual.png",
+        "diff": "assets/6a8b6b70a7bc1ff7/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "settings-en-light-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/bab69ec78249ceee/expected.png",
+        "actual": "assets/bab69ec78249ceee/actual.png",
+        "diff": "assets/bab69ec78249ceee/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "settings-fr-dark-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/804c8131f8eb1d58/expected.png",
+        "actual": "assets/804c8131f8eb1d58/actual.png",
+        "diff": "assets/804c8131f8eb1d58/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "settings-fr-dark-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/2b098c5dbee09b5e/expected.png",
+        "actual": "assets/2b098c5dbee09b5e/actual.png",
+        "diff": "assets/2b098c5dbee09b5e/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "settings-fr-light-100.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/a859370d38637d7c/expected.png",
+        "actual": "assets/a859370d38637d7c/actual.png",
+        "diff": "assets/a859370d38637d7c/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    },
+    {
+      "file": "settings-fr-light-200.png",
+      "errors": [],
+      "images": {
+        "expected": "assets/6170f760d9905d3a/expected.png",
+        "actual": "assets/6170f760d9905d3a/actual.png",
+        "diff": "assets/6170f760d9905d3a/diff.png"
+      },
+      "metrics": {
+        "width": 720,
+        "height": 1480,
+        "totalPixels": 1065600,
+        "changedPixels": 0,
+        "changedFraction": 0.0,
+        "allowedChangedPixels": 64,
+        "materialPixels": 0,
+        "largestComponentAtLeast": 0,
+        "maximumChannelDelta": 0,
+        "errors": []
+      },
+      "status": "passed"
+    }
+  ],
+  "summary": {
+    "total": 48,
+    "passed": 48,
+    "failed": 0
+  },
+  "status": "passed"
+}

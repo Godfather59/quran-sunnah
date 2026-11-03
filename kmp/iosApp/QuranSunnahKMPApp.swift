@@ -1,7 +1,7 @@
 import SwiftUI
 
-// Phase 0 shell. Wired to the shared Kotlin framework in Phase 6.
-// Xcode project (.xcodeproj) must be created on macOS; see README.md.
+// Native SwiftUI app entry point. Xcode builds and embeds the KMP framework;
+// the initial reader still loads the verified bundle assets directly.
 @main
 struct QuranSunnahKMPApp: App {
     var body: some Scene {

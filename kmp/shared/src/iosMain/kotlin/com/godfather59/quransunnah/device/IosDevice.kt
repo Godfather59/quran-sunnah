@@ -51,13 +51,8 @@ class IosCompass : Compass {
 
 class IosSharer : Sharer {
     override fun shareText(text: String, subject: String?) {}
-    override fun shareFile(path: String, mimeType: String) {}
 }
 
 class IosClipboard : Clipboard {
     override fun copy(text: String) {}
-}
-
-class IosBackupFilePicker : BackupFilePicker {
-    override suspend fun pickJsonBytes(): ByteArray? = null
 }

@@ -39,21 +39,17 @@ Start once with airplane mode / network disabled:
 - Quran reading works for all bundled editions/scripts.
 - Hadith browsing and global search work from bundled data + local FTS5.
 - Tafsir and translations work from bundled assets.
-- Bookmarks, notes, highlights, collections and recent items work.
 - Data sources/licenses page works.
 - Bundled fonts render without network access.
 - Audio streaming must fail gracefully; already downloaded audio remains
   local-first.
 
-## Persistence and migration
+## Persistence
 
-- Create bookmark, note, highlight and custom collection; kill the app; reopen.
-- Verify all personal library data survives.
-- Upgrade from a build that used SharedPreferences library storage and verify
-  one-time migration to SQLite without duplicates or loss.
-- Reopen repeatedly to ensure migration does not run twice.
-- Delete a collection and verify its bookmarks remain but are detached from
-  the deleted collection.
+- Save a Quran position, kill the app, and verify Continue Reading resumes at
+  the saved surah and ayah.
+- Change reader, audio, prayer, and appearance settings, then reopen the app
+  and verify each preference survives.
 
 ## Search
 
@@ -89,7 +85,7 @@ Start once with airplane mode / network disabled:
 
 - **P0:** wrong/fabricated/mislabeled sacred text, data corruption, crash on
   core reading.
-- **P1:** bookmark/note loss, wrong navigation/reference, search returning
+- **P1:** saved-position loss, wrong navigation/reference, search returning
   mismatched source text, broken offline core flow.
 - **P2:** audio/download defect, serious layout/accessibility issue.
 - **P3:** cosmetic/polish issue.

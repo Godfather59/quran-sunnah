@@ -10,23 +10,23 @@ import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
 
 /**
- * iOS bundle reader (Phase 6 wiring, compilable on any host).
- * Bundle resources must be added in Xcode (Phase 6 macOS step); until then
- * missing entries return null so the UI renders "Content unavailable"
+ * iOS bundle reader. The Xcode app includes the repository assets as an
+ * `assets` folder reference, so paths are resolved relative to that folder.
+ * Missing entries return null so the UI renders "Content unavailable"
  * instead of crashing. Never throws.
  */
 class IosBundleAssetReader : AssetReader {
     @OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
     override fun readBytes(path: String): ByteArray? {
         return try {
-            // "assets/quran/..." -> bundle resource "quran/..." (directories
-            // preserved as folder references in Xcode).
-            val resource = path.removePrefix("assets/").removePrefix("/")
+            val resource = path.removePrefix("/")
             val extIndex = resource.lastIndexOf('.')
             val name = if (extIndex < 0) resource else resource.substring(0, extIndex)
             val ext = if (extIndex < 0) null else resource.substring(extIndex + 1)
-            val bundlePath = NSBundle.mainBundle.pathForResource(name, ext)
-                ?: NSBundle.mainBundle.pathForResource(resource, null)
+            val directory = name.substringBeforeLast('/', "")
+            val fileName = name.substringAfterLast('/')
+            val bundlePath = NSBundle.mainBundle.pathForResource(fileName, ext, directory.ifEmpty { null })
+                ?: NSBundle.mainBundle.pathForResource(name, ext)
                 ?: return null
             val data: NSData = NSData.dataWithContentsOfFile(bundlePath) ?: return null
             val size = data.length.toInt()
